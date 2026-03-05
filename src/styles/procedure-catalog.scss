@@ -1,0 +1,12 @@
+.catalog-trigger {
+  min-width: 168px;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .site-nav__actions .catalog-trigger,
+  .site-nav__actions .site-nav__cta {
+    flex: 1;
+    min-width: 0;
+  }
+}

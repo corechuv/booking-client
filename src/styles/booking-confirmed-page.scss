@@ -1,0 +1,88 @@
+.booking-confirmed-page {
+  min-height: 100vh;
+  padding: clamp(1.2rem, 3vw, 2.4rem);
+  display: grid;
+  place-items: center;
+  color: var(--text-1);
+  background:
+    radial-gradient(circle at 14% 20%, var(--blob-1), transparent 45%),
+    radial-gradient(circle at 90% 4%, var(--blob-2), transparent 38%),
+    linear-gradient(140deg, var(--bg-base), var(--bg-soft));
+}
+
+.booking-confirmed {
+  width: min(700px, 100%);
+  display: grid;
+  gap: 1rem;
+  text-align: center;
+}
+
+.booking-confirmed__eyebrow {
+  margin: 0;
+  color: var(--text-3);
+  font-size: 0.76rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.booking-confirmed h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 5.8vw, 3.4rem);
+  line-height: 1.02;
+}
+
+.booking-confirmed__details {
+  display: grid;
+  gap: 0.58rem;
+}
+
+.booking-confirmed__details p {
+  margin: 0;
+  display: grid;
+  gap: 0.12rem;
+}
+
+.booking-confirmed__details span {
+  color: var(--text-3);
+  font-size: 0.82rem;
+}
+
+.booking-confirmed__details strong {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.booking-confirmed__details a {
+  color: var(--text-1);
+}
+
+.booking-confirmed__actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.72rem;
+}
+
+.booking-confirmed__message {
+  margin: 0;
+  color: var(--text-2);
+  font-size: 0.95rem;
+}
+
+.booking-confirmed--loading p {
+  margin: 0;
+  color: var(--text-2);
+  font-size: 0.96rem;
+}
+
+.booking-confirmed--error .booking-confirmed__message {
+  color: #d97878;
+}
+
+@media (max-width: 580px) {
+  .booking-confirmed__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

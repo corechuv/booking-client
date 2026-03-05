@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
+
+:root,
+[data-theme='mira-dark'],
+[data-theme='mira-nocturne'] {
+  --font-display: 'Manrope', 'Segoe UI', sans-serif;
+  --font-body: 'Manrope', 'Segoe UI', sans-serif;
+
+  --bg-base: #0f1015;
+  --bg-soft: #17181f;
+  --surface-1: rgba(20, 21, 29, 0.9);
+  --surface-2: rgba(18, 18, 24, 0.95);
+  --surface-3: rgba(44, 37, 30, 0.7);
+
+  --text-1: #f4eee7;
+  --text-2: #c6b8a8;
+  --text-3: #a79480;
+
+  --accent-1: #cb844a;
+  --accent-2: #9e5f2c;
+  --accent-3: #efc08d;
+  --focus-ring: rgba(203, 132, 74, 0.28);
+
+  --border-soft: rgba(239, 192, 141, 0.18);
+  --border-strong: rgba(239, 192, 141, 0.32);
+
+  --surface-overlay-1: rgba(255, 255, 255, 0.03);
+  --surface-overlay-2: rgba(255, 255, 255, 0.05);
+  --surface-overlay-3: rgba(255, 255, 255, 0.08);
+  --panel-bg-1: rgba(16, 17, 24, 0.58);
+  --panel-bg-2: rgba(13, 14, 20, 0.7);
+  --card-bg-1: rgba(18, 19, 24, 0.65);
+  --card-bg-2: rgba(14, 15, 21, 0.52);
+  --card-bg-3: rgba(12, 12, 16, 0.36);
+  --hero-card-grad-from: rgba(255, 255, 255, 0.1);
+  --hero-card-grad-to: rgba(12, 12, 16, 0.45);
+  --cta-grad-1: rgba(199, 134, 81, 0.2);
+  --cta-grad-2: rgba(20, 28, 32, 0.55);
+  --grid-line: rgba(255, 255, 255, 0.03);
+  --sale-border: rgba(240, 165, 105, 0.5);
+  --sale-bg: rgba(240, 165, 105, 0.14);
+  --sale-text: #f8c998;
+
+  --blob-1: rgba(203, 132, 74, 0.2);
+  --blob-2: rgba(92, 143, 151, 0.16);
+
+  --radius-xl: 30px;
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+
+  --shadow-soft: 0 24px 48px rgba(0, 0, 0, 0.45);
+  --shadow-card: 0 14px 30px rgba(0, 0, 0, 0.38);
+}
+
+[data-theme='mira-light'],
+[data-theme='mira-blush'],
+[data-theme='mira-emerald'] {
+  --font-display: 'Manrope', 'Segoe UI', sans-serif;
+  --font-body: 'Manrope', 'Segoe UI', sans-serif;
+
+  --bg-base: #f9ede6;
+  --bg-soft: #fff8f2;
+  --surface-1: rgba(255, 250, 246, 0.88);
+  --surface-2: #fffdfb;
+  --surface-3: #fff1e8;
+
+  --text-1: #2f2120;
+  --text-2: #6f5752;
+  --text-3: #92716b;
+
+  --accent-1: #cb6d55;
+  --accent-2: #a64069;
+  --accent-3: #f4bca4;
+  --focus-ring: rgba(203, 109, 85, 0.32);
+
+  --border-soft: rgba(141, 97, 83, 0.24);
+  --border-strong: rgba(166, 64, 105, 0.34);
+
+  --surface-overlay-1: transparent;
+  --surface-overlay-2: rgba(47, 33, 32, 0.06);
+  --surface-overlay-3: rgba(47, 33, 32, 0.1);
+  --panel-bg-1: rgba(255, 250, 246, 0.9);
+  --panel-bg-2: rgba(255, 246, 239, 0.88);
+  --card-bg-1: transparent;
+  --card-bg-2: rgba(255, 247, 240, 0.86);
+  --card-bg-3: rgba(255, 244, 236, 0.82);
+  --hero-card-grad-from: rgba(255, 255, 255, 0.96);
+  --hero-card-grad-to: rgba(244, 210, 191, 0.6);
+  --cta-grad-1: rgba(203, 109, 85, 0.24);
+  --cta-grad-2: rgba(255, 240, 229, 0.92);
+  --grid-line: rgba(146, 113, 107, 0.12);
+  --sale-border: rgba(203, 109, 85, 0.42);
+  --sale-bg: rgba(203, 109, 85, 0.14);
+  --sale-text: #8a3f2f;
+
+  --blob-1: rgba(250, 181, 154, 0.5);
+  --blob-2: rgba(224, 154, 183, 0.4);
+
+  --radius-xl: 30px;
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+
+  --shadow-soft: 0 20px 42px rgba(93, 50, 38, 0.16);
+  --shadow-card: 0 12px 26px rgba(126, 73, 56, 0.14);
+}

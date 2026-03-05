@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ru" translate="yes">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="content-language" content="ru" />
+    <script>
+      ;(() => {
+        try {
+          const rawPreferences = window.localStorage.getItem('mira-cookie-preferences')
+          let functionalEnabled = true
+
+          if (rawPreferences) {
+            const parsed = JSON.parse(rawPreferences)
+            if (parsed && typeof parsed === 'object' && parsed.functional === false) {
+              functionalEnabled = false
+            }
+          }
+
+          const raw = functionalEnabled
+            ? window.localStorage.getItem('mira-language')
+            : null
+          const lang = raw === 'de' ? 'de' : raw === 'uk' ? 'uk' : 'ru'
+          document.documentElement.setAttribute('lang', lang)
+          document.documentElement.setAttribute('xml:lang', lang)
+          document.documentElement.setAttribute('translate', 'yes')
+          const meta = document.querySelector('meta[name="content-language"]')
+          if (meta) {
+            meta.setAttribute('content', lang)
+          }
+        } catch {
+          document.documentElement.setAttribute('lang', 'ru')
+          document.documentElement.setAttribute('xml:lang', 'ru')
+          document.documentElement.setAttribute('translate', 'yes')
+        }
+      })()
+    </script>
+    <title>mira-booking</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

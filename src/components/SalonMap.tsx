@@ -26,11 +26,13 @@ type SalonMapProps = {
 }
 
 function SalonMap({
-  salonName = 'Mira Beauty Salon',
-  address = 'Berlin, Friedrichstrasse 12',
+  salonName = '',
+  address = '',
   routeUrl = '',
 }: SalonMapProps) {
   const { t } = useI18n()
+  const normalizedAddress = address.trim()
+  const normalizedSalonName = salonName.trim()
   const [coordinates, setCoordinates] = useState<[number, number]>(fallbackCoordinates)
 
   useEffect(() => {
@@ -39,7 +41,7 @@ function SalonMap({
 
     const loadCoordinates = async () => {
       try {
-        const query = encodeURIComponent(address)
+        const query = encodeURIComponent(normalizedAddress)
         const response = await fetch(
           `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${query}`,
           { signal: controller.signal },
@@ -64,7 +66,7 @@ function SalonMap({
       }
     }
 
-    if (address.trim().length > 0) {
+    if (normalizedAddress.length > 0) {
       void loadCoordinates()
     }
 
@@ -72,16 +74,16 @@ function SalonMap({
       isCancelled = true
       controller.abort()
     }
-  }, [address])
+  }, [normalizedAddress])
 
   const searchUrl = useMemo(
-    () => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`,
-    [address],
+    () => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(normalizedAddress)}`,
+    [normalizedAddress],
   )
 
   const directionsUrl = useMemo(
-    () => `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`,
-    [address],
+    () => `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(normalizedAddress)}`,
+    [normalizedAddress],
   )
 
   return (
@@ -103,12 +105,14 @@ function SalonMap({
             maxZoom={20}
           />
           <Marker position={coordinates} icon={salonMarkerIcon}>
-            <Popup>{`${salonName}, ${address}`}</Popup>
+            <Popup>
+              {[normalizedSalonName, normalizedAddress].filter(Boolean).join(', ')}
+            </Popup>
           </Marker>
         </MapContainer>
       </div>
 
-      <p className="salon-map__address">{address}</p>
+      <p className="salon-map__address">{normalizedAddress || '—'}</p>
 
       <div className="salon-map__actions">
         <LinkButton

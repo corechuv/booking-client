@@ -82,13 +82,10 @@ export const getLegalContent = (
   contact?: PublicContactSettings,
 ): LegalPageContent => {
   const salonName = getFallback(contact?.salon_name, 'Mira beauty salon')
-  const salonEmail = getFallback(contact?.email, 'info@center-mira.com')
-  const salonPhone = getFallback(contact?.phone, '+49 30 9999 1212')
-  const salonAddress = getFallback(contact?.address, 'Berlin, Friedrichstrasse 12')
-  const routeUrl = getFallback(
-    contact?.route_url,
-    'https://maps.google.com/?q=Berlin+Friedrichstrasse+12',
-  )
+  const salonEmail = getFallback(contact?.email, '—')
+  const salonPhone = getFallback(contact?.phone, '—')
+  const salonAddress = getFallback(contact?.address, '—')
+  const routeUrl = getFallback(contact?.route_url, '—')
 
   if (language === 'uk') {
     return {

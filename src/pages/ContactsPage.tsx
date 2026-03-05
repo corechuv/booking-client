@@ -108,8 +108,6 @@ function ContactsPage() {
     void loadContent()
   }, [loadContent])
 
-  const certificatesDescription = t('contacts.certificates.descApi')
-
   return (
     <main className="section-page contacts-page">
       <div className="section-page__glow section-page__glow--left" />
@@ -177,7 +175,7 @@ function ContactsPage() {
         id="certificates"
         limit={2}
         title={t('contacts.certificates.title')}
-        description={certificatesDescription}
+        description=""
         items={certificateItems}
       />
 

@@ -32,12 +32,13 @@ function CertificatesGrid({
   const visibleItems = typeof limit === 'number' ? sourceItems.slice(0, limit) : sourceItems
   const resolvedTitle = title ?? t('cert.title')
   const resolvedDescription = description ?? t('cert.description')
+  const hasDescription = resolvedDescription.trim().length > 0
 
   return (
     <section className="section-page__strip section-page__certificates" id={id}>
       <div className="section-page__strip-head">
         <h2>{resolvedTitle}</h2>
-        <p>{resolvedDescription}</p>
+        {hasDescription ? <p>{resolvedDescription}</p> : null}
       </div>
 
       <div className="certificate-grid">

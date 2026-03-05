@@ -12,8 +12,6 @@ export type CookiePreferences = {
   updated_at: string
 }
 
-const STORAGE_KEY = 'mira-cookie-preferences'
-
 const DEFAULT_COOKIE_PREFERENCES: CookiePreferences = {
   necessary: true,
   functional: true,
@@ -41,22 +39,10 @@ const normalize = (value: unknown): CookiePreferences => {
   }
 }
 
-export const getCookiePreferencesStorageKey = () => STORAGE_KEY
+export const getCookiePreferencesStorageKey = () => 'mira-cookie-preferences'
 
 export const getCookiePreferences = (): CookiePreferences => {
-  if (typeof window === 'undefined') {
-    return { ...DEFAULT_COOKIE_PREFERENCES }
-  }
-
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY)
-    if (!raw) {
-      return { ...DEFAULT_COOKIE_PREFERENCES }
-    }
-    return normalize(JSON.parse(raw))
-  } catch {
-    return { ...DEFAULT_COOKIE_PREFERENCES }
-  }
+  return { ...DEFAULT_COOKIE_PREFERENCES }
 }
 
 export const isCookieCategoryEnabled = (key: CookieCategoryKey): boolean => {
@@ -67,37 +53,19 @@ export const isCookieCategoryEnabled = (key: CookieCategoryKey): boolean => {
 }
 
 export const clearFunctionalStorage = (): void => {
-  if (typeof window === 'undefined') {
-    return
-  }
-
-  window.localStorage.removeItem('mira-theme')
-  window.localStorage.removeItem('mira-language')
-
-  for (let index = window.sessionStorage.length - 1; index >= 0; index -= 1) {
-    const key = window.sessionStorage.key(index)
-    if (key?.startsWith('mira-booking-confirmed:')) {
-      window.sessionStorage.removeItem(key)
-    }
-  }
+  return
 }
 
 export const persistCookiePreferences = (
   next: Omit<CookiePreferences, 'updated_at'>,
 ): CookiePreferences => {
-  const normalized: CookiePreferences = {
+  return normalize({
     necessary: true,
     functional: Boolean(next.functional),
     analytics: Boolean(next.analytics),
     marketing: Boolean(next.marketing),
     updated_at: new Date().toISOString(),
-  }
-
-  if (typeof window !== 'undefined') {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized))
-  }
-
-  return normalized
+  })
 }
 
 export const applyCookiePreferences = (

@@ -6,22 +6,15 @@ import SiteFooter from '../components/SiteFooter'
 import SiteNav from '../components/SiteNav'
 import { useLanguage } from '../context/language-context'
 import { useI18n } from '../hooks/useI18n'
-import { serviceCatalog } from '../data/service-catalog'
 import { mapApiServicesToCatalog } from '../lib/service-catalog-api'
 import '../styles/section-page.scss'
-
-const fallbackPriceList = serviceCatalog.flatMap((category) =>
-  category.services.map((service) => ({
-    service: `${category.name} · ${service.title}`,
-    price: service.price,
-    duration: service.duration,
-  })),
-)
 
 function PricingPage() {
   const { language } = useLanguage()
   const { t } = useI18n()
-  const [priceList, setPriceList] = useState(fallbackPriceList)
+  const [priceList, setPriceList] = useState<
+    Array<{ service: string; price: string; duration: string }>
+  >([])
   const packages = [
     {
       type: t('pricing.pack.starterType'),
@@ -54,9 +47,9 @@ function PricingPage() {
           duration: service.duration,
         })),
       )
-      setPriceList(apiPriceList.length ? apiPriceList : fallbackPriceList)
+      setPriceList(apiPriceList)
     } catch {
-      setPriceList(fallbackPriceList)
+      setPriceList([])
     }
   }, [language])
 

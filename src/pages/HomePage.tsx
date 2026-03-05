@@ -5,25 +5,22 @@ import SiteFooter from '../components/SiteFooter'
 import SiteNav from '../components/SiteNav'
 import { useLanguage } from '../context/language-context'
 import { useI18n } from '../hooks/useI18n'
-import { serviceCatalog } from '../data/service-catalog'
 import { mapApiServicesToCatalog } from '../lib/service-catalog-api'
 import '../styles/landing-page.scss'
-
-const fallbackDeals = serviceCatalog
-  .flatMap((category) =>
-    category.services
-      .filter((service) => service.discountBadge && service.oldPrice)
-      .map((service) => ({
-        ...service,
-        categoryName: category.name,
-      })),
-  )
-  .slice(0, 4)
 
 function HomePage() {
   const { language } = useLanguage()
   const { t } = useI18n()
-  const [deals, setDeals] = useState(fallbackDeals)
+  const [deals, setDeals] = useState<
+    Array<{
+      id: string
+      title: string
+      categoryName: string
+      oldPrice?: string
+      discountBadge?: string
+      price: string
+    }>
+  >([])
   const experiences = [
     {
       title: t('home.exp.skin.title'),
@@ -82,9 +79,9 @@ function HomePage() {
         )
         .slice(0, 4)
 
-      setDeals(apiDeals.length ? apiDeals : fallbackDeals)
+      setDeals(apiDeals)
     } catch {
-      setDeals(fallbackDeals)
+      setDeals([])
     }
   }, [language])
 

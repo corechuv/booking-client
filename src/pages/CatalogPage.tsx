@@ -7,7 +7,6 @@ import SectionPageHero from '../components/SectionPageHero'
 import SiteFooter from '../components/SiteFooter'
 import SiteNav from '../components/SiteNav'
 import { useLanguage } from '../context/language-context'
-import { serviceCatalog } from '../data/service-catalog'
 import { useI18n } from '../hooks/useI18n'
 import { mapApiServicesToCatalog } from '../lib/service-catalog-api'
 import '../styles/section-page.scss'
@@ -16,7 +15,7 @@ import '../styles/catalog-page.scss'
 function CatalogPage() {
   const { language } = useLanguage()
   const { t } = useI18n()
-  const [catalog, setCatalog] = useState(serviceCatalog)
+  const [catalog, setCatalog] = useState<ReturnType<typeof mapApiServicesToCatalog>>([])
   const [activeCategoryId, setActiveCategoryId] = useState('')
   const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -35,7 +34,7 @@ function CatalogPage() {
       } else {
         setError(t('catalog.errorFallback'))
       }
-      setCatalog(serviceCatalog)
+      setCatalog([])
     } finally {
       setIsLoading(false)
     }

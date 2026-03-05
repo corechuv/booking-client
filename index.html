@@ -7,32 +7,12 @@
     <meta name="content-language" content="ru" />
     <script>
       ;(() => {
-        try {
-          const rawPreferences = window.localStorage.getItem('mira-cookie-preferences')
-          let functionalEnabled = true
-
-          if (rawPreferences) {
-            const parsed = JSON.parse(rawPreferences)
-            if (parsed && typeof parsed === 'object' && parsed.functional === false) {
-              functionalEnabled = false
-            }
-          }
-
-          const raw = functionalEnabled
-            ? window.localStorage.getItem('mira-language')
-            : null
-          const lang = raw === 'de' ? 'de' : raw === 'uk' ? 'uk' : 'ru'
-          document.documentElement.setAttribute('lang', lang)
-          document.documentElement.setAttribute('xml:lang', lang)
-          document.documentElement.setAttribute('translate', 'yes')
-          const meta = document.querySelector('meta[name="content-language"]')
-          if (meta) {
-            meta.setAttribute('content', lang)
-          }
-        } catch {
-          document.documentElement.setAttribute('lang', 'ru')
-          document.documentElement.setAttribute('xml:lang', 'ru')
-          document.documentElement.setAttribute('translate', 'yes')
+        document.documentElement.setAttribute('lang', 'ru')
+        document.documentElement.setAttribute('xml:lang', 'ru')
+        document.documentElement.setAttribute('translate', 'yes')
+        const meta = document.querySelector('meta[name="content-language"]')
+        if (meta) {
+          meta.setAttribute('content', 'ru')
         }
       })()
     </script>

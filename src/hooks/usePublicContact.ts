@@ -9,11 +9,11 @@ import { useI18n } from './useI18n'
 
 export const fallbackPublicContact: PublicContactSettings = {
   id: 0,
-  salon_name: 'Mira beauty salon',
-  phone: '+49 30 9999 1212',
-  email: 'info@center-mira.com',
-  address: 'Berlin, Friedrichstrasse 12',
-  route_url: 'https://maps.google.com/?q=Berlin+Friedrichstrasse+12',
+  salon_name: '',
+  phone: '',
+  email: '',
+  address: '',
+  route_url: '',
   created_at: '',
   updated_at: '',
 }

@@ -7,7 +7,6 @@ import {
 } from '../api/client-api'
 import LinkButton from '../components/LinkButton'
 import { useI18n } from '../hooks/useI18n'
-import { isCookieCategoryEnabled } from '../utils/cookie-preferences'
 import '../styles/booking-confirmed-page.scss'
 
 type ConfirmState =
@@ -16,40 +15,6 @@ type ConfirmState =
   | { phase: 'success'; booking: BookingConfirmedResult }
 
 const confirmationInFlight = new Map<string, Promise<BookingConfirmedResult>>()
-
-const getCacheKey = (token: string) => `mira-booking-confirmed:${token}`
-
-const readCachedBooking = (token: string): BookingConfirmedResult | null => {
-  if (typeof window === 'undefined') {
-    return null
-  }
-
-  if (!isCookieCategoryEnabled('functional')) {
-    return null
-  }
-
-  try {
-    const raw = window.sessionStorage.getItem(getCacheKey(token))
-    if (!raw) {
-      return null
-    }
-    return JSON.parse(raw) as BookingConfirmedResult
-  } catch {
-    return null
-  }
-}
-
-const writeCachedBooking = (token: string, booking: BookingConfirmedResult): void => {
-  if (typeof window === 'undefined') {
-    return
-  }
-
-  if (!isCookieCategoryEnabled('functional')) {
-    return
-  }
-
-  window.sessionStorage.setItem(getCacheKey(token), JSON.stringify(booking))
-}
 
 const getErrorMessage = (error: unknown, t: (key: string) => string): string => {
   if (error instanceof ApiError) {
@@ -86,12 +51,6 @@ function BookingConfirmedPage() {
       return
     }
 
-    const cachedBooking = readCachedBooking(token)
-    if (cachedBooking) {
-      setState({ phase: 'success', booking: cachedBooking })
-      return
-    }
-
     let isMounted = true
     setState({ phase: 'loading' })
 
@@ -103,7 +62,6 @@ function BookingConfirmedPage() {
 
     request
       .then((booking) => {
-        writeCachedBooking(token, booking)
         if (!isMounted) {
           return
         }

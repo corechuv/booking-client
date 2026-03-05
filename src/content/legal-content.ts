@@ -272,7 +272,7 @@ export const getLegalContent = (
         description:
           'Які технології зберігання ми застосовуємо зараз, навіщо вони потрібні та як керувати згодою.',
         intro:
-          'На сайті не використовується рекламний трекінг за замовчуванням. Використовуються переважно технічні та функціональні механізми зберігання.',
+          'На сайті не використовується рекламний трекінг за замовчуванням. Клієнтський додаток не зберігає персональні налаштування у localStorage/sessionStorage: дані завантажуються з API.',
         categories_title: 'Категорії зберігання',
         categories: [
           {
@@ -287,7 +287,7 @@ export const getLegalContent = (
             key: 'functional',
             title: 'Функціональні',
             description:
-              'Зберігають обрані користувачем параметри (тема, мова) та тимчасовий кеш підтвердження запису.',
+              'Функціональні налаштування застосовуються в рамках поточної сесії без довгострокового збереження у браузері.',
             legal_basis: '§ 25 Abs. 1 TDDDG + ст. 6(1)(a) DSGVO',
           },
           {
@@ -312,32 +312,12 @@ export const getLegalContent = (
         storage_title: 'Що реально використовується на сайті',
         storage_rows: [
           {
-            key_name: 'mira-cookie-preferences',
-            storage: 'localStorage',
-            purpose: 'Збереження вибору категорій згоди',
-            ttl: '12 місяців (оновлюється при зміні)',
+            key_name: 'Немає постійних ключів',
+            storage: 'Не використовується',
+            purpose:
+              'Клієнт не зберігає дані у localStorage/sessionStorage; контент завантажується напряму з backend API.',
+            ttl: 'Не застосовується',
             category: 'necessary',
-          },
-          {
-            key_name: 'mira-theme',
-            storage: 'localStorage',
-            purpose: 'Тема інтерфейсу (dark/light)',
-            ttl: 'до видалення користувачем',
-            category: 'functional',
-          },
-          {
-            key_name: 'mira-language',
-            storage: 'localStorage',
-            purpose: 'Обрана мова інтерфейсу',
-            ttl: 'до видалення користувачем',
-            category: 'functional',
-          },
-          {
-            key_name: 'mira-booking-confirmed:*',
-            storage: 'sessionStorage',
-            purpose: 'Кеш уже підтвердженої заявки в поточній сесії браузера',
-            ttl: 'до закриття вкладки',
-            category: 'functional',
           },
         ],
         third_party_title: 'Зовнішні сервіси і мережеві запити',
@@ -594,7 +574,7 @@ export const getLegalContent = (
         description:
           'Diese Seite zeigt transparent, welche Speichertechnologien wir aktuell verwenden und wie Sie Ihre Einwilligung steuern.',
         intro:
-          'Der Client setzt derzeit keine Marketing- oder Tracking-Cookies. Verwendet werden in erster Linie notwendige und funktionale Browser-Speicher.',
+          'Der Client setzt derzeit keine Marketing- oder Tracking-Cookies. Es werden keine dauerhaften Daten in localStorage/sessionStorage gespeichert; Inhalte werden aus dem API geladen.',
         categories_title: 'Kategorien',
         categories: [
           {
@@ -609,7 +589,7 @@ export const getLegalContent = (
             key: 'functional',
             title: 'Funktional',
             description:
-              'Speichert Komforteinstellungen wie Sprache, Theme und Session-Caches fuer Bestaetigungsseiten.',
+              'Funktionale Einstellungen gelten nur innerhalb der aktuellen Sitzung und werden nicht dauerhaft im Browser gespeichert.',
             legal_basis: '§ 25 Abs. 1 TDDDG + Art. 6 Abs. 1 lit. a DSGVO',
           },
           {
@@ -634,32 +614,12 @@ export const getLegalContent = (
         storage_title: 'Tatsaechlich eingesetzte Speicherobjekte',
         storage_rows: [
           {
-            key_name: 'mira-cookie-preferences',
-            storage: 'localStorage',
-            purpose: 'Speichert Ihre Auswahl fuer Einwilligungskategorien',
-            ttl: '12 Monate (bei Aenderung aktualisiert)',
+            key_name: 'Keine persistenten Keys',
+            storage: 'Nicht verwendet',
+            purpose:
+              'Der Client speichert keine Daten in localStorage/sessionStorage; Inhalte werden direkt vom Backend-API geladen.',
+            ttl: 'Nicht anwendbar',
             category: 'necessary',
-          },
-          {
-            key_name: 'mira-theme',
-            storage: 'localStorage',
-            purpose: 'Speichert das ausgewaehlte Theme',
-            ttl: 'bis zur manuellen Loeschung',
-            category: 'functional',
-          },
-          {
-            key_name: 'mira-language',
-            storage: 'localStorage',
-            purpose: 'Speichert die ausgewaehlte Sprache',
-            ttl: 'bis zur manuellen Loeschung',
-            category: 'functional',
-          },
-          {
-            key_name: 'mira-booking-confirmed:*',
-            storage: 'sessionStorage',
-            purpose: 'Temporarer Cache bestaetigter Buchungsdaten in derselben Browser-Sitzung',
-            ttl: 'bis zum Schliessen des Tabs/Fensters',
-            category: 'functional',
           },
         ],
         third_party_title: 'Externe Dienste bei Karten- und Routenfunktionen',
@@ -918,7 +878,7 @@ export const getLegalContent = (
       description:
         'Подробно о том, какие технологии хранения мы используем сейчас и как вы управляете согласием.',
       intro:
-        'На текущей версии сайта нет включенного рекламного или аналитического трекинга. Используются в основном необходимые и функциональные хранилища браузера.',
+        'На текущей версии сайта нет включенного рекламного или аналитического трекинга. Клиент не сохраняет данные в localStorage/sessionStorage и получает контент напрямую из API.',
       categories_title: 'Категории',
       categories: [
         {
@@ -933,7 +893,7 @@ export const getLegalContent = (
           key: 'functional',
           title: 'Функциональные',
           description:
-            'Хранят пользовательские настройки интерфейса (тема, язык) и session-кеш подтверждения записи.',
+            'Функциональные настройки применяются только в рамках текущей сессии без долгосрочного хранения в браузере.',
           legal_basis: '§ 25 Abs. 1 TDDDG + Art. 6(1)(a) DSGVO',
         },
         {
@@ -958,32 +918,12 @@ export const getLegalContent = (
       storage_title: 'Что реально используется в клиенте',
       storage_rows: [
         {
-          key_name: 'mira-cookie-preferences',
-          storage: 'localStorage',
-          purpose: 'Хранение вашего выбора категорий согласия',
-          ttl: '12 месяцев (обновляется при изменении)',
+          key_name: 'Постоянные ключи не используются',
+          storage: 'Не используется',
+          purpose:
+            'Клиент не сохраняет данные в localStorage/sessionStorage; контент загружается напрямую из backend API.',
+          ttl: 'Не применяется',
           category: 'necessary',
-        },
-        {
-          key_name: 'mira-theme',
-          storage: 'localStorage',
-          purpose: 'Выбранная тема интерфейса',
-          ttl: 'до ручного удаления',
-          category: 'functional',
-        },
-        {
-          key_name: 'mira-language',
-          storage: 'localStorage',
-          purpose: 'Выбранный язык интерфейса',
-          ttl: 'до ручного удаления',
-          category: 'functional',
-        },
-        {
-          key_name: 'mira-booking-confirmed:*',
-          storage: 'sessionStorage',
-          purpose: 'Кеш подтвержденной записи в текущей вкладке',
-          ttl: 'до закрытия вкладки',
-          category: 'functional',
         },
       ],
       third_party_title: 'Внешние сервисы при работе карты',

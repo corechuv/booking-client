@@ -13,22 +13,8 @@ import SectionPageHero from '../components/SectionPageHero'
 import SiteFooter from '../components/SiteFooter'
 import SiteNav from '../components/SiteNav'
 import { useLanguage } from '../context/language-context'
-import { certificates } from '../data/certificates'
-import { faqItems } from '../data/faq'
 import { useI18n } from '../hooks/useI18n'
 import '../styles/section-page.scss'
-
-const fallbackContacts = [
-  { label: 'Адрес', value: 'Berlin, Friedrichstrasse 12' },
-  { label: 'Телефон', value: '+49 30 9999 1212' },
-  { label: 'Email', value: 'hello@mira-salon.com' },
-]
-
-const fallbackHours = [
-  { day: 'Понедельник - Четверг', time: '09:00 - 20:00' },
-  { day: 'Пятница', time: '10:00 - 21:00' },
-  { day: 'Суббота - Воскресенье', time: '09:00 - 18:00' },
-]
 
 const getErrorText = (error: unknown, fallback: string): string => {
   if (error instanceof ApiError) {
@@ -52,12 +38,14 @@ function ContactsPage() {
     ],
     [t],
   )
-  const [contacts, setContacts] = useState(fallbackContacts)
-  const [hours, setHours] = useState(fallbackHours)
-  const [faq, setFaq] = useState(faqItems)
+  const [contacts, setContacts] = useState<Array<{ label: string; value: string }>>([])
+  const [hours, setHours] = useState<Array<{ day: string; time: string }>>([])
+  const [faq, setFaq] = useState<Array<{ id: string; question: string; answer: string }>>([])
   const [loadingError, setLoadingError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [certificateItems, setCertificateItems] = useState(certificates)
+  const [certificateItems, setCertificateItems] = useState<
+    Array<{ id: string; title: string; area: string; preview: string; pdf: string }>
+  >([])
 
   const loadContent = useCallback(async () => {
     setIsLoading(true)
@@ -104,13 +92,13 @@ function ContactsPage() {
           preview: item.image_url as string,
           pdf: item.image_url as string,
         }))
-      setCertificateItems(mappedCertificates.length ? mappedCertificates : certificates)
+      setCertificateItems(mappedCertificates)
     } catch (requestError) {
       setLoadingError(getErrorText(requestError, t('contacts.errorFallback')))
-      setContacts(fallbackContacts)
-      setHours(fallbackHours)
-      setFaq(faqItems)
-      setCertificateItems(certificates)
+      setContacts([])
+      setHours([])
+      setFaq([])
+      setCertificateItems([])
     } finally {
       setIsLoading(false)
     }
@@ -120,13 +108,7 @@ function ContactsPage() {
     void loadContent()
   }, [loadContent])
 
-  const certificatesDescription = useMemo(
-    () =>
-      certificateItems === certificates
-        ? t('contacts.certificates.descFallback')
-        : t('contacts.certificates.descApi'),
-    [certificateItems, t],
-  )
+  const certificatesDescription = t('contacts.certificates.descApi')
 
   return (
     <main className="section-page contacts-page">

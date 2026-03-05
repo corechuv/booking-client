@@ -11,16 +11,8 @@ import SectionPageHero from '../components/SectionPageHero'
 import SiteFooter from '../components/SiteFooter'
 import SiteNav from '../components/SiteNav'
 import { useLanguage } from '../context/language-context'
-import { certificates } from '../data/certificates'
 import { useI18n } from '../hooks/useI18n'
 import '../styles/section-page.scss'
-
-const fallbackWeekPlan = [
-  { day: 'Mon - Tue', info: '10:00 - 19:00 / full team available' },
-  { day: 'Wed - Thu', info: '09:00 - 20:00 / evening slots active' },
-  { day: 'Fri', info: '10:00 - 21:00 / makeup sessions priority' },
-  { day: 'Sat - Sun', info: '09:00 - 18:00 / weekend express menu' },
-]
 
 const getErrorText = (error: unknown): string => {
   if (error instanceof ApiError) {
@@ -32,41 +24,6 @@ const getErrorText = (error: unknown): string => {
 function SpecialistsPage() {
   const { language } = useLanguage()
   const { t } = useI18n()
-  const fallbackSpecialists = useMemo(
-    () => [
-      {
-        name: 'Mira',
-        role: t('specialists.card.mira.role'),
-        text: t('specialists.card.mira.text'),
-        skills: [
-          t('specialists.card.mira.skill1'),
-          t('specialists.card.mira.skill2'),
-          t('specialists.card.mira.skill3'),
-        ],
-      },
-      {
-        name: 'Alina',
-        role: t('specialists.card.alina.role'),
-        text: t('specialists.card.alina.text'),
-        skills: [
-          t('specialists.card.alina.skill1'),
-          t('specialists.card.alina.skill2'),
-          t('specialists.card.alina.skill3'),
-        ],
-      },
-      {
-        name: 'Sonia',
-        role: t('specialists.card.sonia.role'),
-        text: t('specialists.card.sonia.text'),
-        skills: [
-          t('specialists.card.sonia.skill1'),
-          t('specialists.card.sonia.skill2'),
-          t('specialists.card.sonia.skill3'),
-        ],
-      },
-    ],
-    [t],
-  )
   const dayNames = useMemo(
     () => [
       t('weekday.mon'),
@@ -79,9 +36,13 @@ function SpecialistsPage() {
     ],
     [t],
   )
-  const [specialists, setSpecialists] = useState(fallbackSpecialists)
-  const [weekPlan, setWeekPlan] = useState(fallbackWeekPlan)
-  const [certificateItems, setCertificateItems] = useState(certificates)
+  const [specialists, setSpecialists] = useState<
+    Array<{ name: string; role: string; text: string; skills: string[] }>
+  >([])
+  const [weekPlan, setWeekPlan] = useState<Array<{ day: string; info: string }>>([])
+  const [certificateItems, setCertificateItems] = useState<
+    Array<{ id: string; title: string; area: string; preview: string; pdf: string }>
+  >([])
   const [loadingError, setLoadingError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -101,7 +62,7 @@ function SpecialistsPage() {
         text: item.bio ?? t('specialists.defaultBio'),
         skills: [] as string[],
       }))
-      setSpecialists(mappedSpecialists.length ? mappedSpecialists : fallbackSpecialists)
+      setSpecialists(mappedSpecialists)
 
       const mappedWeekPlan = generalHours.slots
         .slice()
@@ -112,7 +73,7 @@ function SpecialistsPage() {
             ? t('contacts.hours.closed')
             : `${slot.open_time?.slice(0, 5) ?? '--:--'} - ${slot.close_time?.slice(0, 5) ?? '--:--'}`,
         }))
-      setWeekPlan(mappedWeekPlan.length ? mappedWeekPlan : fallbackWeekPlan)
+      setWeekPlan(mappedWeekPlan)
 
       const mappedCertificates = publicCertificates
         .filter((item) => item.image_url)
@@ -123,20 +84,20 @@ function SpecialistsPage() {
           preview: item.image_url as string,
           pdf: item.image_url as string,
         }))
-      setCertificateItems(mappedCertificates.length ? mappedCertificates : certificates)
+      setCertificateItems(mappedCertificates)
     } catch (requestError) {
       if (requestError instanceof ApiError) {
         setLoadingError(getErrorText(requestError))
       } else {
         setLoadingError(t('specialists.errorFallback'))
       }
-      setSpecialists(fallbackSpecialists)
-      setWeekPlan(fallbackWeekPlan)
-      setCertificateItems(certificates)
+      setSpecialists([])
+      setWeekPlan([])
+      setCertificateItems([])
     } finally {
       setIsLoading(false)
     }
-  }, [dayNames, fallbackSpecialists, language, t])
+  }, [dayNames, language, t])
 
   useEffect(() => {
     void loadContent()

@@ -2,9 +2,6 @@ import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { fetchPublicLanguages, type PublicLanguage } from '../api/client-api'
 import { LanguageContext, type AppLanguage } from './language-context'
 import type { AppLanguageCode } from '../i18n/types'
-import { isCookieCategoryEnabled } from '../utils/cookie-preferences'
-
-const STORAGE_KEY = 'mira-language'
 
 const fallbackLanguages: AppLanguage[] = [
   {
@@ -54,15 +51,7 @@ const toLanguage = (payload: PublicLanguage): AppLanguage => ({
 })
 
 const getInitialLanguage = (): AppLanguageCode => {
-  if (typeof window === 'undefined') {
-    return 'ru'
-  }
-
-  if (!isCookieCategoryEnabled('functional')) {
-    return 'ru'
-  }
-
-  return normalizeLanguageCode(window.localStorage.getItem(STORAGE_KEY))
+  return 'ru'
 }
 
 const resolveDefaultLanguage = (languages: AppLanguage[]): AppLanguageCode => {
@@ -96,11 +85,6 @@ function LanguageProvider({ children }: { children: ReactNode }) {
   const [languages, setLanguages] = useState<AppLanguage[]>(fallbackLanguages)
 
   useEffect(() => {
-    if (isCookieCategoryEnabled('functional')) {
-      window.localStorage.setItem(STORAGE_KEY, language)
-    } else {
-      window.localStorage.removeItem(STORAGE_KEY)
-    }
     applyDocumentLanguage(language)
   }, [language])
 
@@ -147,14 +131,8 @@ function LanguageProvider({ children }: { children: ReactNode }) {
           return
         }
 
-        if (isCookieCategoryEnabled('functional')) {
-          window.localStorage.setItem(STORAGE_KEY, code)
-        } else {
-          window.localStorage.removeItem(STORAGE_KEY)
-        }
         applyDocumentLanguage(code)
         setLanguageState(code)
-        window.location.reload()
       },
       languages,
     }),

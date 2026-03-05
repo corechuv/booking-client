@@ -6,7 +6,6 @@ import SectionPageHero from '../components/SectionPageHero'
 import SiteFooter from '../components/SiteFooter'
 import SiteNav from '../components/SiteNav'
 import { useLanguage } from '../context/language-context'
-import { faqItems } from '../data/faq'
 import { useI18n } from '../hooks/useI18n'
 import '../styles/section-page.scss'
 
@@ -20,7 +19,9 @@ const getErrorText = (error: unknown): string => {
 function FaqPage() {
   const { language } = useLanguage()
   const { t } = useI18n()
-  const [items, setItems] = useState(faqItems)
+  const [items, setItems] = useState<
+    Array<{ id: string; question: string; answer: string }>
+  >([])
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -42,7 +43,7 @@ function FaqPage() {
       } else {
         setError(t('faq.errorFallback'))
       }
-      setItems(faqItems)
+      setItems([])
     } finally {
       setIsLoading(false)
     }

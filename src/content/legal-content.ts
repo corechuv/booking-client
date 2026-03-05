@@ -111,7 +111,7 @@ export const getLegalContent = (
               "ідентифікаційні дані клієнта (ім'я, email, телефон);",
               'дані запису (послуга, майстер, дата/час, коментар, статус);',
               'дані згоди (чекбокс, час підтвердження, версія тексту згоди, IP, User-Agent);',
-              'технічні дані запитів до API (час, endpoint, код відповіді, технічні журнали).',
+              'технічні журнали запитів і системні події безпеки.',
             ],
           },
           {
@@ -137,7 +137,7 @@ export const getLegalContent = (
             title: '5. Одержувачі та обробники',
             paragraphs: ['Дані можуть передаватися лише в обсязі, необхідному для надання сервісу:'],
             list: [
-              'хостинг / база даних (бекенд і PostgreSQL);',
+              'інфраструктура хостингу та база даних;',
               'SMTP-провайдер для листів підтвердження та сповіщень;',
               'картографічні сервіси (тайли/геокодування) під час використання карти;',
               'Google Maps лише за кліком на кнопку маршруту.',
@@ -269,14 +269,14 @@ export const getLegalContent = (
         description:
           'Які технології зберігання ми застосовуємо зараз, навіщо вони потрібні та як керувати згодою.',
         intro:
-          'На сайті не використовується рекламний трекінг за замовчуванням. Клієнтський додаток не зберігає персональні налаштування у localStorage/sessionStorage: дані завантажуються з API.',
+          'На сайті не використовується рекламний трекінг за замовчуванням. Клієнтський додаток не зберігає персональні налаштування у localStorage/sessionStorage: дані завантажуються із серверної частини сайту.',
         categories_title: 'Категорії зберігання',
         categories: [
           {
             key: 'necessary',
             title: 'Необхідні',
             description:
-              'Потрібні для базової роботи сайту та безпечної взаємодії з backend (без них сервіс може працювати некоректно).',
+              'Потрібні для базової роботи сайту та безпечної роботи сервісу (без них сервіс може працювати некоректно).',
             legal_basis: '§ 25 Abs. 2 TDDDG / ст. 6(1)(f) DSGVO',
             always_on: true,
           },
@@ -312,7 +312,7 @@ export const getLegalContent = (
             key_name: 'Немає постійних ключів',
             storage: 'Не використовується',
             purpose:
-              'Клієнт не зберігає дані у localStorage/sessionStorage; контент завантажується напряму з backend API.',
+              'Клієнт не зберігає дані у localStorage/sessionStorage; контент завантажується напряму із серверної частини сайту.',
             ttl: 'Не застосовується',
             category: 'necessary',
           },
@@ -571,7 +571,7 @@ export const getLegalContent = (
         description:
           'Diese Seite zeigt transparent, welche Speichertechnologien wir aktuell verwenden und wie Sie Ihre Einwilligung steuern.',
         intro:
-          'Der Client setzt derzeit keine Marketing- oder Tracking-Cookies. Es werden keine dauerhaften Daten in localStorage/sessionStorage gespeichert; Inhalte werden aus dem API geladen.',
+          'Der Client setzt derzeit keine Marketing- oder Tracking-Cookies. Es werden keine dauerhaften Daten in localStorage/sessionStorage gespeichert; Inhalte werden direkt vom Serverteil der Website geladen.',
         categories_title: 'Kategorien',
         categories: [
           {
@@ -614,7 +614,7 @@ export const getLegalContent = (
             key_name: 'Keine persistenten Keys',
             storage: 'Nicht verwendet',
             purpose:
-              'Der Client speichert keine Daten in localStorage/sessionStorage; Inhalte werden direkt vom Backend-API geladen.',
+              'Der Client speichert keine Daten in localStorage/sessionStorage; Inhalte werden direkt vom Serverteil der Website geladen.',
             ttl: 'Nicht anwendbar',
             category: 'necessary',
           },
@@ -718,7 +718,7 @@ export const getLegalContent = (
             'данные клиента: имя, email, телефон;',
             'данные записи: услуга, специалист, дата/время, комментарий, статус;',
             'данные согласия: отметка checkbox, время, версия согласия, IP, User-Agent;',
-            'технические журналы API и системные события безопасности.',
+            'технические журналы системы и события безопасности.',
           ],
         },
         {
@@ -875,14 +875,14 @@ export const getLegalContent = (
       description:
         'Подробно о том, какие технологии хранения мы используем сейчас и как вы управляете согласием.',
       intro:
-        'На текущей версии сайта нет включенного рекламного или аналитического трекинга. Клиент не сохраняет данные в localStorage/sessionStorage и получает контент напрямую из API.',
+        'На текущей версии сайта нет включенного рекламного или аналитического трекинга. Клиент не сохраняет данные в localStorage/sessionStorage и получает контент напрямую с серверной части сайта.',
       categories_title: 'Категории',
       categories: [
         {
           key: 'necessary',
           title: 'Необходимые',
           description:
-            'Нужны для технической работы сайта, безопасности и корректного обмена с API.',
+            'Нужны для технической работы сайта, безопасности и корректного обмена с сервисом.',
           legal_basis: '§ 25 Abs. 2 TDDDG / Art. 6(1)(f) DSGVO',
           always_on: true,
         },
@@ -918,7 +918,7 @@ export const getLegalContent = (
           key_name: 'Постоянные ключи не используются',
           storage: 'Не используется',
           purpose:
-            'Клиент не сохраняет данные в localStorage/sessionStorage; контент загружается напрямую из backend API.',
+            'Клиент не сохраняет данные в localStorage/sessionStorage; контент загружается напрямую с серверной части сайта.',
           ttl: 'Не применяется',
           category: 'necessary',
         },

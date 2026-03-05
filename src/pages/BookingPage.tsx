@@ -387,7 +387,7 @@ function BookingPage() {
               </label>
 
               <label className="check-field field--full">
-                {/* TODO: На backend сохранить версию текста согласия на процедуру и timestamp подтверждения. */}
+                {/* TODO: На сервере сохранить версию текста согласия на процедуру и timestamp подтверждения. */}
                 <input
                   name="consent_procedure"
                   type="checkbox"

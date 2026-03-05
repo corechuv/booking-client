@@ -506,12 +506,6 @@
   }
 }
 
-@media (max-width: 420px) {
-  .scheduler-slots {
-    grid-template-columns: 1fr;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;

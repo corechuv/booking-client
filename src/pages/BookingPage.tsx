@@ -16,6 +16,7 @@ import SectionPageHero from '../components/SectionPageHero'
 import SiteNav from '../components/SiteNav'
 import SiteFooter from '../components/SiteFooter'
 import { useLanguage } from '../context/language-context'
+import { PRIMARY_SPECIALIST_NAME } from '../config/salon'
 import { useI18n } from '../hooks/useI18n'
 import { usePublicContact } from '../hooks/usePublicContact'
 import { formatEuroPrice } from '../lib/service-catalog-api'
@@ -228,7 +229,8 @@ function BookingPage() {
     const fullName = String(formData.get('full_name') ?? '').trim()
     const phone = String(formData.get('phone') ?? '').trim()
     const email = String(formData.get('email') ?? '').trim().toLowerCase()
-    const specialist = String(formData.get('specialist') ?? '').trim()
+    const specialist =
+      String(formData.get('specialist') ?? '').trim() || PRIMARY_SPECIALIST_NAME
     const comment = String(formData.get('comment') ?? '').trim()
     const bookingDate = String(formData.get('booking_date') ?? '').trim()
     const bookingSlot = String(formData.get('booking_slot') ?? '').trim()
@@ -268,15 +270,13 @@ function BookingPage() {
       const successState: BookingSuccessState = {
         serviceTitle: booking.service.title,
         startsAt: booking.starts_at,
-        specialistName: booking.specialist_name,
+        specialistName: PRIMARY_SPECIALIST_NAME,
       }
       const successParams = new URLSearchParams({
         service: booking.service.title,
         starts_at: booking.starts_at,
+        specialist: PRIMARY_SPECIALIST_NAME,
       })
-      if (booking.specialist_name) {
-        successParams.set('specialist', booking.specialist_name)
-      }
 
       navigate(`/booking/success?${successParams.toString()}`, { state: successState })
     } catch (error) {
@@ -372,11 +372,8 @@ function BookingPage() {
 
               <label className="field">
                 <span>{t('booking.field.specialist')}</span>
-                <select name="specialist" defaultValue="">
-                  <option value="">{t('booking.field.specialistAny')}</option>
-                  <option value="Mira">Mira</option>
-                  <option value="Alina">Alina</option>
-                  <option value="Sonia">Sonia</option>
+                <select name="specialist" defaultValue={PRIMARY_SPECIALIST_NAME}>
+                  <option value={PRIMARY_SPECIALIST_NAME}>{PRIMARY_SPECIALIST_NAME}</option>
                 </select>
               </label>
 
@@ -442,10 +439,13 @@ function BookingPage() {
           <section className="aside-card specialist-card">
             <h3>{t('booking.sidebar.master')}</h3>
             <div className="specialist-card__media">
-              <img src="/iryna%20marinina.jpeg" alt="Mira master portrait" />
+              <img
+                src="/iryna%20marinina.jpeg"
+                alt={`${PRIMARY_SPECIALIST_NAME} master portrait`}
+              />
             </div>
             <div className="specialist-card__body">
-              <strong>Mira</strong>
+              <strong>{PRIMARY_SPECIALIST_NAME}</strong>
               <p>{t('booking.sidebar.masterRole')}</p>
             </div>
           </section>

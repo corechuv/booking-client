@@ -11,6 +11,7 @@ import SectionPageHero from '../components/SectionPageHero'
 import SiteFooter from '../components/SiteFooter'
 import SiteNav from '../components/SiteNav'
 import { useLanguage } from '../context/language-context'
+import { PRIMARY_SPECIALIST_NAME } from '../config/salon'
 import { useI18n } from '../hooks/useI18n'
 import '../styles/section-page.scss'
 
@@ -45,6 +46,15 @@ function SpecialistsPage() {
   >([])
   const [loadingError, setLoadingError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const primarySpecialistFallback = useMemo(
+    () => ({
+      name: PRIMARY_SPECIALIST_NAME,
+      role: t('booking.sidebar.masterRole'),
+      text: t('specialists.defaultBio'),
+      skills: [] as string[],
+    }),
+    [t],
+  )
 
   const loadContent = useCallback(async () => {
     setIsLoading(true)
@@ -62,7 +72,11 @@ function SpecialistsPage() {
         text: item.bio ?? t('specialists.defaultBio'),
         skills: [] as string[],
       }))
-      setSpecialists(mappedSpecialists)
+      const normalizedPrimaryName = PRIMARY_SPECIALIST_NAME.trim().toLowerCase()
+      const primarySpecialist = mappedSpecialists.find(
+        (item) => item.name.trim().toLowerCase() === normalizedPrimaryName,
+      )
+      setSpecialists([primarySpecialist ?? primarySpecialistFallback])
 
       const mappedWeekPlan = generalHours.slots
         .slice()
@@ -91,13 +105,13 @@ function SpecialistsPage() {
       } else {
         setLoadingError(t('specialists.errorFallback'))
       }
-      setSpecialists([])
+      setSpecialists([primarySpecialistFallback])
       setWeekPlan([])
       setCertificateItems([])
     } finally {
       setIsLoading(false)
     }
-  }, [dayNames, language, t])
+  }, [dayNames, language, primarySpecialistFallback, t])
 
   useEffect(() => {
     void loadContent()

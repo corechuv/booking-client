@@ -6,6 +6,12 @@ import {
   type BookingConfirmedResult,
 } from '../api/client-api'
 import LinkButton from '../components/LinkButton'
+import {
+  PRIMARY_SPECIALIST_NAME,
+  SALON_ADDRESS,
+  SALON_PHONE,
+  SALON_ROUTE_URL,
+} from '../config/salon'
 import { useI18n } from '../hooks/useI18n'
 import '../styles/booking-confirmed-page.scss'
 
@@ -118,6 +124,9 @@ function BookingConfirmedPage() {
   }
 
   const { booking } = state
+  const confirmedAddress = SALON_ADDRESS || booking.salon_address
+  const confirmedPhone = SALON_PHONE || booking.salon_phone
+  const confirmedRouteUrl = SALON_ROUTE_URL || booking.salon_route_url
 
   return (
     <main className="booking-confirmed-page">
@@ -140,20 +149,20 @@ function BookingConfirmedPage() {
           </p>
           <p>
             <span>{t('confirmed.master')}</span>
-            <strong>{booking.specialist_name ?? t('confirmed.anySpecialist')}</strong>
+            <strong>{PRIMARY_SPECIALIST_NAME}</strong>
           </p>
           <p>
             <span>{t('confirmed.address')}</span>
-            <strong>{booking.salon_address}</strong>
+            <strong>{confirmedAddress}</strong>
           </p>
           <p>
             <span>{t('confirmed.phone')}</span>
-            <strong>{booking.salon_phone}</strong>
+            <strong>{confirmedPhone}</strong>
           </p>
           <p>
             <span>{t('confirmed.route')}</span>
             <strong>
-              <a href={booking.salon_route_url} target="_blank" rel="noreferrer">
+              <a href={confirmedRouteUrl} target="_blank" rel="noreferrer">
                 {t('confirmed.openRoute')}
               </a>
             </strong>

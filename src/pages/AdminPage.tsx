@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import LinkButton from '../components/LinkButton'
+import { PRIMARY_SPECIALIST_NAME, SALON_PHONE } from '../config/salon'
 import { useTheme } from '../context/theme-context'
 import '../styles/admin-page.scss'
 
@@ -24,28 +25,28 @@ const timeline = [
     time: '10:00',
     client: 'Emma N.',
     service: 'Glow Facial',
-    specialist: 'Mira',
+    specialist: PRIMARY_SPECIALIST_NAME,
     status: 'Подтверждено',
   },
   {
     time: '11:15',
     client: 'Alina B.',
     service: 'Hair Ritual + Styling',
-    specialist: 'Alina',
+    specialist: PRIMARY_SPECIALIST_NAME,
     status: 'В ожидании',
   },
   {
     time: '12:30',
     client: 'Sofia R.',
     service: 'Nail Signature',
-    specialist: 'Sonia',
+    specialist: PRIMARY_SPECIALIST_NAME,
     status: 'Новый',
   },
   {
     time: '14:00',
     client: 'Lena K.',
     service: 'Sensitive Repair',
-    specialist: 'Mira',
+    specialist: PRIMARY_SPECIALIST_NAME,
     status: 'Подтверждено',
   },
 ]
@@ -54,21 +55,21 @@ const incomingRequests = [
   {
     id: '#BK-1042',
     client: 'Julia P.',
-    phone: '+49 30 555 901',
+    phone: SALON_PHONE,
     request: 'Bridal hair styling',
     date: '07 Mar · 12:30',
   },
   {
     id: '#BK-1043',
     client: 'Marta S.',
-    phone: '+49 30 555 214',
+    phone: SALON_PHONE,
     request: 'Hydra Boost Therapy',
     date: '07 Mar · 13:15',
   },
   {
     id: '#BK-1044',
     client: 'Oksana D.',
-    phone: '+49 30 555 774',
+    phone: SALON_PHONE,
     request: 'Express manicure',
     date: '07 Mar · 15:00',
   },
@@ -96,9 +97,7 @@ const serviceGroups = [
 ]
 
 const specialists = [
-  { name: 'Mira', role: 'Lead esthetician', load: 92, today: '7 визитов' },
-  { name: 'Alina', role: 'Hair stylist', load: 74, today: '5 визитов' },
-  { name: 'Sonia', role: 'Nail artist', load: 68, today: '4 визита' },
+  { name: PRIMARY_SPECIALIST_NAME, role: 'Lead esthetician', load: 92, today: '7 визитов' },
 ]
 
 const contentTasks = [

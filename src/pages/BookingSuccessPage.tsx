@@ -1,12 +1,13 @@
 import { useLocation, useSearchParams } from 'react-router-dom'
 import LinkButton from '../components/LinkButton'
+import { PRIMARY_SPECIALIST_NAME } from '../config/salon'
 import { useI18n } from '../hooks/useI18n'
 import '../styles/booking-success-page.scss'
 
 type BookingSuccessState = {
   serviceTitle: string
   startsAt: string
-  specialistName: string | null
+  specialistName: string
 }
 
 const parseStateFromSearch = (searchParams: URLSearchParams): BookingSuccessState => {
@@ -17,7 +18,7 @@ const parseStateFromSearch = (searchParams: URLSearchParams): BookingSuccessStat
   return {
     serviceTitle,
     startsAt,
-    specialistName,
+    specialistName: specialistName?.trim() || PRIMARY_SPECIALIST_NAME,
   }
 }
 
@@ -58,7 +59,7 @@ function BookingSuccessPage() {
           </p>
           <p>
             <span>{t('success.master')}</span>
-            <strong>{locationState.specialistName ?? t('success.anySpecialist')}</strong>
+            <strong>{PRIMARY_SPECIALIST_NAME}</strong>
           </p>
           <p>
             <span>{t('success.nextStep')}</span>

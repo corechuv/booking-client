@@ -3,6 +3,9 @@ import { createRoot } from 'react-dom/client'
 import 'leaflet/dist/leaflet.css'
 import './styles/globals.scss'
 import App from './App.tsx'
+import { resetAppCacheIfNeeded } from './utils/cache-reset'
+
+resetAppCacheIfNeeded()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

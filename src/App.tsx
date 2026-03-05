@@ -3,6 +3,7 @@ import BookingConfirmedPage from './pages/BookingConfirmedPage'
 import BookingPage from './pages/BookingPage'
 import BookingSuccessPage from './pages/BookingSuccessPage'
 import AdminPage from './pages/AdminPage'
+import ScrollToTop from './components/ScrollToTop'
 import { LanguageProvider } from './context/LanguageContext'
 import { ThemeProvider } from './context/ThemeContext'
 import CatalogPage from './pages/CatalogPage'
@@ -21,6 +22,7 @@ function App() {
     <ThemeProvider>
       <LanguageProvider>
         <BrowserRouter basename={import.meta.env.BASE_URL}>
+          <ScrollToTop />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/services" element={<Navigate to="/catalog" replace />} />

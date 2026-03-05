@@ -78,8 +78,10 @@ async function request<T>(
   init: RequestInit = {},
   token?: string,
 ): Promise<T> {
+  const method = (init.method ?? 'GET').toUpperCase()
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...init,
+    cache: init.cache ?? (method === 'GET' ? 'no-store' : undefined),
     headers: makeHeaders(init.headers, token),
   })
 

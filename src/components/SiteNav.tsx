@@ -1,13 +1,19 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
+import { useLanguage } from '../context/language-context'
+import { useTheme } from '../context/theme-context'
 import { useI18n } from '../hooks/useI18n'
 import LinkButton from './LinkButton'
 import { CloseIcon, MenuIcon } from './icons'
 
 function SiteNav() {
   const { t } = useI18n()
+  const { language, setLanguage, languages } = useLanguage()
+  const { theme, setTheme } = useTheme()
   const { pathname } = useLocation()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isThemeModalOpen, setIsThemeModalOpen] = useState(false)
+  const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false)
   const links = [
     { to: '/', label: t('nav.home'), end: true },
     { to: '/catalog', label: t('nav.catalog') },
@@ -19,10 +25,12 @@ function SiteNav() {
 
   useEffect(() => {
     setIsMobileMenuOpen(false)
+    setIsThemeModalOpen(false)
+    setIsLanguageModalOpen(false)
   }, [pathname])
 
   useEffect(() => {
-    if (!isMobileMenuOpen) {
+    if (!isMobileMenuOpen && !isThemeModalOpen && !isLanguageModalOpen) {
       return
     }
 
@@ -30,6 +38,8 @@ function SiteNav() {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setIsMobileMenuOpen(false)
+        setIsThemeModalOpen(false)
+        setIsLanguageModalOpen(false)
       }
     }
 
@@ -40,7 +50,7 @@ function SiteNav() {
       document.body.style.overflow = previousOverflow
       window.removeEventListener('keydown', onKeyDown)
     }
-  }, [isMobileMenuOpen])
+  }, [isLanguageModalOpen, isMobileMenuOpen, isThemeModalOpen])
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false)
 
@@ -122,7 +132,144 @@ function SiteNav() {
                 </NavLink>
               ))}
             </nav>
+
+            <div className="site-nav__mobile-preferences">
+              <button
+                className="site-footer__language-toggle"
+                type="button"
+                onClick={() => {
+                  closeMobileMenu()
+                  setIsThemeModalOpen(false)
+                  setIsLanguageModalOpen(true)
+                }}
+                aria-label={t('footer.language.openModal')}
+                aria-haspopup="dialog"
+                aria-expanded={isLanguageModalOpen}
+              >
+                {t('footer.language.openModal')}
+              </button>
+
+              <button
+                className="site-footer__theme-toggle"
+                type="button"
+                onClick={() => {
+                  closeMobileMenu()
+                  setIsLanguageModalOpen(false)
+                  setIsThemeModalOpen(true)
+                }}
+                aria-label={t('footer.theme.openModal')}
+                aria-haspopup="dialog"
+                aria-expanded={isThemeModalOpen}
+              >
+                {t('footer.theme.openModal')}
+              </button>
+            </div>
           </aside>
+        </div>
+      ) : null}
+
+      {isThemeModalOpen ? (
+        <div
+          className="site-footer__theme-modal-overlay"
+          role="presentation"
+          onClick={() => setIsThemeModalOpen(false)}
+        >
+          <div
+            className="site-footer__theme-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-label={t('footer.theme.modalTitle')}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="site-footer__theme-modal-head">
+              <strong>{t('footer.theme.modalTitle')}</strong>
+              <button
+                type="button"
+                className="site-footer__theme-modal-close"
+                onClick={() => setIsThemeModalOpen(false)}
+                aria-label={t('footer.theme.closeModal')}
+              >
+                <CloseIcon size={20} aria-hidden="true" />
+              </button>
+            </div>
+            <div className="site-footer__theme-modal-list">
+              <button
+                type="button"
+                className={
+                  theme === 'mira-dark'
+                    ? 'site-footer__theme-option is-active'
+                    : 'site-footer__theme-option'
+                }
+                onClick={() => {
+                  setTheme('mira-dark')
+                  setIsThemeModalOpen(false)
+                }}
+              >
+                {t('footer.theme.dark')}
+              </button>
+              <button
+                type="button"
+                className={
+                  theme === 'mira-light'
+                    ? 'site-footer__theme-option is-active'
+                    : 'site-footer__theme-option'
+                }
+                onClick={() => {
+                  setTheme('mira-light')
+                  setIsThemeModalOpen(false)
+                }}
+              >
+                {t('footer.theme.light')}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {isLanguageModalOpen ? (
+        <div
+          className="site-footer__theme-modal-overlay"
+          role="presentation"
+          onClick={() => setIsLanguageModalOpen(false)}
+        >
+          <div
+            className="site-footer__theme-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-label={t('footer.language.modalTitle')}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="site-footer__theme-modal-head">
+              <strong>{t('footer.language.modalTitle')}</strong>
+              <button
+                type="button"
+                className="site-footer__theme-modal-close"
+                onClick={() => setIsLanguageModalOpen(false)}
+                aria-label={t('footer.language.closeModal')}
+              >
+                <CloseIcon size={20} aria-hidden="true" />
+              </button>
+            </div>
+            <div className="site-footer__theme-modal-list">
+              {languages.map((item) => (
+                <button
+                  key={item.code}
+                  type="button"
+                  className={
+                    item.code === language
+                      ? 'site-footer__theme-option is-active'
+                      : 'site-footer__theme-option'
+                  }
+                  onClick={() => {
+                    setLanguage(item.code)
+                    setIsLanguageModalOpen(false)
+                  }}
+                >
+                  {item.name}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       ) : null}
     </>

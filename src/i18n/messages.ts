@@ -11,6 +11,8 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
     'nav.contacts': 'Контакты',
     'nav.faq': 'FAQ',
     'nav.bookNow': 'Записаться',
+    'nav.openMenu': 'Открыть меню',
+    'nav.closeMenu': 'Закрыть меню',
     'nav.homeAria': 'Mira главная',
 
     'footer.address': 'Адрес',
@@ -334,6 +336,8 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
     'nav.contacts': 'Контакти',
     'nav.faq': 'FAQ',
     'nav.bookNow': 'Записатися',
+    'nav.openMenu': 'Відкрити меню',
+    'nav.closeMenu': 'Закрити меню',
     'nav.homeAria': 'Mira головна',
 
     'footer.address': 'Адреса',
@@ -657,6 +661,8 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
     'nav.contacts': 'Kontakt',
     'nav.faq': 'FAQ',
     'nav.bookNow': 'Jetzt buchen',
+    'nav.openMenu': 'Menü öffnen',
+    'nav.closeMenu': 'Menü schließen',
     'nav.homeAria': 'Mira Startseite',
 
     'footer.address': 'Adresse',

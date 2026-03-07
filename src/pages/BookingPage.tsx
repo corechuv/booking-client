@@ -208,6 +208,8 @@ function BookingPage() {
   }, [selectedService])
 
   const isQueryProvided = searchParams.has('service')
+  const backToCatalogLink =
+    serviceIdFromQuery === null ? '/catalog' : `/catalog?service=${serviceIdFromQuery}`
 
   const heroEyebrow = selectedService
     ? t('booking.hero.selected')
@@ -317,7 +319,7 @@ function BookingPage() {
           title={heroTitle}
           description={heroDescription}
           actions={
-            <LinkButton to="/catalog" size="md">
+            <LinkButton to={backToCatalogLink} size="md">
               {t('booking.backToProcedures')}
             </LinkButton>
           }

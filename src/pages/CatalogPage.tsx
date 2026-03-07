@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { ApiError, fetchClientServices } from '../api/client-api'
 import LinkButton from '../components/LinkButton'
 import SectionPageHero from '../components/SectionPageHero'
@@ -13,6 +14,7 @@ import '../styles/catalog-page.scss'
 function CatalogPage() {
   const { language } = useLanguage()
   const { t } = useI18n()
+  const [searchParams] = useSearchParams()
   const getIsMobileCatalog = () =>
     typeof window !== 'undefined'
       ? window.matchMedia('(max-width: 900px)').matches
@@ -24,8 +26,14 @@ function CatalogPage() {
   const [mobileView, setMobileView] = useState<'categories' | 'services'>(
     getIsMobileCatalog() ? 'categories' : 'services',
   )
+  const [pendingFocusServiceId, setPendingFocusServiceId] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  const serviceIdFromQuery = useMemo(() => {
+    const value = searchParams.get('service')?.trim()
+    return value ? value : null
+  }, [searchParams])
 
   const loadCatalog = useCallback(async () => {
     setIsLoading(true)
@@ -90,6 +98,47 @@ function CatalogPage() {
       catalog.find((category) => category.id === activeCategoryId) ?? catalog[0],
     [activeCategoryId, catalog],
   )
+
+  useEffect(() => {
+    if (!catalog.length || serviceIdFromQuery === null) {
+      return
+    }
+
+    const categoryWithService = catalog.find((category) =>
+      category.services.some((service) => service.id === serviceIdFromQuery),
+    )
+    if (!categoryWithService) {
+      return
+    }
+
+    setActiveCategoryId(categoryWithService.id)
+    if (isMobileCatalog) {
+      setMobileView('services')
+    }
+    setPendingFocusServiceId(serviceIdFromQuery)
+  }, [catalog, isMobileCatalog, serviceIdFromQuery])
+
+  useEffect(() => {
+    if (pendingFocusServiceId === null) {
+      return
+    }
+
+    if (isMobileCatalog && mobileView !== 'services') {
+      return
+    }
+
+    const element = document.getElementById(
+      `catalog-service-${pendingFocusServiceId}`,
+    )
+    if (!element) {
+      return
+    }
+
+    requestAnimationFrame(() => {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    })
+    setPendingFocusServiceId(null)
+  }, [isMobileCatalog, mobileView, pendingFocusServiceId])
 
   const showCategories = !isMobileCatalog || mobileView === 'categories'
   const showServices = !isMobileCatalog || mobileView === 'services'
@@ -189,6 +238,7 @@ function CatalogPage() {
             {activeCategory?.services.map((service, index) => (
               <li
                 key={service.id}
+                id={`catalog-service-${service.id}`}
                 className="catalog-page__service-item"
                 style={{ animationDelay: `${index * 45}ms` }}
               >

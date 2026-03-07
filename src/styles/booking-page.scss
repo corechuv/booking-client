@@ -203,9 +203,9 @@
 }
 
 .scheduler-day {
-  border: 1px solid var(--border-soft);
+  border: 1px solid transparent;
   border-radius: 12px;
-  background: transparent;
+  background: var(--surface-overlay-2);
   display: grid;
   gap: 0.1rem;
   justify-items: center;
@@ -215,23 +215,30 @@
 }
 
 .scheduler-day:hover {
-  border-color: var(--border-strong);
+  background: var(--surface-overlay-3);
 }
 
 .scheduler-day.is-disabled {
-  opacity: 0.45;
+  opacity: 0.72;
   cursor: not-allowed;
-  border-color: var(--border-soft);
+  border-color: transparent;
+  background: var(--surface-overlay-2);
+  color: var(--text-3);
 }
 
 .scheduler-day.is-disabled:hover {
-  border-color: var(--border-soft);
+  background: var(--surface-overlay-2);
 }
 
 .scheduler-day.is-selected {
   border-color: transparent;
   background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
   color: var(--on-accent);
+}
+
+.scheduler-day.is-selected.is-disabled {
+  background: var(--surface-overlay-2);
+  color: var(--text-3);
 }
 
 .scheduler-day__weekday {
@@ -257,9 +264,9 @@
 }
 
 .scheduler-slot {
-  border: 1px solid var(--border-soft);
+  border: 1px solid transparent;
   border-radius: 10px;
-  background: transparent;
+  background: var(--surface-overlay-2);
   padding: 0.52rem 0.45rem;
   font-size: 0.78rem;
   font-weight: 600;
@@ -268,7 +275,7 @@
 }
 
 .scheduler-slot:hover {
-  border-color: var(--border-strong);
+  background: var(--surface-overlay-3);
 }
 
 .scheduler-slot.is-selected {
@@ -280,6 +287,8 @@
 .scheduler-slot.is-busy {
   color: var(--text-3);
   background: var(--surface-overlay-2);
+  border-color: transparent;
+  opacity: 0.72;
   cursor: not-allowed;
 }
 

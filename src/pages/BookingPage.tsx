@@ -212,7 +212,7 @@ function BookingPage() {
     serviceIdFromQuery === null ? '/catalog' : `/catalog?service=${serviceIdFromQuery}`
 
   const heroEyebrow = selectedService
-    ? t('booking.hero.selected')
+    ? ''
     : isServicesLoading
       ? t('booking.hero.loading')
       : isQueryProvided

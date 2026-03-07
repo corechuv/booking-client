@@ -28,7 +28,9 @@ function SectionPageHero({
   return (
     <section className={classes}>
       <div className="section-page__hero-main">
-        <p className="section-page__eyebrow">{eyebrow}</p>
+        {eyebrow.trim().length > 0 ? (
+          <p className="section-page__eyebrow">{eyebrow}</p>
+        ) : null}
         <h1>{title}</h1>
         <p>{description}</p>
       </div>

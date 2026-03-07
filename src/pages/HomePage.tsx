@@ -63,6 +63,11 @@ function HomePage() {
       text: t('home.review.3.text'),
     },
   ]
+  const metrics = [
+    { value: '4.9/5', label: t('home.metric.rating') },
+    { value: '2 500+', label: t('home.metric.bookings') },
+    { value: '24/7', label: t('home.metric.availability') },
+  ]
 
   const loadDeals = useCallback(async () => {
     try {
@@ -118,19 +123,16 @@ function HomePage() {
             </div>
           </div>
 
-          <ul className="landing-metrics" aria-label="Ключевые показатели">
-            <li>
-              <strong>4.9/5</strong>
-              <span>{t('home.metric.rating')}</span>
-            </li>
-            <li>
-              <strong>2 500+</strong>
-              <span>{t('home.metric.bookings')}</span>
-            </li>
-            <li>
-              <strong>24/7</strong>
-              <span>{t('home.metric.availability')}</span>
-            </li>
+          <ul
+            className={`landing-metrics landing-metrics--count-${metrics.length}`}
+            aria-label="Ключевые показатели"
+          >
+            {metrics.map((item) => (
+              <li key={item.value}>
+                <strong>{item.value}</strong>
+                <span>{item.label}</span>
+              </li>
+            ))}
           </ul>
         </section>
 

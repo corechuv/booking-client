@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { createPortal } from 'react-dom'
 import { ApiError, fetchClientServices } from '../api/client-api'
-import { CloseIcon } from '../components/icons'
 import LinkButton from '../components/LinkButton'
 import SectionPageHero from '../components/SectionPageHero'
 import SiteFooter from '../components/SiteFooter'
@@ -15,9 +13,17 @@ import '../styles/catalog-page.scss'
 function CatalogPage() {
   const { language } = useLanguage()
   const { t } = useI18n()
+  const getIsMobileCatalog = () =>
+    typeof window !== 'undefined'
+      ? window.matchMedia('(max-width: 900px)').matches
+      : false
+
   const [catalog, setCatalog] = useState<ReturnType<typeof mapApiServicesToCatalog>>([])
   const [activeCategoryId, setActiveCategoryId] = useState('')
-  const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false)
+  const [isMobileCatalog, setIsMobileCatalog] = useState(getIsMobileCatalog)
+  const [mobileView, setMobileView] = useState<'categories' | 'services'>(
+    getIsMobileCatalog() ? 'categories' : 'services',
+  )
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -58,25 +64,26 @@ function CatalogPage() {
   }, [catalog])
 
   useEffect(() => {
-    if (!isCategoryMenuOpen) {
+    if (typeof window === 'undefined') {
       return
     }
 
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setIsCategoryMenuOpen(false)
-      }
+    const query = window.matchMedia('(max-width: 900px)')
+    const updateLayoutMode = (matches: boolean) => {
+      setIsMobileCatalog(matches)
+      setMobileView(matches ? 'categories' : 'services')
     }
 
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    window.addEventListener('keydown', onKeyDown)
+    updateLayoutMode(query.matches)
+    const onChange = (event: MediaQueryListEvent) => {
+      updateLayoutMode(event.matches)
+    }
 
+    query.addEventListener('change', onChange)
     return () => {
-      document.body.style.overflow = previousOverflow
-      window.removeEventListener('keydown', onKeyDown)
+      query.removeEventListener('change', onChange)
     }
-  }, [isCategoryMenuOpen])
+  }, [])
 
   const activeCategory = useMemo(
     () =>
@@ -84,62 +91,8 @@ function CatalogPage() {
     [activeCategoryId, catalog],
   )
 
-  const categoryMenuModal =
-    isCategoryMenuOpen && typeof document !== 'undefined'
-      ? createPortal(
-          <div
-            className="catalog-page__mobile-overlay"
-            role="presentation"
-            onClick={() => setIsCategoryMenuOpen(false)}
-          >
-            <aside
-              className="catalog-page__mobile-drawer"
-              role="dialog"
-              aria-modal="true"
-              aria-label={t('catalog.categoriesTitle')}
-              onClick={(event) => event.stopPropagation()}
-            >
-              <div className="catalog-page__mobile-drawer-head">
-                <strong>{t('catalog.categoriesTitle')}</strong>
-                <button
-                  type="button"
-                  className="catalog-page__mobile-drawer-close"
-                  onClick={() => setIsCategoryMenuOpen(false)}
-                  aria-label={t('catalog.closeCategories')}
-                >
-                  <CloseIcon size={20} aria-hidden="true" />
-                </button>
-              </div>
-
-              <div className="catalog-page__mobile-categories">
-                {catalog.map((category) => (
-                  <button
-                    key={category.id}
-                    className={
-                      category.id === activeCategory?.id
-                        ? 'catalog-page__category is-active'
-                        : 'catalog-page__category'
-                    }
-                    type="button"
-                    onClick={() => {
-                      setActiveCategoryId(category.id)
-                      setIsCategoryMenuOpen(false)
-                    }}
-                  >
-                    <strong>{category.name}</strong>
-                    <span>
-                      {t('catalog.servicesCount', {
-                        count: category.services.length,
-                      })}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </aside>
-          </div>,
-          document.body,
-        )
-      : null
+  const showCategories = !isMobileCatalog || mobileView === 'categories'
+  const showServices = !isMobileCatalog || mobileView === 'services'
 
   return (
     <main className="section-page catalog-page">
@@ -163,15 +116,6 @@ function CatalogPage() {
       />
 
       <section className="catalog-page__layout">
-        <button
-          type="button"
-          className="catalog-page__categories-toggle link-button link-button--secondary link-button--md"
-          onClick={() => setIsCategoryMenuOpen(true)}
-          aria-label={t('catalog.openCategories')}
-        >
-          {t('catalog.openCategories')}
-        </button>
-
         {error ? (
           <div className="catalog-page__notice catalog-page__notice--error">
             <p>{error}</p>
@@ -185,7 +129,17 @@ function CatalogPage() {
           </div>
         ) : null}
 
-        <aside className="catalog-page__categories">
+        <aside
+          className={
+            showCategories
+              ? 'catalog-page__categories is-visible'
+              : 'catalog-page__categories'
+          }
+        >
+          {isLoading && isMobileCatalog ? (
+            <p className="catalog-page__notice">{t('catalog.loading')}</p>
+          ) : null}
+
           {catalog.map((category) => (
             <button
               key={category.id}
@@ -195,7 +149,12 @@ function CatalogPage() {
                   : 'catalog-page__category'
               }
               type="button"
-              onClick={() => setActiveCategoryId(category.id)}
+              onClick={() => {
+                setActiveCategoryId(category.id)
+                if (isMobileCatalog) {
+                  setMobileView('services')
+                }
+              }}
             >
               <strong>{category.name}</strong>
               <span>{t('catalog.servicesCount', { count: category.services.length })}</span>
@@ -203,7 +162,22 @@ function CatalogPage() {
           ))}
         </aside>
 
-        <section className="catalog-page__services" key={activeCategory?.id}>
+        <section
+          className={
+            showServices ? 'catalog-page__services is-visible' : 'catalog-page__services'
+          }
+          key={activeCategory?.id}
+        >
+          {isMobileCatalog ? (
+            <button
+              type="button"
+              className="catalog-page__back-to-categories link-button link-button--secondary link-button--md"
+              onClick={() => setMobileView('categories')}
+            >
+              {t('catalog.backToCategories')}
+            </button>
+          ) : null}
+
           {isLoading ? (
             <p className="catalog-page__notice">{t('catalog.loading')}</p>
           ) : null}
@@ -256,10 +230,7 @@ function CatalogPage() {
             <p className="catalog-page__notice">{t('catalog.empty')}</p>
           ) : null}
         </section>
-
       </section>
-
-      {categoryMenuModal}
 
       <SiteFooter />
     </main>

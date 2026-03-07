@@ -14,10 +14,6 @@
   animation-delay: 0.14s;
 }
 
-.catalog-page__categories-toggle {
-  display: none;
-}
-
 .catalog-page__notice {
   margin: 0;
   color: var(--text-2);
@@ -97,6 +93,11 @@
   align-content: start;
   gap: 0.35rem;
   animation: section-rise 0.52s ease both;
+}
+
+.catalog-page__back-to-categories {
+  justify-self: start;
+  margin-bottom: 0.1rem;
 }
 
 .catalog-page__services h2 {
@@ -199,96 +200,29 @@
   white-space: nowrap;
 }
 
-.catalog-page__mobile-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 125;
-  background: var(--overlay-backdrop);
-  backdrop-filter: blur(3px);
-}
-
-.catalog-page__mobile-drawer {
-  width: min(340px, 90vw);
-  height: 100%;
-  border-right: 0;
-  background: var(--surface-2);
-  box-shadow: var(--shadow-soft);
-  display: flex;
-  flex-direction: column;
-  animation: catalog-drawer-in 0.24s ease both;
-}
-
-.catalog-page__mobile-drawer-head {
-  padding: 0.9rem 0.9rem 0.72rem;
-  border-bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-}
-
-.catalog-page__mobile-drawer-head strong {
-  color: var(--text-1);
-  font-size: 1.08rem;
-  font-weight: 700;
-}
-
-.catalog-page__mobile-drawer-close {
-  width: 38px;
-  height: 38px;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--text-2);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-.catalog-page__mobile-drawer-close:hover {
-  background: var(--surface-overlay-2);
-  color: var(--text-1);
-}
-
-.catalog-page__mobile-categories {
-  padding: 0.72rem 0.75rem 0.9rem;
-  overflow-y: auto;
-  display: grid;
-  align-content: start;
-  gap: 0.48rem;
-}
-
-@keyframes catalog-drawer-in {
-  from {
-    transform: translateX(-16px);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
 @media (max-width: 900px) {
   .catalog-page__layout {
     grid-template-columns: 1fr;
   }
 
-  .catalog-page__categories-toggle {
-    display: inline-flex;
-    align-self: start;
-    justify-content: center;
-    margin-bottom: 0.35rem;
-  }
-
   .catalog-page__categories {
     display: none;
+    border-right: 0;
+    padding: 0;
+    gap: 0.48rem;
+  }
+
+  .catalog-page__categories.is-visible {
+    display: grid;
   }
 
   .catalog-page__services {
+    display: none;
     padding-left: 0;
+  }
+
+  .catalog-page__services.is-visible {
+    display: grid;
   }
 }
 

@@ -43,7 +43,7 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
     'common.openAll': 'Открыть все',
 
     'catalog.hero.eyebrow': 'Service catalog',
-    'catalog.hero.title': 'Каталог процедур по категориям',
+    'catalog.hero.title': 'Каталог',
     'catalog.hero.description': 'Выберите категорию и просмотрите все процедуры. Из любой карточки можно сразу перейти к записи.',
     'catalog.hero.pricing': 'Смотреть цены',
     'catalog.errorLoad': 'Не удалось загрузить каталог: {message}',
@@ -217,7 +217,8 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
     'specialists.hero.description': 'Страница специалистов с навыками и расписанием.',
     'specialists.hero.pick': 'Выбрать специалиста в брони',
     'specialists.hero.catalog': 'Смотреть каталог',
-    'specialists.defaultBio': 'Профиль специалиста скоро будет дополнен.',
+    'specialists.defaultBio':
+      'Профиль специалиста скоро будет дополнен: аппаратная косметология, эстетичная медицина.',
     'specialists.errorFallback': 'Не удалось загрузить данные специалистов.',
     'specialists.schedule.title': 'График команды',
     'specialists.schedule.text': 'Актуальный график специалистов по дням и времени.',

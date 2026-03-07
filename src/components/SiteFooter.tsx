@@ -4,6 +4,7 @@ import { useLanguage } from '../context/language-context'
 import { useI18n } from '../hooks/useI18n'
 import { useTheme } from '../context/theme-context'
 import { usePublicContact } from '../hooks/usePublicContact'
+import { lockBodyScroll, unlockBodyScroll } from '../lib/body-scroll-lock'
 import { CloseIcon } from './icons'
 
 function SiteFooter() {
@@ -56,8 +57,10 @@ function SiteFooter() {
       }
     }
 
+    lockBodyScroll()
     window.addEventListener('keydown', onKeyDown)
     return () => {
+      unlockBodyScroll()
       window.removeEventListener('keydown', onKeyDown)
     }
   }, [isThemeModalOpen, isLanguageModalOpen])

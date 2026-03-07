@@ -3,6 +3,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom'
 import { useLanguage } from '../context/language-context'
 import { useTheme } from '../context/theme-context'
 import { useI18n } from '../hooks/useI18n'
+import { lockBodyScroll, unlockBodyScroll } from '../lib/body-scroll-lock'
 import LinkButton from './LinkButton'
 import { CloseIcon, MenuIcon } from './icons'
 
@@ -34,7 +35,6 @@ function SiteNav() {
       return
     }
 
-    const previousOverflow = document.body.style.overflow
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setIsMobileMenuOpen(false)
@@ -43,11 +43,11 @@ function SiteNav() {
       }
     }
 
-    document.body.style.overflow = 'hidden'
+    lockBodyScroll()
     window.addEventListener('keydown', onKeyDown)
 
     return () => {
-      document.body.style.overflow = previousOverflow
+      unlockBodyScroll()
       window.removeEventListener('keydown', onKeyDown)
     }
   }, [isLanguageModalOpen, isMobileMenuOpen, isThemeModalOpen])

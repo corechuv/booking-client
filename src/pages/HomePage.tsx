@@ -140,7 +140,7 @@ function HomePage() {
               <p>{item.note}</p>
               <h2>{item.title}</h2>
               <span>{item.text}</span>
-              <LinkButton to="/booking" size="sm">
+              <LinkButton to="/booking" size="lg">
                 {t('home.experience.slot')}
               </LinkButton>
             </article>
@@ -164,7 +164,7 @@ function HomePage() {
                   <span>{service.oldPrice}</span>
                   <strong>{service.price}</strong>
                 </div>
-                <LinkButton to={`/booking?service=${service.id}`} size="sm">
+                <LinkButton to={`/booking?service=${service.id}`} size="lg">
                   {t('home.offers.book')}
                 </LinkButton>
               </article>

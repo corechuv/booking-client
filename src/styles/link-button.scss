@@ -23,9 +23,9 @@
 }
 
 .link-button--primary {
-  color: #fff;
+  color: var(--on-accent);
   background: linear-gradient(130deg, var(--accent-1), var(--accent-2));
-  box-shadow: 0 8px 18px rgba(130, 65, 58, 0.22);
+  box-shadow: var(--accent-shadow);
 }
 
 .link-button--primary:hover {

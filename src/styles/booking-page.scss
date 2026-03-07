@@ -45,11 +45,11 @@
 }
 
 .booking-form__notice--error {
-  color: #d97878;
+  color: var(--danger-1);
 }
 
 .booking-form__notice--success {
-  color: #6fbf8f;
+  color: var(--success-1);
 }
 
 .field {
@@ -202,7 +202,7 @@
 .scheduler-day.is-selected {
   border-color: transparent;
   background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .scheduler-day__weekday {
@@ -245,7 +245,7 @@
 .scheduler-slot.is-selected {
   border-color: transparent;
   background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .scheduler-slot.is-busy {
@@ -300,10 +300,10 @@
 }
 
 .button-primary {
-  color: #fff;
+  color: var(--on-accent);
   padding: 0.78rem 1.2rem;
   background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-  box-shadow: 0 8px 18px rgba(130, 65, 58, 0.25);
+  box-shadow: var(--accent-shadow);
 }
 
 .button-primary:hover {

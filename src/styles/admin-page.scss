@@ -5,8 +5,8 @@
   padding: clamp(1rem, 2vw, 2rem);
   color: var(--text-1);
   background:
-    radial-gradient(1000px 360px at 8% -4%, rgba(199, 134, 81, 0.16), transparent 70%),
-    radial-gradient(900px 300px at 96% 2%, rgba(63, 125, 138, 0.15), transparent 72%),
+    radial-gradient(1000px 360px at 8% -4%, var(--blob-1), transparent 70%),
+    radial-gradient(900px 300px at 96% 2%, var(--blob-2), transparent 72%),
     linear-gradient(160deg, var(--bg-base), var(--bg-soft));
 }
 
@@ -23,13 +23,13 @@
 .admin-page__glow--left {
   left: -120px;
   bottom: -90px;
-  background: #c78651;
+  background: var(--glow-1);
 }
 
 .admin-page__glow--right {
   right: -120px;
   top: -120px;
-  background: #3f7d8a;
+  background: var(--glow-2);
 }
 
 .admin-page__shell {

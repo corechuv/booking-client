@@ -77,7 +77,7 @@
 }
 
 .booking-confirmed--error .booking-confirmed__message {
-  color: #d97878;
+  color: var(--danger-1);
 }
 
 @media (max-width: 580px) {

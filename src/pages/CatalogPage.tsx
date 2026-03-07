@@ -244,7 +244,7 @@ function CatalogPage() {
                   className="catalog-page__service-link"
                   to={`/booking?service=${service.id}`}
                   tone="primary"
-                  size="sm"
+                  size="lg"
                 >
                   {t('catalog.toBooking')}
                 </LinkButton>

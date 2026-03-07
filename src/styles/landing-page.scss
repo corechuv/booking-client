@@ -5,7 +5,7 @@
   padding: 0;
   color: var(--text-1);
   background:
-    radial-gradient(1200px 380px at 50% -60px, rgba(230, 168, 112, 0.2), transparent 70%),
+    radial-gradient(1200px 380px at 50% -60px, var(--blob-1), transparent 70%),
     linear-gradient(160deg, var(--bg-base), var(--bg-soft));
 }
 
@@ -28,13 +28,13 @@
 .landing-glow--left {
   left: -140px;
   top: 90px;
-  background: #c78651;
+  background: var(--glow-1);
 }
 
 .landing-glow--right {
   right: -110px;
   top: -120px;
-  background: #3f7d8a;
+  background: var(--glow-2);
 }
 
 .landing-nav,
@@ -85,7 +85,7 @@
 }
 
 .landing-nav__btn {
-  color: #fff !important;
+  color: var(--on-accent) !important;
   background: linear-gradient(130deg, var(--accent-1), var(--accent-2));
   border-radius: 999px;
   padding: 0.55rem 0.9rem;

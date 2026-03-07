@@ -137,7 +137,7 @@ function SiteFooter() {
                 onClick={() => setIsThemeModalOpen(false)}
                 aria-label={t('footer.theme.closeModal')}
               >
-                <CloseIcon size={16} aria-hidden="true" />
+                <CloseIcon size={20} aria-hidden="true" />
               </button>
             </div>
             <div className="site-footer__theme-modal-list">
@@ -184,7 +184,7 @@ function SiteFooter() {
                 onClick={() => setIsLanguageModalOpen(false)}
                 aria-label={t('footer.language.closeModal')}
               >
-                <CloseIcon size={16} aria-hidden="true" />
+                <CloseIcon size={20} aria-hidden="true" />
               </button>
             </div>
             <div className="site-footer__theme-modal-list">

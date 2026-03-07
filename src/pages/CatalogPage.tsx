@@ -107,7 +107,7 @@ function CatalogPage() {
                   onClick={() => setIsCategoryMenuOpen(false)}
                   aria-label={t('catalog.closeCategories')}
                 >
-                  <CloseIcon size={24} aria-hidden="true" />
+                  <CloseIcon size={20} aria-hidden="true" />
                 </button>
               </div>
 
@@ -165,7 +165,7 @@ function CatalogPage() {
       <section className="catalog-page__layout">
         <button
           type="button"
-          className="catalog-page__categories-toggle"
+          className="catalog-page__categories-toggle link-button link-button--secondary link-button--md"
           onClick={() => setIsCategoryMenuOpen(true)}
           aria-label={t('catalog.openCategories')}
         >

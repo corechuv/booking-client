@@ -217,8 +217,7 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
     'specialists.hero.description': 'Страница специалистов с навыками и расписанием.',
     'specialists.hero.pick': 'Выбрать специалиста в брони',
     'specialists.hero.catalog': 'Смотреть каталог',
-    'specialists.defaultBio':
-      'Профиль специалиста скоро будет дополнен: аппаратная косметология, эстетичная медицина.',
+    'specialists.defaultBio': 'Профиль специалиста скоро будет дополнен.',
     'specialists.errorFallback': 'Не удалось загрузить данные специалистов.',
     'specialists.schedule.title': 'График команды',
     'specialists.schedule.text': 'Актуальный график специалистов по дням и времени.',

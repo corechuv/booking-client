@@ -35,7 +35,7 @@ function SiteFooter() {
     { to: '/pricing', label: t('nav.pricing') },
     { to: '/contacts', label: t('nav.contacts') },
     { to: '/faq', label: t('nav.faq') },
-    { to: '/booking', label: t('footer.booking') },
+    { to: '/catalog', label: t('footer.booking') },
   ]
   const legalLinks = [
     { to: '/impressum', label: t('footer.impressum') },

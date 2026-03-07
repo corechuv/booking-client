@@ -130,10 +130,10 @@ function SpecialistsPage() {
         description={t('specialists.hero.description')}
         actions={
           <>
-            <LinkButton to="/booking" tone="primary">
+            <LinkButton to="/catalog" tone="primary">
               {t('specialists.hero.pick')}
             </LinkButton>
-            <LinkButton to="/catalog">{t('specialists.hero.catalog')}</LinkButton>
+            <LinkButton to="/contacts">{t('nav.contacts')}</LinkButton>
           </>
         }
       />
@@ -182,7 +182,7 @@ function SpecialistsPage() {
           <p>{t('specialists.cta.text')}</p>
         </div>
         <div className="section-page__cta-actions">
-          <LinkButton to="/booking" tone="primary">
+          <LinkButton to="/catalog" tone="primary">
             {t('specialists.cta.booking')}
           </LinkButton>
           <LinkButton to="/contacts">{t('specialists.cta.contact')}</LinkButton>

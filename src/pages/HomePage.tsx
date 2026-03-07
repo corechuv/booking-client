@@ -109,11 +109,11 @@ function HomePage() {
               {t('home.description')}
             </p>
             <div className="landing-hero__cta">
-              <LinkButton to="/booking" tone="primary" size="lg">
+              <LinkButton to="/catalog" tone="primary" size="lg">
                 {t('home.cta.booking')}
               </LinkButton>
-              <LinkButton to="/catalog" size="lg">
-                {t('home.cta.catalog')}
+              <LinkButton to="/pricing" size="lg">
+                {t('nav.pricing')}
               </LinkButton>
             </div>
           </div>
@@ -140,7 +140,7 @@ function HomePage() {
               <p>{item.note}</p>
               <h2>{item.title}</h2>
               <span>{item.text}</span>
-              <LinkButton to="/booking" size="lg">
+              <LinkButton to="/catalog" size="lg">
                 {t('home.experience.slot')}
               </LinkButton>
             </article>
@@ -210,7 +210,7 @@ function HomePage() {
         <section className="landing-cta">
           <p>{t('home.final.eyebrow')}</p>
           <h2>{t('home.final.title')}</h2>
-          <LinkButton to="/booking" tone="primary" size="lg">
+          <LinkButton to="/catalog" tone="primary" size="lg">
             {t('home.final.button')}
           </LinkButton>
         </section>

@@ -157,6 +157,27 @@ function BookingPage() {
   )
 
   useEffect(() => {
+    if (serviceIdFromQuery === null) {
+      navigate('/catalog', { replace: true })
+      return
+    }
+
+    if (isServicesLoading || servicesError) {
+      return
+    }
+
+    if (!selectedService) {
+      navigate('/catalog', { replace: true })
+    }
+  }, [
+    serviceIdFromQuery,
+    isServicesLoading,
+    servicesError,
+    selectedService,
+    navigate,
+  ])
+
+  useEffect(() => {
     if (!selectedService) {
       setBusySlotKeys([])
       setAvailabilityError(null)

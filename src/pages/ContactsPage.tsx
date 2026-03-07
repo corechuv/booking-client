@@ -121,10 +121,10 @@ function ContactsPage() {
         description={t('contacts.hero.description')}
         actions={
           <>
-            <LinkButton to="/booking" tone="primary">
+            <LinkButton to="/catalog" tone="primary">
               {t('contacts.hero.bookVisit')}
             </LinkButton>
-            <LinkButton to="/catalog">{t('contacts.hero.pickService')}</LinkButton>
+            <LinkButton to="/pricing">{t('nav.pricing')}</LinkButton>
           </>
         }
       />
@@ -185,7 +185,7 @@ function ContactsPage() {
           <p>{t('contacts.cta.text')}</p>
         </div>
         <div className="section-page__cta-actions">
-          <LinkButton to="/booking" tone="primary">
+          <LinkButton to="/catalog" tone="primary">
             {t('contacts.cta.openBooking')}
           </LinkButton>
           <LinkButton to="/">{t('common.toHome')}</LinkButton>

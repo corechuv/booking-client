@@ -35,7 +35,7 @@ function SiteNav() {
       </nav>
 
       <div className="site-nav__actions">
-        <LinkButton className="site-nav__cta" to="/booking" tone="primary" size="md">
+        <LinkButton className="site-nav__cta" to="/catalog" tone="primary" size="md">
           {t('nav.bookNow')}
         </LinkButton>
       </div>

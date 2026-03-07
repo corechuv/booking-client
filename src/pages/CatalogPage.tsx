@@ -107,7 +107,7 @@ function CatalogPage() {
                   onClick={() => setIsCategoryMenuOpen(false)}
                   aria-label={t('catalog.closeCategories')}
                 >
-                  <CloseIcon size={16} aria-hidden="true" />
+                  <CloseIcon size={24} aria-hidden="true" />
                 </button>
               </div>
 
@@ -154,10 +154,10 @@ function CatalogPage() {
         description={t('catalog.hero.description')}
         actions={
           <>
-            <LinkButton to="/booking" tone="primary">
-              {t('common.toBooking')}
+            <LinkButton to="/pricing" tone="primary">
+              {t('catalog.hero.pricing')}
             </LinkButton>
-            <LinkButton to="/pricing">{t('catalog.hero.pricing')}</LinkButton>
+            <LinkButton to="/contacts">{t('nav.contacts')}</LinkButton>
           </>
         }
       />

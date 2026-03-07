@@ -66,7 +66,7 @@ function FaqPage() {
         description={t('faq.hero.description')}
         actions={
           <>
-            <LinkButton to="/booking" tone="primary">
+            <LinkButton to="/catalog" tone="primary">
               {t('faq.hero.toBooking')}
             </LinkButton>
             <LinkButton to="/contacts">{t('faq.hero.toContacts')}</LinkButton>
@@ -89,7 +89,7 @@ function FaqPage() {
           <p>{t('faq.cta.text')}</p>
         </div>
         <div className="section-page__cta-actions">
-          <LinkButton to="/booking" tone="primary">
+          <LinkButton to="/catalog" tone="primary">
             {t('faq.cta.toBooking')}
           </LinkButton>
           <LinkButton to="/contacts">{t('faq.cta.toContacts')}</LinkButton>

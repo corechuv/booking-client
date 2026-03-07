@@ -269,7 +269,7 @@ export const getLegalContent = (
         description:
           'Які технології зберігання ми застосовуємо зараз, навіщо вони потрібні та як керувати згодою.',
         intro:
-          'На сайті не використовується рекламний трекінг за замовчуванням. Клієнтський додаток не зберігає персональні налаштування у localStorage/sessionStorage: дані завантажуються із серверної частини сайту.',
+          'На сайті не використовується рекламний трекінг за замовчуванням. Клієнтський додаток зберігає лише технічний ключ теми інтерфейсу (mira-theme) у localStorage; контент і персональні дані завантажуються із серверної частини сайту.',
         categories_title: 'Категорії зберігання',
         categories: [
           {
@@ -284,7 +284,7 @@ export const getLegalContent = (
             key: 'functional',
             title: 'Функціональні',
             description:
-              'Функціональні налаштування застосовуються в рамках поточної сесії без довгострокового збереження у браузері.',
+              'Функціональні налаштування можуть зберігати технічний ключ теми інтерфейсу для відновлення вибраного режиму після перезавантаження.',
             legal_basis: '§ 25 Abs. 1 TDDDG + ст. 6(1)(a) DSGVO',
           },
           {
@@ -309,12 +309,12 @@ export const getLegalContent = (
         storage_title: 'Що реально використовується на сайті',
         storage_rows: [
           {
-            key_name: 'Немає постійних ключів',
-            storage: 'Не використовується',
+            key_name: 'mira-theme',
+            storage: 'localStorage',
             purpose:
-              'Клієнт не зберігає дані у localStorage/sessionStorage; контент завантажується напряму із серверної частини сайту.',
-            ttl: 'Не застосовується',
-            category: 'necessary',
+              'Зберігає вибрану тему інтерфейсу (dark/light), щоб тема не скидалася після перезавантаження сторінки.',
+            ttl: 'До очищення браузерних даних користувачем',
+            category: 'functional',
           },
         ],
         third_party_title: 'Зовнішні сервіси і мережеві запити',
@@ -571,7 +571,7 @@ export const getLegalContent = (
         description:
           'Diese Seite zeigt transparent, welche Speichertechnologien wir aktuell verwenden und wie Sie Ihre Einwilligung steuern.',
         intro:
-          'Der Client setzt derzeit keine Marketing- oder Tracking-Cookies. Es werden keine dauerhaften Daten in localStorage/sessionStorage gespeichert; Inhalte werden direkt vom Serverteil der Website geladen.',
+          'Der Client setzt derzeit keine Marketing- oder Tracking-Cookies. Im localStorage wird nur ein technischer Theme-Key (mira-theme) gespeichert; Inhalte und personenbezogene Daten werden direkt vom Serverteil der Website geladen.',
         categories_title: 'Kategorien',
         categories: [
           {
@@ -586,7 +586,7 @@ export const getLegalContent = (
             key: 'functional',
             title: 'Funktional',
             description:
-              'Funktionale Einstellungen gelten nur innerhalb der aktuellen Sitzung und werden nicht dauerhaft im Browser gespeichert.',
+              'Funktionale Einstellungen koennen den technischen Theme-Key speichern, damit der gewaehlt Modus nach einem Reload erhalten bleibt.',
             legal_basis: '§ 25 Abs. 1 TDDDG + Art. 6 Abs. 1 lit. a DSGVO',
           },
           {
@@ -611,12 +611,12 @@ export const getLegalContent = (
         storage_title: 'Tatsaechlich eingesetzte Speicherobjekte',
         storage_rows: [
           {
-            key_name: 'Keine persistenten Keys',
-            storage: 'Nicht verwendet',
+            key_name: 'mira-theme',
+            storage: 'localStorage',
             purpose:
-              'Der Client speichert keine Daten in localStorage/sessionStorage; Inhalte werden direkt vom Serverteil der Website geladen.',
-            ttl: 'Nicht anwendbar',
-            category: 'necessary',
+              'Speichert die ausgewaehlte Oberflaechenfarbe (dark/light), damit die Theme-Auswahl nach dem Neuladen bestehen bleibt.',
+            ttl: 'Bis Browserdaten geloescht werden',
+            category: 'functional',
           },
         ],
         third_party_title: 'Externe Dienste bei Karten- und Routenfunktionen',
@@ -875,7 +875,7 @@ export const getLegalContent = (
       description:
         'Подробно о том, какие технологии хранения мы используем сейчас и как вы управляете согласием.',
       intro:
-        'На текущей версии сайта нет включенного рекламного или аналитического трекинга. Клиент не сохраняет данные в localStorage/sessionStorage и получает контент напрямую с серверной части сайта.',
+        'На текущей версии сайта нет включенного рекламного или аналитического трекинга. Клиент сохраняет только технический ключ темы интерфейса (mira-theme) в localStorage; контент и персональные данные загружаются напрямую с серверной части сайта.',
       categories_title: 'Категории',
       categories: [
         {
@@ -890,7 +890,7 @@ export const getLegalContent = (
           key: 'functional',
           title: 'Функциональные',
           description:
-            'Функциональные настройки применяются только в рамках текущей сессии без долгосрочного хранения в браузере.',
+            'Функциональные настройки могут сохранять технический ключ темы интерфейса, чтобы выбранный режим не сбрасывался после перезагрузки.',
           legal_basis: '§ 25 Abs. 1 TDDDG + Art. 6(1)(a) DSGVO',
         },
         {
@@ -915,12 +915,12 @@ export const getLegalContent = (
       storage_title: 'Что реально используется в клиенте',
       storage_rows: [
         {
-          key_name: 'Постоянные ключи не используются',
-          storage: 'Не используется',
+          key_name: 'mira-theme',
+          storage: 'localStorage',
           purpose:
-            'Клиент не сохраняет данные в localStorage/sessionStorage; контент загружается напрямую с серверной части сайта.',
-          ttl: 'Не применяется',
-          category: 'necessary',
+            'Сохраняет выбранную тему интерфейса (dark/light), чтобы тема не сбрасывалась после перезагрузки страницы.',
+          ttl: 'До очистки данных браузера пользователем',
+          category: 'functional',
         },
       ],
       third_party_title: 'Внешние сервисы при работе карты',

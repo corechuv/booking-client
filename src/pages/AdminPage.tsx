@@ -146,8 +146,8 @@ function AdminPage() {
           </div>
 
           <div className="admin-topbar__actions">
-            <LinkButton to="/booking" size="sm">
-              Клиентский booking
+            <LinkButton to="/catalog" size="sm">
+              Клиентский каталог
             </LinkButton>
             <button
               className="admin-theme-toggle"

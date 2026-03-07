@@ -70,10 +70,10 @@ function PricingPage() {
         description={t('pricing.hero.description')}
         actions={
           <>
-            <LinkButton to="/booking" tone="primary">
+            <LinkButton to="/catalog" tone="primary">
               {t('pricing.hero.book')}
             </LinkButton>
-            <LinkButton to="/catalog">{t('pricing.hero.catalog')}</LinkButton>
+            <LinkButton to="/contacts">{t('pricing.cta.contacts')}</LinkButton>
           </>
         }
       />
@@ -115,7 +115,7 @@ function PricingPage() {
           <p>{t('pricing.cta.text')}</p>
         </div>
         <div className="section-page__cta-actions">
-          <LinkButton to="/booking" tone="primary">
+          <LinkButton to="/catalog" tone="primary">
             {t('pricing.cta.booking')}
           </LinkButton>
           <LinkButton to="/contacts">{t('pricing.cta.contacts')}</LinkButton>

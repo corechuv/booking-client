@@ -127,21 +127,50 @@ function BookingScheduler({
     () => Array.from({ length: 7 }, (_, index) => addDays(weekStart, index)),
     [weekStart],
   )
+  const visibleWeekDays = useMemo(
+    () => weekDays.filter((day) => !isBeforeDate(day, today)),
+    [today, weekDays],
+  )
 
-  const currentWeekLabel = `${weekRangeFormatter.format(weekDays[0])} - ${weekRangeFormatter.format(weekDays[6])}`
+  const labelStartDay = visibleWeekDays[0] ?? weekDays[0]
+  const labelEndDay = visibleWeekDays[visibleWeekDays.length - 1] ?? weekDays[6]
+  const currentWeekLabel = `${weekRangeFormatter.format(labelStartDay)} - ${weekRangeFormatter.format(labelEndDay)}`
+
+  const getDayAvailability = (date: Date) => {
+    const dayHours = generalHoursByDay.get(toBusinessDayOfWeek(date))
+    const dayStartMinutes =
+      parseTimeToMinutes(dayHours?.open_time ?? null) ?? DAY_START_MINUTES
+    const dayEndMinutes =
+      parseTimeToMinutes(dayHours?.close_time ?? null) ?? DAY_END_MINUTES
+    const hasDurationWindow = dayEndMinutes - dayStartMinutes >= serviceDurationMinutes
+    const isClosed =
+      Boolean(dayHours?.is_closed) ||
+      dayStartMinutes >= dayEndMinutes ||
+      !hasDurationWindow
+
+    return {
+      dayStartMinutes,
+      dayEndMinutes,
+      isClosed,
+      hasDurationWindow,
+    }
+  }
 
   const currentMinutes = now.getHours() * 60 + now.getMinutes()
   const isSelectedDatePast = isBeforeDate(selectedDate, today)
   const isTodaySelected = isSameDate(selectedDate, today)
-  const selectedDayHours = generalHoursByDay.get(toBusinessDayOfWeek(selectedDate))
-  const selectedDayStartMinutes =
-    parseTimeToMinutes(selectedDayHours?.open_time ?? null) ?? DAY_START_MINUTES
-  const selectedDayEndMinutes =
-    parseTimeToMinutes(selectedDayHours?.close_time ?? null) ?? DAY_END_MINUTES
-  const selectedDayClosed =
-    Boolean(selectedDayHours?.is_closed) || selectedDayStartMinutes >= selectedDayEndMinutes
-  const hasSelectedDayDurationWindow =
-    selectedDayEndMinutes - selectedDayStartMinutes >= serviceDurationMinutes
+  const selectedDayAvailability = getDayAvailability(selectedDate)
+  const selectedDayStartMinutes = selectedDayAvailability.dayStartMinutes
+  const selectedDayEndMinutes = selectedDayAvailability.dayEndMinutes
+  const selectedDayClosed = selectedDayAvailability.isClosed
+  const hasSelectedDayDurationWindow = selectedDayAvailability.hasDurationWindow
+  const selectableVisibleWeekDays = visibleWeekDays.filter((day) => {
+    if (isBeforeDate(day, today)) {
+      return false
+    }
+
+    return !getDayAvailability(day).isClosed
+  })
 
   const latestStartMinutes = Math.max(
     selectedDayStartMinutes,
@@ -178,7 +207,10 @@ function BookingScheduler({
       return
     }
     setWeekStart((current) => addDays(current, direction * 7))
-    setSelectedDate((current) => addDays(current, direction * 7))
+    setSelectedDate((current) => {
+      const shiftedDate = addDays(current, direction * 7)
+      return isBeforeDate(shiftedDate, today) ? today : shiftedDate
+    })
     setSelectedSlot(null)
   }
 
@@ -218,6 +250,37 @@ function BookingScheduler({
     }
   }, [selectedSlot, slots])
 
+  useEffect(() => {
+    if (!visibleWeekDays.length) {
+      return
+    }
+
+    if (selectableVisibleWeekDays.length === 0) {
+      if (weekStart.getTime() === currentWeekStart.getTime()) {
+        const nextWeekStart = addDays(weekStart, 7)
+        setWeekStart(nextWeekStart)
+        setSelectedDate(nextWeekStart)
+        setSelectedSlot(null)
+      }
+      return
+    }
+
+    const selectedIsVisible = visibleWeekDays.some((day) => isSameDate(day, selectedDate))
+    const selectedIsSelectable = selectableVisibleWeekDays.some((day) =>
+      isSameDate(day, selectedDate),
+    )
+    if (!selectedIsVisible || !selectedIsSelectable) {
+      setSelectedDate(selectableVisibleWeekDays[0])
+      setSelectedSlot(null)
+    }
+  }, [
+    currentWeekStart,
+    selectedDate,
+    selectableVisibleWeekDays,
+    visibleWeekDays,
+    weekStart,
+  ])
+
   return (
     <section className="booking-scheduler" aria-label={t('scheduler.aria')}>
       <input type="hidden" name="booking_date" value={selectedDateIso} />
@@ -249,19 +312,19 @@ function BookingScheduler({
         </div>
       </div>
 
-      <div className="scheduler-days" role="list" aria-label={t('scheduler.daysAria')}>
-        {weekDays.map((day) => {
+      <div
+        className="scheduler-days"
+        role="list"
+        aria-label={t('scheduler.daysAria')}
+        style={{
+          gridTemplateColumns: `repeat(${Math.max(visibleWeekDays.length, 1)}, minmax(0, 1fr))`,
+        }}
+      >
+        {visibleWeekDays.map((day) => {
           const selected = isSameDate(day, selectedDate)
           const isPastDay = isBeforeDate(day, today)
-          const dayHours = generalHoursByDay.get(toBusinessDayOfWeek(day))
-          const dayStartMinutes =
-            parseTimeToMinutes(dayHours?.open_time ?? null) ?? DAY_START_MINUTES
-          const dayEndMinutes =
-            parseTimeToMinutes(dayHours?.close_time ?? null) ?? DAY_END_MINUTES
-          const isClosedDay =
-            Boolean(dayHours?.is_closed) ||
-            dayStartMinutes >= dayEndMinutes ||
-            dayEndMinutes - dayStartMinutes < serviceDurationMinutes
+          const dayAvailability = getDayAvailability(day)
+          const isClosedDay = dayAvailability.isClosed
           const isDisabled = isPastDay || isClosedDay
 
           return (

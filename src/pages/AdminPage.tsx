@@ -97,7 +97,7 @@ const serviceGroups = [
 ]
 
 const specialists = [
-  { name: PRIMARY_SPECIALIST_NAME, role: 'Lead esthetician', load: 92, today: '7 визитов' },
+  { name: PRIMARY_SPECIALIST_NAME, role: 'Cosmetologist', load: 92, today: '7 визитов' },
 ]
 
 const contentTasks = [

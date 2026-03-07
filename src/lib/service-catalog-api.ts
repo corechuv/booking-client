@@ -35,6 +35,18 @@ const serviceDiscounts: Record<
   'Nail Signature': { badge: '-16%', oldPrice: '€45' },
 }
 
+export const resolveServiceDiscount = (service: {
+  title: string
+  title_i18n?: Record<string, string> | null
+}) => {
+  const fallbackDiscountKey =
+    service.title_i18n?.ru ?? service.title_i18n?.en ?? service.title
+
+  return (
+    serviceDiscounts[service.title] ?? serviceDiscounts[fallbackDiscountKey] ?? null
+  )
+}
+
 const toSlug = (value: string): string =>
   value
     .toLowerCase()
@@ -82,9 +94,7 @@ const fallbackSummary = (language: AppLanguageCode, categoryName: string): strin
 }
 
 const mapService = (service: ClientService, language: AppLanguageCode): ServiceItem => {
-  const fallbackDiscountKey =
-    service.title_i18n?.ru ?? service.title_i18n?.en ?? service.title
-  const discount = serviceDiscounts[service.title] ?? serviceDiscounts[fallbackDiscountKey]
+  const discount = resolveServiceDiscount(service)
 
   return {
     id: String(service.id),

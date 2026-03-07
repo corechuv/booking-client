@@ -47,6 +47,21 @@
   padding: clamp(0.45rem, 1.2vw, 0.85rem) 0;
 }
 
+.section-page__hero--split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(0.8rem, 2vw, 1.6rem);
+}
+
+.section-page__hero-main {
+  min-width: 0;
+}
+
+.section-page__hero-meta {
+  justify-self: end;
+}
+
 .section-page__eyebrow {
   margin: 0;
   color: var(--text-3);
@@ -55,14 +70,14 @@
   font-size: 0.74rem;
 }
 
-.section-page__hero h1 {
+.section-page__hero-main h1 {
   margin: 0.45rem 0 0;
   font-family: var(--font-display);
   font-size: clamp(1.8rem, 4.8vw, 3.3rem);
   line-height: 1;
 }
 
-.section-page__hero p {
+.section-page__hero-main > p {
   margin: 0.85rem 0 0;
   color: var(--text-2);
   max-width: 66ch;
@@ -72,6 +87,11 @@
   margin-top: 1.1rem;
   display: inline-flex;
   gap: 0.65rem;
+}
+
+.section-page__hero--split .section-page__hero-links {
+  grid-column: 1 / -1;
+  margin-top: 0.25rem;
 }
 
 .section-page__grid {

@@ -19,7 +19,7 @@ import { useLanguage } from '../context/language-context'
 import { PRIMARY_SPECIALIST_NAME } from '../config/salon'
 import { useI18n } from '../hooks/useI18n'
 import { usePublicContact } from '../hooks/usePublicContact'
-import { formatEuroPrice } from '../lib/service-catalog-api'
+import { formatEuroPrice, resolveServiceDiscount } from '../lib/service-catalog-api'
 import '../styles/booking-page.scss'
 
 const getErrorText = (error: unknown): string => {
@@ -223,10 +223,17 @@ function BookingPage() {
     ? selectedService.title
     : t('booking.hero.openCatalog')
 
-  const heroDescription = selectedService
-    ? `${selectedService.category} · ${selectedService.duration_minutes} ${
+  const selectedServiceDuration = selectedService
+    ? `${selectedService.duration_minutes} ${
         language === 'de' ? 'Min' : language === 'uk' ? 'хв' : 'мин'
-      } · ${formatEuroPrice(selectedService.price)}`
+      }`
+    : null
+  const selectedServiceDiscount = selectedService
+    ? resolveServiceDiscount(selectedService)
+    : null
+
+  const heroDescription = selectedService
+    ? `${selectedService.category} · ${selectedServiceDuration}`
     : t('booking.hero.onlyCatalog')
 
   const isFormReady =
@@ -318,6 +325,20 @@ function BookingPage() {
           eyebrow={heroEyebrow}
           title={heroTitle}
           description={heroDescription}
+          meta={
+            selectedService ? (
+              <div className="booking-hero-meta">
+                <div className="booking-hero-meta__price">
+                  {selectedServiceDiscount?.oldPrice ? (
+                    <span className="booking-hero-meta__old">
+                      {selectedServiceDiscount.oldPrice}
+                    </span>
+                  ) : null}
+                  <strong>{formatEuroPrice(selectedService.price)}</strong>
+                </div>
+              </div>
+            ) : null
+          }
           actions={
             <LinkButton to={backToCatalogLink} size="md">
               {t('booking.backToProcedures')}
@@ -464,7 +485,7 @@ function BookingPage() {
             <div className="specialist-card__media">
               <img
                 src="/iryna%20marinina.jpeg"
-                alt={`${PRIMARY_SPECIALIST_NAME} master portrait`}
+                alt={`${PRIMARY_SPECIALIST_NAME} specialist portrait`}
               />
             </div>
             <div className="specialist-card__body">

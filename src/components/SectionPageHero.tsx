@@ -5,6 +5,8 @@ type SectionPageHeroProps = {
   title: string
   description: ReactNode
   actions?: ReactNode
+  meta?: ReactNode
+  className?: string
 }
 
 function SectionPageHero({
@@ -12,12 +14,25 @@ function SectionPageHero({
   title,
   description,
   actions,
+  meta,
+  className,
 }: SectionPageHeroProps) {
+  const classes = [
+    'section-page__hero',
+    meta ? 'section-page__hero--split' : null,
+    className ?? null,
+  ]
+    .filter(Boolean)
+    .join(' ')
+
   return (
-    <section className="section-page__hero">
-      <p className="section-page__eyebrow">{eyebrow}</p>
-      <h1>{title}</h1>
-      <p>{description}</p>
+    <section className={classes}>
+      <div className="section-page__hero-main">
+        <p className="section-page__eyebrow">{eyebrow}</p>
+        <h1>{title}</h1>
+        <p>{description}</p>
+      </div>
+      {meta ? <div className="section-page__hero-meta">{meta}</div> : null}
       {actions ? <div className="section-page__hero-links">{actions}</div> : null}
     </section>
   )

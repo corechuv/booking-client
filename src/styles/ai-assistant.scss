@@ -122,6 +122,11 @@
   background: var(--surface-overlay-2);
 }
 
+.ai-assistant__action-link.is-external {
+  display: inline-flex;
+  align-items: center;
+}
+
 .ai-assistant__bubble.is-assistant {
   background: var(--surface-overlay-2);
   color: var(--text-1);

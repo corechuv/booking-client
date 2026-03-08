@@ -90,13 +90,13 @@ function SpecialistsPage() {
       setWeekPlan(mappedWeekPlan)
 
       const mappedCertificates = publicCertificates
-        .filter((item) => item.image_url)
+        .filter((item) => item.image_url || item.document_url)
         .map((item) => ({
           id: String(item.id),
           title: item.title,
           area: item.issuer || 'Certificate',
-          preview: item.image_url as string,
-          pdf: item.image_url as string,
+          preview: item.image_url || item.document_url || '',
+          pdf: item.document_url || item.image_url || '',
         }))
       setCertificateItems(mappedCertificates)
     } catch (requestError) {

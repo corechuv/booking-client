@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import {
   ApiError,
   chatWithAssistant,
+  fetchPublicContact,
   type AssistantHistoryItem,
 } from '../api/client-api'
 import { useLanguage } from '../context/language-context'
@@ -19,6 +20,7 @@ const EMAIL_RE = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i
 const PHONE_RE = /(?:\+?\d[\d()\-\s]{6,}\d)/
 const IBAN_RE = /\b[A-Z]{2}\d{2}[A-Z0-9]{10,30}\b/i
 const CARD_RE = /\b(?:\d[ -]*?){13,19}\b/
+const MAP_INTENT_RE = /\bmap\b|\broute\b|\baddress\b|карта|маршрут|адрес|мапа|адреса|karte|route|adresse|anfahrt|maps\.google/i
 const ASSISTANT_ROUTE_LABELS: Record<string, string> = {
   '/catalog': 'nav.catalog',
   '/booking': 'footer.booking',
@@ -37,6 +39,11 @@ const createAssistantRouteRegex = () =>
 
 type AssistantActionLink = {
   path: string
+  label: string
+}
+
+type AssistantExternalActionLink = {
+  href: string
   label: string
 }
 
@@ -66,6 +73,8 @@ function AiAssistantWidget() {
   const [errorText, setErrorText] = useState<string | null>(null)
   const [consentAccepted, setConsentAccepted] = useState(false)
   const [showConsentDetails, setShowConsentDetails] = useState(false)
+  const [chatAddress, setChatAddress] = useState('')
+  const [chatRouteUrl, setChatRouteUrl] = useState('')
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
   const isFeatureEnabled = isAssistantFeatureEnabled()
   const isHidden = pathname.startsWith('/admin')
@@ -111,6 +120,34 @@ function AiAssistantWidget() {
     setIsOpen(false)
   }, [isHidden, isOpen])
 
+  useEffect(() => {
+    if (!isOpen) {
+      return
+    }
+    let isCancelled = false
+
+    void (async () => {
+      try {
+        const contact = await fetchPublicContact(language)
+        if (isCancelled) {
+          return
+        }
+        setChatAddress((contact.address ?? '').trim())
+        setChatRouteUrl((contact.route_url ?? '').trim())
+      } catch {
+        if (isCancelled) {
+          return
+        }
+        setChatAddress('')
+        setChatRouteUrl('')
+      }
+    })()
+
+    return () => {
+      isCancelled = true
+    }
+  }, [isOpen, language])
+
   const openAssistant = () => {
     setIsOpen(true)
     setErrorText(null)
@@ -153,6 +190,38 @@ function AiAssistantWidget() {
       path,
       label: t(ASSISTANT_ROUTE_LABELS[path]),
     }))
+  }
+
+  const getAssistantMapActionLinks = (
+    text: string,
+  ): AssistantExternalActionLink[] => {
+    const normalized = text.trim().toLowerCase()
+    if (
+      !normalized
+      || (!MAP_INTENT_RE.test(normalized) && !normalized.includes('/contacts'))
+    ) {
+      return []
+    }
+
+    const routeUrl = chatRouteUrl.trim()
+    const address = chatAddress.trim()
+    const encodedAddress = encodeURIComponent(address)
+    const mapUrl = address
+      ? `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`
+      : routeUrl
+    const routeLink = routeUrl
+      || (address
+        ? `https://www.google.com/maps/dir/?api=1&destination=${encodedAddress}`
+        : '')
+
+    const actions: AssistantExternalActionLink[] = []
+    if (mapUrl) {
+      actions.push({ href: mapUrl, label: t('map.openMap') })
+    }
+    if (routeLink) {
+      actions.push({ href: routeLink, label: t('map.openRoute') })
+    }
+    return actions
   }
 
   const renderAssistantContent = (text: string): ReactNode => {
@@ -323,6 +392,17 @@ function AiAssistantWidget() {
                         >
                           {t('assistant.action.openPage', { page: action.label })}
                         </Link>
+                      ))}
+                      {getAssistantMapActionLinks(item.content).map((action) => (
+                        <a
+                          key={`${item.id}-${action.href}`}
+                          href={action.href}
+                          className="ai-assistant__action-link is-external"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {action.label}
+                        </a>
                       ))}
                     </div>
                     )

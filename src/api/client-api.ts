@@ -207,6 +207,7 @@ export type PublicCertificate = {
   issuer_i18n?: Record<string, string> | null
   issued_at: string | null
   image_url: string | null
+  document_url: string | null
   description: string | null
   description_i18n?: Record<string, string> | null
   sort_order: number

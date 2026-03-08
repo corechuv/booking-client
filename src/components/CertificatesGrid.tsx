@@ -19,6 +19,9 @@ type CertificatesGridProps = {
 }
 
 const toPublicUrl = (path: string) => encodeURI(path)
+const isPdfLike = (value: string): boolean =>
+  value.trim().toLowerCase().startsWith('data:application/pdf')
+  || value.trim().toLowerCase().endsWith('.pdf')
 
 function CertificatesGrid({
   id = 'certificates',
@@ -51,12 +54,20 @@ function CertificatesGrid({
               rel="noreferrer"
               aria-label={t('cert.openAria', { title: item.title })}
             >
-              <img
-                className="certificate-card__preview"
-                src={toPublicUrl(item.preview)}
-                alt={t('cert.imageAlt', { title: item.title })}
-                loading="lazy"
-              />
+              {isPdfLike(item.preview)
+                ? (
+                  <div className="certificate-card__preview-fallback">
+                    PDF
+                  </div>
+                  )
+                : (
+                  <img
+                    className="certificate-card__preview"
+                    src={toPublicUrl(item.preview)}
+                    alt={t('cert.imageAlt', { title: item.title })}
+                    loading="lazy"
+                  />
+                  )}
             </a>
 
             <div className="certificate-card__body">

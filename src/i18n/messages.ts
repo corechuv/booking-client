@@ -53,6 +53,8 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
     'assistant.sending': 'Печатаю ответ...',
     'assistant.errorGeneric': 'Не удалось получить ответ. Попробуйте еще раз.',
     'assistant.errorEmptyResponse': 'Ответ пустой. Попробуйте уточнить запрос.',
+    'assistant.errorTemporary': 'Сервис ассистента временно недоступен. Попробуйте чуть позже.',
+    'assistant.errorRateLimit': 'Слишком много запросов к ассистенту. Подождите минуту и попробуйте снова.',
     'assistant.errorConsentRequired': 'Нужно принять условия использования AI ассистента.',
     'assistant.errorSensitiveData':
       'Не отправляйте в чат персональные или платежные данные (email, телефон, IBAN, карта).',
@@ -60,6 +62,9 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
       'AI ассистент не заменяет консультацию специалиста и не принимает медицинских решений.',
     'assistant.legal.consentPrefix':
       'Я согласен(а) с обработкой данных в AI-чате и принимаю',
+    'assistant.consentAccepted': 'Согласие на AI-чат подтверждено.',
+    'assistant.consentManage': 'Изменить',
+    'assistant.action.openPage': 'Открыть {page}',
 
     'catalog.hero.eyebrow': 'Service catalog',
     'catalog.hero.title': 'Каталог',
@@ -398,6 +403,8 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
     'assistant.sending': 'Друкую відповідь...',
     'assistant.errorGeneric': 'Не вдалося отримати відповідь. Спробуйте ще раз.',
     'assistant.errorEmptyResponse': 'Порожня відповідь. Спробуйте уточнити запит.',
+    'assistant.errorTemporary': 'Сервіс асистента тимчасово недоступний. Спробуйте трохи пізніше.',
+    'assistant.errorRateLimit': 'Занадто багато запитів до асистента. Зачекайте хвилину і спробуйте знову.',
     'assistant.errorConsentRequired': 'Потрібно прийняти умови використання AI асистента.',
     'assistant.errorSensitiveData':
       'Не надсилайте в чат персональні або платіжні дані (email, телефон, IBAN, картка).',
@@ -405,6 +412,9 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
       'AI асистент не замінює консультацію фахівця і не приймає медичних рішень.',
     'assistant.legal.consentPrefix':
       'Я погоджуюся на обробку даних в AI-чаті та приймаю',
+    'assistant.consentAccepted': 'Згода на AI-чат підтверджена.',
+    'assistant.consentManage': 'Змінити',
+    'assistant.action.openPage': 'Відкрити {page}',
 
     'catalog.hero.eyebrow': 'Service catalog',
     'catalog.hero.title': 'Каталог процедур за категоріями',
@@ -743,6 +753,8 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
     'assistant.sending': 'Antwort wird erstellt...',
     'assistant.errorGeneric': 'Antwort konnte nicht geladen werden. Bitte erneut versuchen.',
     'assistant.errorEmptyResponse': 'Leere Antwort. Bitte Anfrage präzisieren.',
+    'assistant.errorTemporary': 'Der Assistent ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.',
+    'assistant.errorRateLimit': 'Zu viele Anfragen an den Assistenten. Bitte warten Sie eine Minute und versuchen Sie es erneut.',
     'assistant.errorConsentRequired':
       'Bitte stimmen Sie den Nutzungsbedingungen des AI-Assistenten zu.',
     'assistant.errorSensitiveData':
@@ -751,6 +763,9 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
       'Der AI-Assistent ersetzt keine Fachberatung und trifft keine medizinischen Entscheidungen.',
     'assistant.legal.consentPrefix':
       'Ich stimme der Datenverarbeitung im AI-Chat zu und akzeptiere',
+    'assistant.consentAccepted': 'Einwilligung für den AI-Chat ist bestätigt.',
+    'assistant.consentManage': 'Ändern',
+    'assistant.action.openPage': '{page} öffnen',
 
     'catalog.hero.eyebrow': 'Service catalog',
     'catalog.hero.title': 'Behandlungskatalog nach Kategorien',

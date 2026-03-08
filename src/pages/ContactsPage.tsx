@@ -44,7 +44,7 @@ function ContactsPage() {
   const [loadingError, setLoadingError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [certificateItems, setCertificateItems] = useState<
-    Array<{ id: string; title: string; area: string; preview: string; pdf: string }>
+    Array<{ id: string; title: string; preview: string; pdf: string }>
   >([])
 
   const loadContent = useCallback(async () => {
@@ -88,7 +88,6 @@ function ContactsPage() {
         .map((item) => ({
           id: String(item.id),
           title: item.title,
-          area: item.issuer || 'Certificate',
           preview: item.image_url || item.document_url || '',
           pdf: item.document_url || item.image_url || '',
         }))

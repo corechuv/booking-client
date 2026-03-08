@@ -5,7 +5,7 @@ import LinkButton from './LinkButton'
 export type CertificateCardItem = {
   id: string | number
   title: string
-  area: string
+  area?: string
   preview: string
   pdf: string
 }
@@ -71,7 +71,7 @@ function CertificatesGrid({
             </a>
 
             <div className="certificate-card__body">
-              <p className="section-card__meta">{item.area}</p>
+              {item.area?.trim() ? <p className="section-card__meta">{item.area}</p> : null}
               <h3>{item.title}</h3>
 
               <div className="certificate-card__actions">

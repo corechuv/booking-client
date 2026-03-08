@@ -124,6 +124,8 @@ export type ClientService = {
   description: string | null
   duration_minutes: number
   price: number | string
+  old_price?: number | string | null
+  discount_percent?: number | null
   is_active: boolean
   created_at: string
   updated_at: string

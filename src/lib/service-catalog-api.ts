@@ -23,30 +23,6 @@ const categorySummaries: Record<AppLanguageCode, Record<string, string>> = {
   },
 }
 
-const serviceDiscounts: Record<
-  string,
-  {
-    badge: string
-    oldPrice: string
-  }
-> = {
-  'Glow Facial': { badge: '-11%', oldPrice: '€55' },
-  'Hair Ritual + Styling': { badge: '-16%', oldPrice: '€83' },
-  'Nail Signature': { badge: '-16%', oldPrice: '€45' },
-}
-
-export const resolveServiceDiscount = (service: {
-  title: string
-  title_i18n?: Record<string, string> | null
-}) => {
-  const fallbackDiscountKey =
-    service.title_i18n?.ru ?? service.title_i18n?.en ?? service.title
-
-  return (
-    serviceDiscounts[service.title] ?? serviceDiscounts[fallbackDiscountKey] ?? null
-  )
-}
-
 const toSlug = (value: string): string =>
   value
     .toLowerCase()
@@ -62,6 +38,14 @@ const toPriceNumber = (value: number | string): number => {
   return Number.isFinite(parsed) ? parsed : 0
 }
 
+type DiscountSource = {
+  price: number | string
+  old_price?: number | string | null
+  discount_percent?: number | null
+  oldPrice?: string
+  discountBadge?: string
+}
+
 export const formatEuroPrice = (value: number | string): string => {
   const amount = toPriceNumber(value)
   const formatted = Number.isInteger(amount)
@@ -69,6 +53,43 @@ export const formatEuroPrice = (value: number | string): string => {
     : amount.toFixed(2).replace(/0+$/, '').replace(/\.$/, '')
 
   return `€${formatted}`
+}
+
+export const resolveServiceDiscount = (
+  service: DiscountSource,
+): { badge: string; oldPrice: string } | null => {
+  if (service.oldPrice && service.discountBadge) {
+    return {
+      badge: service.discountBadge,
+      oldPrice: service.oldPrice,
+    }
+  }
+
+  const currentPrice = toPriceNumber(service.price)
+  const oldPriceRaw = service.old_price
+  if (oldPriceRaw === null || oldPriceRaw === undefined) {
+    return null
+  }
+
+  const oldPrice = toPriceNumber(oldPriceRaw)
+  if (!Number.isFinite(oldPrice) || oldPrice <= currentPrice) {
+    return null
+  }
+
+  const percentFromApi =
+    typeof service.discount_percent === 'number' && service.discount_percent > 0
+      ? service.discount_percent
+      : null
+  const computedPercent = Math.round(((oldPrice - currentPrice) / oldPrice) * 100)
+  const discountPercent = percentFromApi ?? computedPercent
+  if (!Number.isFinite(discountPercent) || discountPercent <= 0) {
+    return null
+  }
+
+  return {
+    badge: `-${discountPercent}%`,
+    oldPrice: formatEuroPrice(oldPrice),
+  }
 }
 
 const fallbackDescriptionByLang: Record<AppLanguageCode, string> = {

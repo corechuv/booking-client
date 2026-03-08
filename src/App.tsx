@@ -3,6 +3,7 @@ import BookingConfirmedPage from './pages/BookingConfirmedPage'
 import BookingPage from './pages/BookingPage'
 import BookingSuccessPage from './pages/BookingSuccessPage'
 import AdminPage from './pages/AdminPage'
+import AiAssistantWidget from './components/AiAssistantWidget'
 import ScrollToTop from './components/ScrollToTop'
 import { LanguageProvider } from './context/LanguageContext'
 import { ThemeProvider } from './context/ThemeContext'
@@ -41,6 +42,7 @@ function App() {
             <Route path="/impressum" element={<ImpressumPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+          <AiAssistantWidget />
         </BrowserRouter>
       </LanguageProvider>
     </ThemeProvider>

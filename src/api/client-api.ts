@@ -237,6 +237,22 @@ export type PublicLanguage = {
   updated_at: string
 }
 
+export type AssistantHistoryItem = {
+  role: 'user' | 'assistant'
+  content: string
+}
+
+export type AssistantChatPayload = {
+  message: string
+  lang?: ClientLanguageCode
+  history?: AssistantHistoryItem[]
+  consent_accepted: boolean
+}
+
+export type AssistantChatResponse = {
+  message: string
+}
+
 export type ClientBooking = {
   id: number
   client_id: number
@@ -322,3 +338,9 @@ export const fetchPublicSpecialists = (lang?: ClientLanguageCode) =>
 
 export const fetchPublicLanguages = () =>
   request<PublicLanguage[]>('/client/content/languages')
+
+export const chatWithAssistant = (payload: AssistantChatPayload) =>
+  request<AssistantChatResponse>('/client/assistant/chat', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })

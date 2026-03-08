@@ -42,6 +42,25 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
     'common.toHome': 'На главную',
     'common.openAll': 'Открыть все',
 
+    'assistant.open': 'Открыть AI ассистента',
+    'assistant.close': 'Закрыть AI ассистента',
+    'assistant.title': 'AI ассистент Mira',
+    'assistant.subtitle': 'Быстрые ответы по услугам и записи',
+    'assistant.greeting':
+      'Здравствуйте! Я AI-ассистент Mira. Помогу с выбором услуги, ценами и переходом к записи.',
+    'assistant.inputPlaceholder': 'Напишите ваш вопрос...',
+    'assistant.send': 'Отправить',
+    'assistant.sending': 'Печатаю ответ...',
+    'assistant.errorGeneric': 'Не удалось получить ответ. Попробуйте еще раз.',
+    'assistant.errorEmptyResponse': 'Ответ пустой. Попробуйте уточнить запрос.',
+    'assistant.errorConsentRequired': 'Нужно принять условия использования AI ассистента.',
+    'assistant.errorSensitiveData':
+      'Не отправляйте в чат персональные или платежные данные (email, телефон, IBAN, карта).',
+    'assistant.legal.note':
+      'AI ассистент не заменяет консультацию специалиста и не принимает медицинских решений.',
+    'assistant.legal.consentPrefix':
+      'Я согласен(а) с обработкой данных в AI-чате и принимаю',
+
     'catalog.hero.eyebrow': 'Service catalog',
     'catalog.hero.title': 'Каталог',
     'catalog.hero.description': 'Выберите категорию и просмотрите все процедуры. Из любой карточки можно сразу перейти к записи.',
@@ -368,6 +387,25 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
     'common.toHome': 'На головну',
     'common.openAll': 'Відкрити все',
 
+    'assistant.open': 'Відкрити AI асистента',
+    'assistant.close': 'Закрити AI асистента',
+    'assistant.title': 'AI асистент Mira',
+    'assistant.subtitle': 'Швидкі відповіді щодо послуг і запису',
+    'assistant.greeting':
+      'Вітаю! Я AI-асистент Mira. Допоможу з вибором послуги, цінами та переходом до запису.',
+    'assistant.inputPlaceholder': 'Напишіть ваше запитання...',
+    'assistant.send': 'Надіслати',
+    'assistant.sending': 'Друкую відповідь...',
+    'assistant.errorGeneric': 'Не вдалося отримати відповідь. Спробуйте ще раз.',
+    'assistant.errorEmptyResponse': 'Порожня відповідь. Спробуйте уточнити запит.',
+    'assistant.errorConsentRequired': 'Потрібно прийняти умови використання AI асистента.',
+    'assistant.errorSensitiveData':
+      'Не надсилайте в чат персональні або платіжні дані (email, телефон, IBAN, картка).',
+    'assistant.legal.note':
+      'AI асистент не замінює консультацію фахівця і не приймає медичних рішень.',
+    'assistant.legal.consentPrefix':
+      'Я погоджуюся на обробку даних в AI-чаті та приймаю',
+
     'catalog.hero.eyebrow': 'Service catalog',
     'catalog.hero.title': 'Каталог процедур за категоріями',
     'catalog.hero.description': 'Оберіть категорію та перегляньте всі процедури. Із будь-якої картки можна одразу перейти до запису.',
@@ -693,6 +731,26 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
     'common.toCatalog': 'Zum Katalog',
     'common.toHome': 'Zur Startseite',
     'common.openAll': 'Alle anzeigen',
+
+    'assistant.open': 'AI-Assistent öffnen',
+    'assistant.close': 'AI-Assistent schließen',
+    'assistant.title': 'Mira AI-Assistent',
+    'assistant.subtitle': 'Schnelle Antworten zu Leistungen und Buchung',
+    'assistant.greeting':
+      'Hallo! Ich bin der Mira AI-Assistent. Ich helfe bei Leistungen, Preisen und dem Weg zur Buchung.',
+    'assistant.inputPlaceholder': 'Ihre Frage eingeben...',
+    'assistant.send': 'Senden',
+    'assistant.sending': 'Antwort wird erstellt...',
+    'assistant.errorGeneric': 'Antwort konnte nicht geladen werden. Bitte erneut versuchen.',
+    'assistant.errorEmptyResponse': 'Leere Antwort. Bitte Anfrage präzisieren.',
+    'assistant.errorConsentRequired':
+      'Bitte stimmen Sie den Nutzungsbedingungen des AI-Assistenten zu.',
+    'assistant.errorSensitiveData':
+      'Bitte senden Sie keine personen- oder zahlungsbezogenen Daten (E-Mail, Telefon, IBAN, Karte).',
+    'assistant.legal.note':
+      'Der AI-Assistent ersetzt keine Fachberatung und trifft keine medizinischen Entscheidungen.',
+    'assistant.legal.consentPrefix':
+      'Ich stimme der Datenverarbeitung im AI-Chat zu und akzeptiere',
 
     'catalog.hero.eyebrow': 'Service catalog',
     'catalog.hero.title': 'Behandlungskatalog nach Kategorien',

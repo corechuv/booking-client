@@ -177,7 +177,15 @@ export const getLegalContent = (
             ],
           },
           {
-            title: '10. Скарги та нагляд',
+            title: '10. AI-асистент і мінімізація даних',
+            paragraphs: [
+              'AI-асистент працює лише після явної згоди користувача у віджеті чату.',
+              'Ми просимо не вводити в AI-чат чутливі персональні або платіжні дані; сервер блокує/маскує виявлені email, телефони, IBAN та номери карт.',
+              'Звернення до AI обмежуються rate-limit і передаються зовнішньому AI-провайдеру тільки в обсязі, потрібному для відповіді.',
+            ],
+          },
+          {
+            title: '11. Скарги та нагляд',
             paragraphs: [
               'Ви можете подати скаргу до компетентного органу захисту даних у Німеччині.',
               'Спочатку рекомендуємо звернутися до нас: це часто дозволяє швидко вирішити питання без спору.',
@@ -256,7 +264,15 @@ export const getLegalContent = (
             ],
           },
           {
-            title: '10. Спори та позасудове врегулювання',
+            title: '10. AI-консультації на сайті',
+            paragraphs: [
+              'AI-асистент має довідковий характер і не замінює персональну консультацію фахівця.',
+              'Через AI-чат заборонено передавати чутливі персональні чи платіжні дані.',
+              'Використання AI-функції можливе лише після прийняття умов і політик сайту.',
+            ],
+          },
+          {
+            title: '11. Спори та позасудове врегулювання',
             paragraphs: [
               'Спочатку звертайтесь до салону через контакти на сайті: ми намагаємося врегулювати питання напряму.',
               'Інформація про участь у процедурах споживчого врегулювання (якщо застосовується) публікується в Impressum.',
@@ -269,7 +285,7 @@ export const getLegalContent = (
         description:
           'Які технології зберігання ми застосовуємо зараз, навіщо вони потрібні та як керувати згодою.',
         intro:
-          'На сайті не використовується рекламний трекінг за замовчуванням. Клієнтський додаток зберігає лише технічний ключ теми інтерфейсу (mira-theme) у localStorage; контент і персональні дані завантажуються із серверної частини сайту.',
+          'На сайті не використовується рекламний трекінг за замовчуванням. Клієнтський додаток зберігає технічний ключ теми (mira-theme) у localStorage та ключ згоди AI-чату (mira-ai-consent-v1) у sessionStorage; контент і персональні дані завантажуються із серверної частини сайту.',
         categories_title: 'Категорії зберігання',
         categories: [
           {
@@ -316,9 +332,23 @@ export const getLegalContent = (
             ttl: 'До очищення браузерних даних користувачем',
             category: 'functional',
           },
+          {
+            key_name: 'mira-ai-consent-v1',
+            storage: 'sessionStorage',
+            purpose:
+              'Фіксує згоду користувача на використання AI-чату протягом поточної сесії браузера.',
+            ttl: 'До закриття вкладки/браузера',
+            category: 'necessary',
+          },
         ],
         third_party_title: 'Зовнішні сервіси і мережеві запити',
         third_party_rows: [
+          {
+            service: 'OpenAI API',
+            when_used: 'Лише при відправці повідомлення в AI-чаті',
+            data: 'Текст запиту після фільтрації/маскування чутливих даних, технічні метадані',
+            transfer: 'Можлива міжнародна передача згідно з главою V DSGVO',
+          },
           {
             service: 'OpenStreetMap Nominatim',
             when_used: 'При рендері карти для геокодування адреси',
@@ -481,7 +511,15 @@ export const getLegalContent = (
             ],
           },
           {
-            title: '10. Beschwerderecht',
+            title: '10. AI-Assistent und Datenminimierung',
+            paragraphs: [
+              'Der AI-Assistent wird nur nach ausdruecklicher Einwilligung im Chat-Widget genutzt.',
+              'Bitte geben Sie keine sensiblen personenbezogenen oder Zahlungsdaten ein; der Server blockiert/maskiert erkannte E-Mails, Telefonnummern, IBAN und Kartendaten.',
+              'AI-Anfragen werden rate-limitiert und nur im erforderlichen Umfang an den externen AI-Dienst uebermittelt.',
+            ],
+          },
+          {
+            title: '11. Beschwerderecht',
             paragraphs: [
               'Unabhaengig von internen Klaerungen koennen Sie sich bei einer zustaendigen Datenschutzaufsichtsbehoerde beschweren.',
             ],
@@ -558,7 +596,15 @@ export const getLegalContent = (
             ],
           },
           {
-            title: '10. Verbraucherstreitbeilegung',
+            title: '10. AI-Beratung auf der Website',
+            paragraphs: [
+              'Der AI-Assistent dient nur der Orientierung und ersetzt keine individuelle Fachberatung.',
+              'Im AI-Chat duerfen keine sensiblen personen- oder zahlungsbezogenen Daten uebermittelt werden.',
+              'Die Nutzung der AI-Funktion setzt die Zustimmung zu den rechtlichen Bedingungen der Website voraus.',
+            ],
+          },
+          {
+            title: '11. Verbraucherstreitbeilegung',
             paragraphs: [
               'Informationen zur Teilnahmebereitschaft an Streitbeilegungsverfahren werden im Impressum bereitgestellt.',
               'Veraltete Hinweise auf die ehemalige EU-ODR-Plattform wurden entfernt, da diese seit 20.07.2025 eingestellt ist.',
@@ -571,7 +617,7 @@ export const getLegalContent = (
         description:
           'Diese Seite zeigt transparent, welche Speichertechnologien wir aktuell verwenden und wie Sie Ihre Einwilligung steuern.',
         intro:
-          'Der Client setzt derzeit keine Marketing- oder Tracking-Cookies. Im localStorage wird nur ein technischer Theme-Key (mira-theme) gespeichert; Inhalte und personenbezogene Daten werden direkt vom Serverteil der Website geladen.',
+          'Der Client setzt derzeit keine Marketing- oder Tracking-Cookies. Im localStorage wird ein technischer Theme-Key (mira-theme) und im sessionStorage ein AI-Einwilligungs-Key (mira-ai-consent-v1) gespeichert; Inhalte und personenbezogene Daten werden direkt vom Serverteil der Website geladen.',
         categories_title: 'Kategorien',
         categories: [
           {
@@ -618,9 +664,23 @@ export const getLegalContent = (
             ttl: 'Bis Browserdaten geloescht werden',
             category: 'functional',
           },
+          {
+            key_name: 'mira-ai-consent-v1',
+            storage: 'sessionStorage',
+            purpose:
+              'Speichert die Einwilligung fuer die AI-Chat-Nutzung nur fuer die aktuelle Browser-Sitzung.',
+            ttl: 'Bis Browser/Tab geschlossen wird',
+            category: 'necessary',
+          },
         ],
         third_party_title: 'Externe Dienste bei Karten- und Routenfunktionen',
         third_party_rows: [
+          {
+            service: 'OpenAI API',
+            when_used: 'Nur beim Versand einer Nachricht im AI-Chat',
+            data: 'Nachrichtentext nach Filterung/Maskierung sensibler Daten, technische Metadaten',
+            transfer: 'Moegliche internationale Uebermittlung gemaess Kapitel V DSGVO',
+          },
           {
             service: 'OpenStreetMap Nominatim',
             when_used: 'Bei Adress-Geocoding im Kartenmodul',
@@ -784,7 +844,15 @@ export const getLegalContent = (
           ],
         },
         {
-          title: '10. Куда жаловаться',
+          title: '10. AI-ассистент и минимизация данных',
+          paragraphs: [
+            'AI-ассистент доступен только после явного согласия пользователя в виджете чата.',
+            'Не вводите в AI-чат чувствительные персональные и платежные данные; сервер блокирует/маскирует email, телефон, IBAN и номера карт.',
+            'Запросы к AI ограничиваются rate-limit и передаются внешнему AI-провайдеру только в объеме, необходимом для ответа.',
+          ],
+        },
+        {
+          title: '11. Куда жаловаться',
           paragraphs: [
             'Вы можете подать жалобу в компетентный орган по защите данных в Германии.',
             'Перед подачей жалобы рекомендуем сначала написать нам, чтобы решить вопрос быстрее.',
@@ -862,7 +930,15 @@ export const getLegalContent = (
           ],
         },
         {
-          title: '10. Споры и внесудебное урегулирование',
+          title: '10. AI-консультирование на сайте',
+          paragraphs: [
+            'AI-ассистент носит справочный характер и не заменяет персональную консультацию специалиста.',
+            'Передавать через AI-чат чувствительные персональные или платежные данные запрещено.',
+            'Использование AI-функции возможно только после принятия правовых условий сайта.',
+          ],
+        },
+        {
+          title: '11. Споры и внесудебное урегулирование',
           paragraphs: [
             'Сначала обратитесь в salon напрямую по контактам на сайте.',
             'Статус участия в потребительском ADR-порядке публикуется в Impressum (если применимо).',
@@ -875,7 +951,7 @@ export const getLegalContent = (
       description:
         'Подробно о том, какие технологии хранения мы используем сейчас и как вы управляете согласием.',
       intro:
-        'На текущей версии сайта нет включенного рекламного или аналитического трекинга. Клиент сохраняет только технический ключ темы интерфейса (mira-theme) в localStorage; контент и персональные данные загружаются напрямую с серверной части сайта.',
+        'На текущей версии сайта нет включенного рекламного или аналитического трекинга. Клиент сохраняет технический ключ темы интерфейса (mira-theme) в localStorage и ключ согласия AI-чата (mira-ai-consent-v1) в sessionStorage; контент и персональные данные загружаются напрямую с серверной части сайта.',
       categories_title: 'Категории',
       categories: [
         {
@@ -922,9 +998,23 @@ export const getLegalContent = (
           ttl: 'До очистки данных браузера пользователем',
           category: 'functional',
         },
+        {
+          key_name: 'mira-ai-consent-v1',
+          storage: 'sessionStorage',
+          purpose:
+            'Хранит согласие пользователя на использование AI-чата только в рамках текущей сессии браузера.',
+          ttl: 'До закрытия вкладки/браузера',
+          category: 'necessary',
+        },
       ],
       third_party_title: 'Внешние сервисы при работе карты',
       third_party_rows: [
+        {
+          service: 'OpenAI API',
+          when_used: 'Только при отправке сообщения в AI-чате',
+          data: 'Текст сообщения после фильтрации/маскирования чувствительных данных, технические метаданные',
+          transfer: 'Возможна международная передача по правилам главы V DSGVO',
+        },
         {
           service: 'OpenStreetMap Nominatim',
           when_used: 'При геокодировании адреса в блоке карты',

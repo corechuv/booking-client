@@ -12,14 +12,16 @@ npm run dev
 
 ## ENV переменные
 
-Используется только одна переменная:
+Используемые переменные:
 
 - `VITE_API_URL` — базовый URL backend API.
+- `VITE_AI_ASSISTANT_ENABLED` — включение AI-ассистента (`true/false`).
 
 Пример:
 
 ```env
 VITE_API_URL=http://localhost:8001/api/v1
+VITE_AI_ASSISTANT_ENABLED=true
 ```
 
 ## Netlify
@@ -34,10 +36,10 @@ VITE_API_URL=http://localhost:8001/api/v1
 ### Что указать в Netlify Environment variables
 
 - `VITE_API_URL=https://YOUR_BACKEND_DOMAIN/api/v1`
+- `VITE_AI_ASSISTANT_ENABLED=true`
 
 ## Сборка
 
 ```bash
 npm run build
 ```
-

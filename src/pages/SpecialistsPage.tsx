@@ -13,6 +13,7 @@ import SiteNav from '../components/SiteNav'
 import { useLanguage } from '../context/language-context'
 import { PRIMARY_SPECIALIST_NAME } from '../config/salon'
 import { useI18n } from '../hooks/useI18n'
+import { buildHoursByDay, formatDayHours } from '../lib/business-hours'
 import '../styles/section-page.scss'
 
 const getErrorText = (error: unknown): string => {
@@ -78,15 +79,24 @@ function SpecialistsPage() {
       )
       setSpecialists([primarySpecialist ?? primarySpecialistFallback])
 
-      const mappedWeekPlan = generalHours.slots
-        .slice()
-        .sort((a, b) => a.day_of_week - b.day_of_week)
-        .map((slot) => ({
-          day: dayNames[slot.day_of_week] ?? `Day ${slot.day_of_week + 1}`,
-          info: slot.is_closed
-            ? t('contacts.hours.closed')
-            : `${slot.open_time?.slice(0, 5) ?? '--:--'} - ${slot.close_time?.slice(0, 5) ?? '--:--'}`,
-        }))
+      const hoursByDay = buildHoursByDay(generalHours.slots)
+      const mappedWeekPlan = dayNames.map((dayName, dayIndex) => ({
+        day: dayName,
+        info: formatDayHours(
+          hoursByDay.get(dayIndex) ?? {
+            isClosed: false,
+            intervals: [
+              {
+                openMinutes: 9 * 60,
+                closeMinutes: 20 * 60,
+                openTime: '09:00',
+                closeTime: '20:00',
+              },
+            ],
+          },
+          t('contacts.hours.closed'),
+        ),
+      }))
       setWeekPlan(mappedWeekPlan)
 
       const mappedCertificates = publicCertificates

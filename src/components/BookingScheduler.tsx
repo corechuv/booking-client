@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useI18n } from '../hooks/useI18n'
+import { buildHoursByDay } from '../lib/business-hours'
 import { ArrowLeftIcon, ArrowRightIcon } from './icons'
 
 const SLOT_INTERVAL_MINUTES = 15
@@ -46,19 +47,6 @@ const formatIsoDate = (date: Date) => {
   return `${year}-${month}-${day}`
 }
 
-const parseTimeToMinutes = (value: string | null): number | null => {
-  if (!value) {
-    return null
-  }
-  const [hoursRaw, minutesRaw] = value.split(':')
-  const hours = Number.parseInt(hoursRaw, 10)
-  const minutes = Number.parseInt(minutesRaw, 10)
-  if (Number.isNaN(hours) || Number.isNaN(minutes)) {
-    return null
-  }
-  return hours * 60 + minutes
-}
-
 const toBusinessDayOfWeek = (date: Date): number => {
   const jsDay = date.getDay()
   return jsDay === 0 ? 6 : jsDay - 1
@@ -66,6 +54,7 @@ const toBusinessDayOfWeek = (date: Date): number => {
 
 type GeneralHourSlot = {
   day_of_week: number
+  interval_index: number
   open_time: string | null
   close_time: string | null
   is_closed: boolean
@@ -93,10 +82,7 @@ function BookingScheduler({
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null)
 
   const busySlotSet = useMemo(() => new Set(busySlotKeys), [busySlotKeys])
-  const generalHoursByDay = useMemo(
-    () => new Map(generalHoursSlots.map((slot) => [slot.day_of_week, slot])),
-    [generalHoursSlots],
-  )
+  const generalHoursByDay = useMemo(() => buildHoursByDay(generalHoursSlots), [generalHoursSlots])
   const weekdayFormatter = useMemo(
     () => new Intl.DateTimeFormat(locale, { weekday: 'short' }),
     [locale],
@@ -138,19 +124,22 @@ function BookingScheduler({
 
   const getDayAvailability = (date: Date) => {
     const dayHours = generalHoursByDay.get(toBusinessDayOfWeek(date))
-    const dayStartMinutes =
-      parseTimeToMinutes(dayHours?.open_time ?? null) ?? DAY_START_MINUTES
-    const dayEndMinutes =
-      parseTimeToMinutes(dayHours?.close_time ?? null) ?? DAY_END_MINUTES
-    const hasDurationWindow = dayEndMinutes - dayStartMinutes >= serviceDurationMinutes
-    const isClosed =
-      Boolean(dayHours?.is_closed) ||
-      dayStartMinutes >= dayEndMinutes ||
-      !hasDurationWindow
+    const intervals =
+      dayHours?.intervals.length
+        ? dayHours.intervals
+        : [
+            {
+              openMinutes: DAY_START_MINUTES,
+              closeMinutes: DAY_END_MINUTES,
+            },
+          ]
+    const hasDurationWindow = intervals.some(
+      (interval) => interval.closeMinutes - interval.openMinutes >= serviceDurationMinutes,
+    )
+    const isClosed = Boolean(dayHours?.isClosed) || !hasDurationWindow
 
     return {
-      dayStartMinutes,
-      dayEndMinutes,
+      intervals,
       isClosed,
       hasDurationWindow,
     }
@@ -160,8 +149,6 @@ function BookingScheduler({
   const isSelectedDatePast = isBeforeDate(selectedDate, today)
   const isTodaySelected = isSameDate(selectedDate, today)
   const selectedDayAvailability = getDayAvailability(selectedDate)
-  const selectedDayStartMinutes = selectedDayAvailability.dayStartMinutes
-  const selectedDayEndMinutes = selectedDayAvailability.dayEndMinutes
   const selectedDayClosed = selectedDayAvailability.isClosed
   const hasSelectedDayDurationWindow = selectedDayAvailability.hasDurationWindow
   const selectableVisibleWeekDays = visibleWeekDays.filter((day) => {
@@ -172,33 +159,48 @@ function BookingScheduler({
     return !getDayAvailability(day).isClosed
   })
 
-  const latestStartMinutes = Math.max(
-    selectedDayStartMinutes,
-    selectedDayEndMinutes - serviceDurationMinutes,
-  )
-  const slots = isSelectedDatePast
-    ? []
-    : selectedDayClosed
-    ? []
-    : !hasSelectedDayDurationWindow
-    ? []
-    : Array.from(
-        {
-          length:
-            Math.floor(
-              (latestStartMinutes - selectedDayStartMinutes) / SLOT_INTERVAL_MINUTES,
-            ) + 1,
-        },
-        (_, index) => selectedDayStartMinutes + index * SLOT_INTERVAL_MINUTES,
-      )
-        .filter((minutes) => !isTodaySelected || minutes > currentMinutes)
-        .map((minutes) => {
-          const slotKey = `${formatIsoDate(selectedDate)}|${formatTime(minutes)}`
-          return {
-            time: formatTime(minutes),
-            busy: busySlotSet.has(slotKey),
-          }
-        })
+  const slots = useMemo(() => {
+    if (isSelectedDatePast || selectedDayClosed || !hasSelectedDayDurationWindow) {
+      return []
+    }
+
+    const minutesSet = new Set<number>()
+    for (const interval of selectedDayAvailability.intervals) {
+      const latestStartMinutes = interval.closeMinutes - serviceDurationMinutes
+      if (latestStartMinutes < interval.openMinutes) {
+        continue
+      }
+      for (
+        let minutes = interval.openMinutes;
+        minutes <= latestStartMinutes;
+        minutes += SLOT_INTERVAL_MINUTES
+      ) {
+        if (!isTodaySelected || minutes > currentMinutes) {
+          minutesSet.add(minutes)
+        }
+      }
+    }
+
+    return Array.from(minutesSet)
+      .sort((a, b) => a - b)
+      .map((minutes) => {
+        const slotKey = `${formatIsoDate(selectedDate)}|${formatTime(minutes)}`
+        return {
+          time: formatTime(minutes),
+          busy: busySlotSet.has(slotKey),
+        }
+      })
+  }, [
+    busySlotSet,
+    currentMinutes,
+    hasSelectedDayDurationWindow,
+    isSelectedDatePast,
+    isTodaySelected,
+    selectedDate,
+    selectedDayAvailability.intervals,
+    selectedDayClosed,
+    serviceDurationMinutes,
+  ])
 
   const canGoPrevWeek = weekStart.getTime() > currentWeekStart.getTime()
 

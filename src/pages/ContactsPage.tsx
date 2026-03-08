@@ -14,6 +14,7 @@ import SiteFooter from '../components/SiteFooter'
 import SiteNav from '../components/SiteNav'
 import { useLanguage } from '../context/language-context'
 import { useI18n } from '../hooks/useI18n'
+import { buildHoursByDay, formatDayHours } from '../lib/business-hours'
 import '../styles/section-page.scss'
 
 const getErrorText = (error: unknown, fallback: string): string => {
@@ -64,15 +65,24 @@ function ContactsPage() {
         { label: t('contacts.field.email'), value: contact.email },
       ])
 
-      const mappedHours = generalHours.slots
-        .slice()
-        .sort((a, b) => a.day_of_week - b.day_of_week)
-        .map((slot) => ({
-          day: dayNames[slot.day_of_week] ?? `День ${slot.day_of_week + 1}`,
-          time: slot.is_closed
-            ? t('contacts.hours.closed')
-            : `${slot.open_time?.slice(0, 5) ?? '--:--'} - ${slot.close_time?.slice(0, 5) ?? '--:--'}`,
-        }))
+      const hoursByDay = buildHoursByDay(generalHours.slots)
+      const mappedHours = dayNames.map((dayName, dayIndex) => ({
+        day: dayName,
+        time: formatDayHours(
+          hoursByDay.get(dayIndex) ?? {
+            isClosed: false,
+            intervals: [
+              {
+                openMinutes: 9 * 60,
+                closeMinutes: 20 * 60,
+                openTime: '09:00',
+                closeTime: '20:00',
+              },
+            ],
+          },
+          t('contacts.hours.closed'),
+        ),
+      }))
       setHours(mappedHours)
 
       setFaq(

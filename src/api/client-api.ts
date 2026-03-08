@@ -190,6 +190,7 @@ export type PublicContactSettings = {
 
 export type PublicHourSlot = {
   day_of_week: number
+  interval_index: number
   open_time: string | null
   close_time: string | null
   is_closed: boolean

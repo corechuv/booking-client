@@ -51,20 +51,31 @@ function ContactsPage() {
   const loadContent = useCallback(async () => {
     setIsLoading(true)
     setLoadingError(null)
-    try {
-      const [contact, generalHours, publicFaqs, publicCertificates] = await Promise.all([
+
+    const [contactResult, generalHoursResult, faqResult, certificatesResult] =
+      await Promise.allSettled([
         fetchPublicContact(language),
         fetchPublicGeneralHours(),
         fetchPublicFaqs(language),
         fetchPublicCertificates(language),
       ])
 
+    let firstError: string | null = null
+
+    if (contactResult.status === 'fulfilled') {
+      const contact = contactResult.value
       setContacts([
         { label: t('contacts.field.address'), value: contact.address },
         { label: t('contacts.field.phone'), value: contact.phone },
         { label: t('contacts.field.email'), value: contact.email },
       ])
+    } else {
+      setContacts([])
+      firstError ??= getErrorText(contactResult.reason, t('contacts.errorFallback'))
+    }
 
+    if (generalHoursResult.status === 'fulfilled') {
+      const generalHours = generalHoursResult.value
       const hoursByDay = buildHoursByDay(generalHours.slots)
       const mappedHours = dayNames.map((dayName, dayIndex) => ({
         day: dayName,
@@ -84,16 +95,26 @@ function ContactsPage() {
         ),
       }))
       setHours(mappedHours)
+    } else {
+      setHours([])
+      firstError ??= getErrorText(generalHoursResult.reason, t('contacts.errorFallback'))
+    }
 
+    if (faqResult.status === 'fulfilled') {
       setFaq(
-        publicFaqs.map((item) => ({
+        faqResult.value.map((item) => ({
           id: String(item.id),
           question: item.question,
           answer: item.answer,
         })),
       )
+    } else {
+      setFaq([])
+      firstError ??= getErrorText(faqResult.reason, t('contacts.errorFallback'))
+    }
 
-      const mappedCertificates = publicCertificates
+    if (certificatesResult.status === 'fulfilled') {
+      const mappedCertificates = certificatesResult.value
         .filter((item) => item.image_url || item.document_url)
         .map((item) => ({
           id: String(item.id),
@@ -102,15 +123,13 @@ function ContactsPage() {
           pdf: item.document_url || item.image_url || '',
         }))
       setCertificateItems(mappedCertificates)
-    } catch (requestError) {
-      setLoadingError(getErrorText(requestError, t('contacts.errorFallback')))
-      setContacts([])
-      setHours([])
-      setFaq([])
+    } else {
       setCertificateItems([])
-    } finally {
-      setIsLoading(false)
+      firstError ??= getErrorText(certificatesResult.reason, t('contacts.errorFallback'))
     }
+
+    setLoadingError(firstError)
+    setIsLoading(false)
   }, [dayNames, language, t])
 
   useEffect(() => {

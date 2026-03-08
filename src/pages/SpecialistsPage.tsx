@@ -60,14 +60,19 @@ function SpecialistsPage() {
   const loadContent = useCallback(async () => {
     setIsLoading(true)
     setLoadingError(null)
-    try {
-      const [publicSpecialists, generalHours, publicCertificates] = await Promise.all([
+
+    const [specialistsResult, generalHoursResult, certificatesResult] = await Promise.allSettled(
+      [
         fetchPublicSpecialists(language),
         fetchPublicGeneralHours(),
         fetchPublicCertificates(language),
-      ])
+      ],
+    )
 
-      const mappedSpecialists = publicSpecialists.map((item) => ({
+    let firstError: string | null = null
+
+    if (specialistsResult.status === 'fulfilled') {
+      const mappedSpecialists = specialistsResult.value.map((item) => ({
         name: item.full_name,
         role: item.title,
         text: item.bio ?? t('specialists.defaultBio'),
@@ -78,8 +83,17 @@ function SpecialistsPage() {
         (item) => item.name.trim().toLowerCase() === normalizedPrimaryName,
       )
       setSpecialists([primarySpecialist ?? primarySpecialistFallback])
+    } else {
+      setSpecialists([primarySpecialistFallback])
+      if (specialistsResult.reason instanceof ApiError) {
+        firstError ??= getErrorText(specialistsResult.reason)
+      } else {
+        firstError ??= t('specialists.errorFallback')
+      }
+    }
 
-      const hoursByDay = buildHoursByDay(generalHours.slots)
+    if (generalHoursResult.status === 'fulfilled') {
+      const hoursByDay = buildHoursByDay(generalHoursResult.value.slots)
       const mappedWeekPlan = dayNames.map((dayName, dayIndex) => ({
         day: dayName,
         info: formatDayHours(
@@ -98,8 +112,17 @@ function SpecialistsPage() {
         ),
       }))
       setWeekPlan(mappedWeekPlan)
+    } else {
+      setWeekPlan([])
+      if (generalHoursResult.reason instanceof ApiError) {
+        firstError ??= getErrorText(generalHoursResult.reason)
+      } else {
+        firstError ??= t('specialists.errorFallback')
+      }
+    }
 
-      const mappedCertificates = publicCertificates
+    if (certificatesResult.status === 'fulfilled') {
+      const mappedCertificates = certificatesResult.value
         .filter((item) => item.image_url || item.document_url)
         .map((item) => ({
           id: String(item.id),
@@ -108,18 +131,17 @@ function SpecialistsPage() {
           pdf: item.document_url || item.image_url || '',
         }))
       setCertificateItems(mappedCertificates)
-    } catch (requestError) {
-      if (requestError instanceof ApiError) {
-        setLoadingError(getErrorText(requestError))
-      } else {
-        setLoadingError(t('specialists.errorFallback'))
-      }
-      setSpecialists([primarySpecialistFallback])
-      setWeekPlan([])
+    } else {
       setCertificateItems([])
-    } finally {
-      setIsLoading(false)
+      if (certificatesResult.reason instanceof ApiError) {
+        firstError ??= getErrorText(certificatesResult.reason)
+      } else {
+        firstError ??= t('specialists.errorFallback')
+      }
     }
+
+    setLoadingError(firstError)
+    setIsLoading(false)
   }, [dayNames, language, primarySpecialistFallback, t])
 
   useEffect(() => {

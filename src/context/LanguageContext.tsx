@@ -3,6 +3,8 @@ import { fetchPublicLanguages, type PublicLanguage } from '../api/client-api'
 import { LanguageContext, type AppLanguage } from './language-context'
 import type { AppLanguageCode } from '../i18n/types'
 
+const LANGUAGE_STORAGE_KEY = 'mira-language'
+
 const fallbackLanguages: AppLanguage[] = [
   {
     id: 1,
@@ -41,6 +43,16 @@ const normalizeLanguageCode = (value: string | null | undefined): AppLanguageCod
   return 'ru'
 }
 
+const parseLanguageCode = (
+  value: string | null | undefined,
+): AppLanguageCode | null => {
+  const normalized = value?.trim().toLowerCase()
+  if (normalized === 'ru' || normalized === 'uk' || normalized === 'de') {
+    return normalized
+  }
+  return null
+}
+
 const toLanguage = (payload: PublicLanguage): AppLanguage => ({
   id: payload.id,
   code: normalizeLanguageCode(payload.code),
@@ -51,6 +63,27 @@ const toLanguage = (payload: PublicLanguage): AppLanguage => ({
 })
 
 const getInitialLanguage = (): AppLanguageCode => {
+  if (typeof window === 'undefined') {
+    return 'ru'
+  }
+
+  const storedCode = parseLanguageCode(window.localStorage.getItem(LANGUAGE_STORAGE_KEY))
+  if (storedCode) {
+    return storedCode
+  }
+
+  const documentCode = parseLanguageCode(document.documentElement.getAttribute('lang'))
+  if (documentCode) {
+    return documentCode
+  }
+
+  const browserLanguageCode = parseLanguageCode(
+    window.navigator.language.split('-')[0],
+  )
+  if (browserLanguageCode) {
+    return browserLanguageCode
+  }
+
   return 'ru'
 }
 
@@ -86,6 +119,11 @@ function LanguageProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     applyDocumentLanguage(language)
+    if (typeof window === 'undefined') {
+      return
+    }
+
+    window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language)
   }, [language])
 
   useEffect(() => {

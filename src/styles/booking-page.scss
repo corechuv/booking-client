@@ -170,9 +170,9 @@
 .scheduler-week-btn {
   width: 34px;
   height: 34px;
-  border: 1px solid var(--border-soft);
-  border-radius: 10px;
-  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  background: var(--surface-overlay-1);
   color: var(--text-1);
   display: inline-flex;
   align-items: center;
@@ -185,15 +185,13 @@
 }
 
 .scheduler-week-btn:hover {
-  border-color: var(--border-strong);
   background: var(--surface-overlay-2);
 }
 
 .scheduler-week-btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;
-  border-color: var(--border-soft);
-  background: transparent;
+  background: var(--surface-overlay-1);
 }
 
 .scheduler-days {

@@ -37,6 +37,27 @@ function CatalogPage() {
   const [error, setError] = useState<string | null>(null)
   const servicesSectionRef = useRef<HTMLElement | null>(null)
 
+  const scrollServicesStartBelowHeader = useCallback(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+
+    const section = servicesSectionRef.current
+    if (!section) {
+      return
+    }
+
+    const nav = document.querySelector<HTMLElement>('.site-nav')
+    const headerOffset = (nav?.getBoundingClientRect().height ?? 0) + 10
+    const sectionTop = section.getBoundingClientRect().top + window.scrollY
+    const targetTop = Math.max(sectionTop - headerOffset, 0)
+
+    window.scrollTo({
+      top: targetTop,
+      behavior: 'auto',
+    })
+  }, [])
+
   const serviceIdFromQuery = useMemo(() => {
     const value = searchParams.get('service')?.trim()
     return value ? value : null
@@ -186,13 +207,12 @@ function CatalogPage() {
     }
 
     requestAnimationFrame(() => {
-      servicesSectionRef.current?.scrollIntoView({
-        behavior: 'auto',
-        block: 'start',
+      requestAnimationFrame(() => {
+        scrollServicesStartBelowHeader()
       })
     })
     setPendingScrollToServicesTop(false)
-  }, [isMobileCatalog, mobileView, pendingScrollToServicesTop])
+  }, [isMobileCatalog, mobileView, pendingScrollToServicesTop, scrollServicesStartBelowHeader])
 
   const showCategories = !isMobileCatalog || mobileView === 'categories'
   const showServices = !isMobileCatalog || mobileView === 'services'

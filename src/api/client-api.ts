@@ -131,6 +131,13 @@ export type ClientService = {
   updated_at: string
 }
 
+export type ClientCategory = {
+  id: number
+  name: string
+  description: string | null
+  show_empty: boolean
+}
+
 export type CreateBookingPayload = {
   service_id: number
   specialist_name?: string | null
@@ -294,6 +301,9 @@ const withLangQuery = (path: string, lang?: ClientLanguageCode): string => {
 
 export const fetchClientServices = (lang?: ClientLanguageCode) =>
   request<ClientService[]>(withLangQuery('/client/services', lang))
+
+export const fetchClientCategories = (lang?: ClientLanguageCode) =>
+  request<ClientCategory[]>(withLangQuery('/client/categories', lang))
 
 export const fetchBookingAvailability = (
   serviceId: number,

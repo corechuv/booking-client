@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { ApiError, fetchClientServices } from '../api/client-api'
+import {
+  type ClientCategory,
+  ApiError,
+  fetchClientCategories,
+  fetchClientServices,
+} from '../api/client-api'
 import LinkButton from '../components/LinkButton'
 import SectionPageHero from '../components/SectionPageHero'
 import SiteFooter from '../components/SiteFooter'
@@ -41,7 +46,13 @@ function CatalogPage() {
 
     try {
       const services = await fetchClientServices(language)
-      setCatalog(mapApiServicesToCatalog(services, language))
+      let categories: ClientCategory[] = []
+      try {
+        categories = await fetchClientCategories(language)
+      } catch {
+        categories = []
+      }
+      setCatalog(mapApiServicesToCatalog(services, language, categories))
     } catch (requestError) {
       if (requestError instanceof ApiError) {
         setError(t('catalog.errorLoad', { message: requestError.message }))

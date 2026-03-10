@@ -1,4 +1,4 @@
-import type { ClientService } from '../api/client-api'
+import type { ClientCategory, ClientService } from '../api/client-api'
 import type { ServiceCategory, ServiceItem } from '../data/service-catalog'
 import type { AppLanguageCode } from '../i18n/types'
 
@@ -132,15 +132,27 @@ const mapService = (service: ClientService, language: AppLanguageCode): ServiceI
 export const mapApiServicesToCatalog = (
   services: ClientService[],
   language: AppLanguageCode = 'ru',
+  categories: ClientCategory[] = [],
 ): ServiceCategory[] => {
   const grouped = new Map<
     number,
     {
       name: string
+      summary: string
+      showEmpty: boolean
       items: ServiceItem[]
     }
   >()
   const seenServiceIds = new Set<number>()
+
+  categories.forEach((category) => {
+    grouped.set(category.id, {
+      name: category.name,
+      summary: category.description?.trim() || '',
+      showEmpty: Boolean(category.show_empty),
+      items: [],
+    })
+  })
 
   services.forEach((service) => {
     if (seenServiceIds.has(service.id)) {
@@ -150,6 +162,8 @@ export const mapApiServicesToCatalog = (
 
     const group = grouped.get(service.category_id) ?? {
       name: service.category,
+      summary: '',
+      showEmpty: false,
       items: [],
     }
     if (!group.name && service.category) {
@@ -159,11 +173,15 @@ export const mapApiServicesToCatalog = (
     grouped.set(service.category_id, group)
   })
 
-  return Array.from(grouped.entries()).map(([categoryId, data]) => ({
-    id: `${toSlug(data.name)}-${categoryId}`,
-    name: data.name,
-    summary:
-      categorySummaries[language][data.name] ?? fallbackSummary(language, data.name),
-    services: data.items,
-  }))
+  return Array.from(grouped.entries())
+    .filter(([, data]) => data.items.length > 0 || data.showEmpty)
+    .map(([categoryId, data]) => ({
+      id: `${toSlug(data.name)}-${categoryId}`,
+      name: data.name,
+      summary:
+        data.summary ||
+        categorySummaries[language][data.name] ||
+        fallbackSummary(language, data.name),
+      services: data.items,
+    }))
 }

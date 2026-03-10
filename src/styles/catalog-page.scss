@@ -225,6 +225,11 @@
   .catalog-page__services.is-visible {
     display: grid;
   }
+
+  .catalog-page__back-to-categories {
+    justify-self: stretch;
+    width: 100%;
+  }
 }
 
 @media (max-width: 640px) {

@@ -1,0 +1,166 @@
+.inspiration-page__grid {
+  width: min(1180px, 100%);
+  margin-inline: auto;
+  position: relative;
+  z-index: 2;
+}
+
+.inspiration-page__grid {
+  margin-top: clamp(1rem, 2.8vw, 2rem);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.65rem, 1.8vw, 0.95rem);
+}
+
+.inspiration-page__grid > .section-page__notice {
+  grid-column: 1 / -1;
+}
+
+.inspiration-banner-card {
+  position: relative;
+  overflow: hidden;
+  border: 0;
+  border-radius: 22px;
+  min-height: clamp(280px, 38vw, 420px);
+  background-image:
+    linear-gradient(180deg, rgba(7, 9, 16, 0.2) 12%, rgba(7, 9, 16, 0.9) 100%),
+    var(--banner-image);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.24s ease, border-color 0.24s ease;
+}
+
+.inspiration-banner-card:hover {
+  transform: translateY(-3px);
+}
+
+.inspiration-banner-card__content {
+  width: 100%;
+  padding: clamp(0.85rem, 2.2vw, 1.15rem);
+  display: grid;
+  gap: 0.4rem;
+}
+
+.inspiration-banner-card__kicker {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+  color: var(--accent-3);
+  font-weight: 700;
+}
+
+.inspiration-banner-card h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2.2vw, 1.45rem);
+  line-height: 1.05;
+}
+
+.inspiration-banner-card p {
+  margin: 0;
+  color: var(--text-2);
+  font-size: 0.9rem;
+}
+
+.inspiration-banner-card .link-button {
+  margin-top: 0.45rem;
+  justify-self: start;
+}
+
+.inspiration-page__ai {
+  width: min(1180px, 100%);
+  margin: clamp(1rem, 2.8vw, 2rem) auto 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: clamp(0.95rem, 2.4vw, 1.35rem) 0;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.inspiration-page__ai-kicker {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+  color: var(--accent-3);
+  font-weight: 700;
+}
+
+.inspiration-page__ai-head h2 {
+  margin: 0.3rem 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2.8vw, 1.9rem);
+}
+
+.inspiration-page__ai-head p {
+  margin: 0.5rem 0 0;
+  color: var(--text-2);
+  max-width: 78ch;
+}
+
+.inspiration-page__ai-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.inspiration-page__ai-list li {
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  background: var(--card-bg-1);
+  padding: 0.75rem 0.82rem;
+  color: var(--text-1);
+  line-height: 1.35;
+}
+
+.inspiration-page__ai-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.inspiration-page__cta {
+  margin-top: clamp(1.1rem, 2.8vw, 2rem);
+}
+
+@media (max-width: 980px) {
+  .inspiration-page__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .inspiration-page__ai-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .inspiration-page__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .inspiration-banner-card {
+    min-height: 280px;
+  }
+
+  .inspiration-banner-card .link-button {
+    width: 100%;
+  }
+
+  .inspiration-page__ai-actions {
+    display: grid;
+    width: 100%;
+  }
+
+  .inspiration-page__ai-actions .link-button {
+    width: 100%;
+  }
+}

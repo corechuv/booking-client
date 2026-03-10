@@ -8,15 +8,50 @@
 .ai-assistant__toggle {
   border: 0;
   border-radius: 999px;
-  min-width: 52px;
-  height: 52px;
-  padding: 0 1rem;
-  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  min-width: 174px;
+  height: 64px;
+  padding: 0.46rem 0.48rem 0.46rem 1rem;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--accent-2) 44%, #fff 56%) 0%,
+    color-mix(in srgb, var(--accent-1) 66%, var(--accent-2) 34%) 70%,
+    color-mix(in srgb, var(--accent-2) 62%, #000 38%) 100%
+  );
   color: var(--on-accent);
-  font-size: 0.92rem;
-  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.62rem;
   cursor: pointer;
   box-shadow: var(--accent-shadow);
+}
+
+.ai-assistant__toggle-text {
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+.ai-assistant__toggle-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent-1) 72%, var(--accent-2) 28%);
+  color: var(--on-accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.08rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  flex-shrink: 0;
+}
+
+.ai-assistant__toggle:hover .ai-assistant__toggle-circle {
+  background: color-mix(in srgb, var(--accent-1) 58%, var(--accent-2) 42%);
 }
 
 .ai-assistant__panel {
@@ -252,6 +287,22 @@
   .ai-assistant {
     right: 0.6rem;
     bottom: 0.6rem;
+  }
+
+  .ai-assistant__toggle {
+    min-width: 164px;
+    height: 58px;
+    padding: 0.38rem 0.42rem 0.38rem 0.82rem;
+  }
+
+  .ai-assistant__toggle-text {
+    font-size: 0.92rem;
+  }
+
+  .ai-assistant__toggle-circle {
+    width: 42px;
+    height: 42px;
+    font-size: 0.96rem;
   }
 
   .ai-assistant__panel {

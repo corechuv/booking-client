@@ -13,6 +13,7 @@ import ContactsPage from './pages/ContactsPage'
 import FaqPage from './pages/FaqPage'
 import HomePage from './pages/HomePage'
 import ImpressumPage from './pages/ImpressumPage'
+import InspirationPage from './pages/InspirationPage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import PricingPage from './pages/PricingPage'
 import SpecialistsPage from './pages/SpecialistsPage'
@@ -30,6 +31,7 @@ function App() {
             <Route path="/catalog" element={<CatalogPage />} />
             <Route path="/specialists" element={<SpecialistsPage />} />
             <Route path="/pricing" element={<PricingPage />} />
+            <Route path="/inspiration" element={<InspirationPage />} />
             <Route path="/contacts" element={<ContactsPage />} />
             <Route path="/faq" element={<FaqPage />} />
             <Route path="/booking" element={<BookingPage />} />

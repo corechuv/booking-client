@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import {
   ApiError,
@@ -9,6 +9,7 @@ import {
 import { useLanguage } from '../context/language-context'
 import { useI18n } from '../hooks/useI18n'
 import { lockBodyScroll, unlockBodyScroll } from '../lib/body-scroll-lock'
+import { AI_ASSISTANT_OPEN_EVENT } from '../constants/assistant'
 import { CloseIcon } from './icons'
 
 type ChatMessage = AssistantHistoryItem & {
@@ -22,6 +23,7 @@ const IBAN_RE = /\b[A-Z]{2}\d{2}[A-Z0-9]{10,30}\b/i
 const CARD_RE = /\b(?:\d[ -]*?){13,19}\b/
 const MAP_INTENT_RE = /\bmap\b|\broute\b|\baddress\b|карта|маршрут|адрес|мапа|адреса|karte|route|adresse|anfahrt|maps\.google/i
 const ASSISTANT_ROUTE_LABELS: Record<string, string> = {
+  '/inspiration': 'nav.inspiration',
   '/catalog': 'nav.catalog',
   '/booking': 'footer.booking',
   '/contacts': 'nav.contacts',
@@ -35,7 +37,7 @@ const ASSISTANT_ROUTE_LABELS: Record<string, string> = {
 }
 
 const createAssistantRouteRegex = () =>
-  /\/(?:catalog|booking|contacts|faq|pricing|specialists|privacy|terms|cookies|impressum)\b/gi
+  /\/(?:inspiration|catalog|booking|contacts|faq|pricing|specialists|privacy|terms|cookies|impressum)\b/gi
 
 type AssistantActionLink = {
   path: string
@@ -148,11 +150,26 @@ function AiAssistantWidget() {
     }
   }, [isOpen, language])
 
-  const openAssistant = () => {
+  const openAssistant = useCallback(() => {
     setIsOpen(true)
     setErrorText(null)
     setMessages((prev) => (prev.length ? prev : [starterMessage]))
-  }
+  }, [starterMessage])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+
+    const handleExternalOpen = () => {
+      openAssistant()
+    }
+
+    window.addEventListener(AI_ASSISTANT_OPEN_EVENT, handleExternalOpen)
+    return () => {
+      window.removeEventListener(AI_ASSISTANT_OPEN_EVENT, handleExternalOpen)
+    }
+  }, [openAssistant])
 
   const closeAssistant = () => {
     setIsOpen(false)
@@ -340,7 +357,10 @@ function AiAssistantWidget() {
           aria-label={t('assistant.open')}
           onClick={openAssistant}
         >
-          AI
+          <span className="ai-assistant__toggle-text">{t('assistant.always')}</span>
+          <span className="ai-assistant__toggle-circle" aria-hidden="true">
+            AI
+          </span>
         </button>
       ) : null}
 

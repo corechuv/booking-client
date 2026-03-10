@@ -17,6 +17,7 @@ function SiteNav() {
   const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false)
   const links = [
     { to: '/', label: t('nav.home'), end: true },
+    { to: '/inspiration', label: t('nav.inspiration') },
     { to: '/catalog', label: t('nav.catalog') },
     { to: '/specialists', label: t('nav.specialists') },
     { to: '/pricing', label: t('nav.pricing') },

@@ -39,6 +39,10 @@ function CatalogPage() {
     const value = searchParams.get('service')?.trim()
     return value ? value : null
   }, [searchParams])
+  const categoryIdFromQuery = useMemo(() => {
+    const value = searchParams.get('category')?.trim()
+    return value ? value : null
+  }, [searchParams])
 
   const loadCatalog = useCallback(async () => {
     setIsLoading(true)
@@ -109,6 +113,24 @@ function CatalogPage() {
       catalog.find((category) => category.id === activeCategoryId) ?? catalog[0],
     [activeCategoryId, catalog],
   )
+
+  useEffect(() => {
+    if (!catalog.length || categoryIdFromQuery === null) {
+      return
+    }
+
+    const hasCategoryFromQuery = catalog.some(
+      (category) => category.id === categoryIdFromQuery,
+    )
+    if (!hasCategoryFromQuery) {
+      return
+    }
+
+    setActiveCategoryId(categoryIdFromQuery)
+    if (isMobileCatalog) {
+      setMobileView('services')
+    }
+  }, [catalog, categoryIdFromQuery, isMobileCatalog])
 
   useEffect(() => {
     if (!catalog.length || serviceIdFromQuery === null) {

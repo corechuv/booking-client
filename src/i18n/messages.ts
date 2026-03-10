@@ -5,6 +5,7 @@ type MessageDictionary = Record<string, string>
 const messages: Record<AppLanguageCode, MessageDictionary> = {
   ru: {
     'nav.home': 'Главная',
+    'nav.inspiration': 'Атмосфера',
     'nav.catalog': 'Каталог',
     'nav.specialists': 'Специалисты',
     'nav.pricing': 'Цены',
@@ -44,6 +45,7 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
 
     'assistant.open': 'Открыть AI ассистента',
     'assistant.close': 'Закрыть AI ассистента',
+    'assistant.always': '24/7 онлайн',
     'assistant.title': 'AI ассистент Mira',
     'assistant.subtitle': 'Быстрые ответы по услугам и записи',
     'assistant.greeting':
@@ -103,6 +105,57 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
     'home.final.eyebrow': 'Ready for your next look?',
     'home.final.title': 'Сделайте бронирование через каталог услуг',
     'home.final.button': 'Открыть страницу записи',
+
+    'inspiration.hero.eyebrow': 'Mira atmosphere',
+    'inspiration.hero.title': 'Визуальные подборки и настроение салона',
+    'inspiration.hero.description': 'Три направления, три эстетики и один сервисный стандарт Mira. Выбирайте стиль и переходите к записи.',
+    'inspiration.hero.catalog': 'Открыть каталог',
+    'inspiration.hero.booking': 'Перейти к записи',
+    'inspiration.loading': 'Загружаем подборки из каталога...',
+    'inspiration.errorLoad': 'Не удалось обновить блок из каталога: {message}',
+    'inspiration.errorFallback': 'Не удалось загрузить данные каталога.',
+    'inspiration.card.openFromCatalog': 'Открыть в каталоге',
+    'inspiration.card.1.kicker': 'Каталог',
+    'inspiration.card.1.title': 'Актуальные категории и процедуры',
+    'inspiration.card.1.text': 'Список направлений и услуг подтягивается из вашего каталога.',
+    'inspiration.card.1.cta': 'Открыть каталог',
+    'inspiration.card.2.kicker': 'Каталог',
+    'inspiration.card.2.title': 'Выбирайте направление',
+    'inspiration.card.2.text': 'Переходите в нужную категорию и открывайте доступные услуги.',
+    'inspiration.card.2.cta': 'Смотреть категории',
+    'inspiration.card.3.kicker': 'Каталог',
+    'inspiration.card.3.title': 'Далее — запись',
+    'inspiration.card.3.text': 'После выбора услуги переходите к booking и фиксируйте слот.',
+    'inspiration.card.3.cta': 'Перейти в каталог',
+    'inspiration.focus.title': 'Что вы получаете на каждом визите',
+    'inspiration.focus.text': 'Формат страницы подходит как mood-board перед выбором процедуры.',
+    'inspiration.focus.1': 'Единый визуальный стиль от первого экрана до подтверждения записи',
+    'inspiration.focus.2': 'Переход в каталог и booking в один клик без лишних шагов',
+    'inspiration.focus.3': 'Актуальные сценарии под реальные услуги и специалистов',
+    'inspiration.focus.dynamic.catalog':
+      'В каталоге сейчас {categories} категорий и {services} активных услуг.',
+    'inspiration.focus.dynamic.featured':
+      'Фокус-процедура: {category} · {title} · {duration} · {price}.',
+    'inspiration.focus.dynamic.discounts': 'Процедур со скидкой сейчас: {count}.',
+    'inspiration.ai.kicker': 'AI support 24/7',
+    'inspiration.ai.title': 'AI-помощник всегда доступен на сайте',
+    'inspiration.ai.text':
+      'На любой странице можно открыть AI-помощника и получить понятный следующий шаг: куда нажать, что выбрать и как быстрее записаться.',
+    'inspiration.ai.facts':
+      'Помощник использует текущий каталог: {categories} категорий, {services} услуг и {discounts} предложений со скидкой.',
+    'inspiration.ai.factsFallback':
+      'Помощник использует актуальные данные сайта и подсказывает маршрут до записи.',
+    'inspiration.ai.item.1':
+      'Подбирает услуги под ваш запрос и сразу дает ссылки на нужные разделы каталога.',
+    'inspiration.ai.item.2':
+      'Отвечает по записи, свободным слотам, правилам и подтверждению визита.',
+    'inspiration.ai.item.3':
+      'Подсказывает контакты, адрес и дает кнопки для перехода к карте и маршруту.',
+    'inspiration.ai.open': 'Открыть AI-помощника',
+    'inspiration.ai.faq': 'Читать FAQ',
+    'inspiration.cta.title': 'Готовы выбрать процедуру под ваш запрос?',
+    'inspiration.cta.text': 'Откройте каталог, выберите процедуру и зафиксируйте удобный слот.',
+    'inspiration.cta.button': 'Открыть каталог',
 
     'home.exp.skin.title': 'Skin Lab Sessions',
     'home.exp.skin.text': 'Диагностика кожи + персональный facial-ритуал под состояние кожи сегодня.',
@@ -355,6 +408,7 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
   },
   uk: {
     'nav.home': 'Головна',
+    'nav.inspiration': 'Атмосфера',
     'nav.catalog': 'Каталог',
     'nav.specialists': 'Фахівці',
     'nav.pricing': 'Ціни',
@@ -394,6 +448,7 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
 
     'assistant.open': 'Відкрити AI асистента',
     'assistant.close': 'Закрити AI асистента',
+    'assistant.always': '24/7 онлайн',
     'assistant.title': 'AI асистент Mira',
     'assistant.subtitle': 'Швидкі відповіді щодо послуг і запису',
     'assistant.greeting':
@@ -453,6 +508,57 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
     'home.final.eyebrow': 'Ready for your next look?',
     'home.final.title': 'Зробіть бронювання через каталог послуг',
     'home.final.button': 'Відкрити сторінку запису',
+
+    'inspiration.hero.eyebrow': 'Mira atmosphere',
+    'inspiration.hero.title': 'Візуальні добірки та настрій салону',
+    'inspiration.hero.description': 'Три напрями, три естетики й один сервісний стандарт Mira. Обирайте стиль і переходьте до запису.',
+    'inspiration.hero.catalog': 'Відкрити каталог',
+    'inspiration.hero.booking': 'Перейти до запису',
+    'inspiration.loading': 'Завантажуємо добірки з каталогу...',
+    'inspiration.errorLoad': 'Не вдалося оновити блок із каталогу: {message}',
+    'inspiration.errorFallback': 'Не вдалося завантажити дані каталогу.',
+    'inspiration.card.openFromCatalog': 'Відкрити в каталозі',
+    'inspiration.card.1.kicker': 'Каталог',
+    'inspiration.card.1.title': 'Актуальні категорії та процедури',
+    'inspiration.card.1.text': 'Список напрямів і послуг підтягується з вашого каталогу.',
+    'inspiration.card.1.cta': 'Відкрити каталог',
+    'inspiration.card.2.kicker': 'Каталог',
+    'inspiration.card.2.title': 'Оберіть напрям',
+    'inspiration.card.2.text': 'Переходьте в потрібну категорію та відкривайте доступні послуги.',
+    'inspiration.card.2.cta': 'Дивитися категорії',
+    'inspiration.card.3.kicker': 'Каталог',
+    'inspiration.card.3.title': 'Далі — запис',
+    'inspiration.card.3.text': 'Після вибору послуги переходьте до booking і фіксуйте слот.',
+    'inspiration.card.3.cta': 'Перейти в каталог',
+    'inspiration.focus.title': 'Що ви отримуєте на кожному візиті',
+    'inspiration.focus.text': 'Формат сторінки працює як mood-board перед вибором процедури.',
+    'inspiration.focus.1': 'Єдиний візуальний стиль від першого екрана до підтвердження запису',
+    'inspiration.focus.2': 'Перехід у каталог і booking в один клік без зайвих кроків',
+    'inspiration.focus.3': 'Актуальні сценарії під реальні послуги та фахівців',
+    'inspiration.focus.dynamic.catalog':
+      'У каталозі зараз {categories} категорій і {services} активних послуг.',
+    'inspiration.focus.dynamic.featured':
+      'Фокус-процедура: {category} · {title} · {duration} · {price}.',
+    'inspiration.focus.dynamic.discounts': 'Процедур зі знижкою зараз: {count}.',
+    'inspiration.ai.kicker': 'AI support 24/7',
+    'inspiration.ai.title': 'AI-помічник завжди доступний на сайті',
+    'inspiration.ai.text':
+      'На будь-якій сторінці можна відкрити AI-помічника й отримати зрозумілий наступний крок: куди натиснути, що обрати та як швидше записатися.',
+    'inspiration.ai.facts':
+      'Помічник використовує поточний каталог: {categories} категорій, {services} послуг і {discounts} пропозицій зі знижкою.',
+    'inspiration.ai.factsFallback':
+      'Помічник використовує актуальні дані сайту та підказує маршрут до запису.',
+    'inspiration.ai.item.1':
+      'Підбирає послуги під ваш запит і одразу дає посилання на потрібні розділи каталогу.',
+    'inspiration.ai.item.2':
+      'Відповідає щодо запису, вільних слотів, правил і підтвердження візиту.',
+    'inspiration.ai.item.3':
+      'Підказує контакти, адресу та дає кнопки переходу до карти й маршруту.',
+    'inspiration.ai.open': 'Відкрити AI-помічника',
+    'inspiration.ai.faq': 'Читати FAQ',
+    'inspiration.cta.title': 'Готові обрати процедуру під ваш запит?',
+    'inspiration.cta.text': 'Відкрийте каталог, оберіть процедуру та зафіксуйте зручний слот.',
+    'inspiration.cta.button': 'Відкрити каталог',
 
     'home.exp.skin.title': 'Skin Lab Sessions',
     'home.exp.skin.text': 'Діагностика шкіри + персональний facial-ритуал під стан шкіри сьогодні.',
@@ -705,6 +811,7 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
   },
   de: {
     'nav.home': 'Startseite',
+    'nav.inspiration': 'Inspiration',
     'nav.catalog': 'Katalog',
     'nav.specialists': 'Spezialisten',
     'nav.pricing': 'Preise',
@@ -744,6 +851,7 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
 
     'assistant.open': 'AI-Assistent öffnen',
     'assistant.close': 'AI-Assistent schließen',
+    'assistant.always': '24/7 online',
     'assistant.title': 'Mira AI-Assistent',
     'assistant.subtitle': 'Schnelle Antworten zu Leistungen und Buchung',
     'assistant.greeting':
@@ -804,6 +912,58 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
     'home.final.eyebrow': 'Ready for your next look?',
     'home.final.title': 'Buchen Sie ueber den Leistungskatalog',
     'home.final.button': 'Buchungsseite öffnen',
+
+    'inspiration.hero.eyebrow': 'Mira atmosphere',
+    'inspiration.hero.title': 'Visuelle Kollektionen und Salon-Stimmung',
+    'inspiration.hero.description': 'Drei Richtungen, drei Ästhetiken und ein Mira-Servicestandard. Stil wählen und direkt zur Buchung wechseln.',
+    'inspiration.hero.catalog': 'Katalog öffnen',
+    'inspiration.hero.booking': 'Zur Buchung',
+    'inspiration.loading': 'Katalog-Auswahl wird geladen...',
+    'inspiration.errorLoad': 'Katalog-Block konnte nicht aktualisiert werden: {message}',
+    'inspiration.errorFallback': 'Katalogdaten konnten nicht geladen werden.',
+    'inspiration.card.openFromCatalog': 'Im Katalog öffnen',
+    'inspiration.card.1.kicker': 'Katalog',
+    'inspiration.card.1.title': 'Aktuelle Kategorien und Behandlungen',
+    'inspiration.card.1.text': 'Richtungen und Leistungen werden direkt aus Ihrem Katalog geladen.',
+    'inspiration.card.1.cta': 'Katalog öffnen',
+    'inspiration.card.2.kicker': 'Katalog',
+    'inspiration.card.2.title': 'Richtung auswählen',
+    'inspiration.card.2.text': 'In die gewünschte Kategorie wechseln und verfügbare Leistungen ansehen.',
+    'inspiration.card.2.cta': 'Kategorien ansehen',
+    'inspiration.card.3.kicker': 'Katalog',
+    'inspiration.card.3.title': 'Danach zur Buchung',
+    'inspiration.card.3.text': 'Nach der Leistungswahl direkt zu booking wechseln und Slot sichern.',
+    'inspiration.card.3.cta': 'Zum Katalog',
+    'inspiration.focus.title': 'Was Sie bei jedem Besuch bekommen',
+    'inspiration.focus.text': 'Diese Seite funktioniert als Mood-Board vor der Auswahl einer Behandlung.',
+    'inspiration.focus.1': 'Einheitlicher visueller Stil vom ersten Screen bis zur Buchungsbestätigung',
+    'inspiration.focus.2': 'Wechsel zu Katalog und booking in einem Klick ohne Umwege',
+    'inspiration.focus.3': 'Aktuelle Szenarien auf Basis realer Leistungen und Spezialisten',
+    'inspiration.focus.dynamic.catalog':
+      'Im Katalog sind aktuell {categories} Kategorien und {services} aktive Leistungen verfügbar.',
+    'inspiration.focus.dynamic.featured':
+      'Fokus-Behandlung: {category} · {title} · {duration} · {price}.',
+    'inspiration.focus.dynamic.discounts':
+      'Leistungen mit Rabatt aktuell: {count}.',
+    'inspiration.ai.kicker': 'AI support 24/7',
+    'inspiration.ai.title': 'Der AI-Assistent ist auf der Website immer verfügbar',
+    'inspiration.ai.text':
+      'Auf jeder Seite können Sie den AI-Assistenten öffnen und den nächsten klaren Schritt bekommen: wohin klicken, was auswählen und wie schneller buchen.',
+    'inspiration.ai.facts':
+      'Der Assistent nutzt den aktuellen Katalog: {categories} Kategorien, {services} Leistungen und {discounts} Angebote mit Rabatt.',
+    'inspiration.ai.factsFallback':
+      'Der Assistent nutzt aktuelle Website-Daten und zeigt den kürzesten Weg zur Buchung.',
+    'inspiration.ai.item.1':
+      'Empfiehlt Leistungen nach Ihrem Bedarf und verlinkt direkt zu den passenden Katalogbereichen.',
+    'inspiration.ai.item.2':
+      'Beantwortet Fragen zu Buchung, freien Slots, Regeln und Terminbestätigung.',
+    'inspiration.ai.item.3':
+      'Zeigt Kontakte und Adresse sowie direkte Buttons für Karte und Route.',
+    'inspiration.ai.open': 'AI-Assistent öffnen',
+    'inspiration.ai.faq': 'FAQ lesen',
+    'inspiration.cta.title': 'Bereit, die passende Behandlung zu wählen?',
+    'inspiration.cta.text': 'Katalog öffnen, Behandlung auswählen und passenden Zeitslot sichern.',
+    'inspiration.cta.button': 'Katalog öffnen',
 
     'home.exp.skin.title': 'Skin Lab Sessions',
     'home.exp.skin.text': 'Hautdiagnose + persönliches Facial-Ritual passend zum aktuellen Hautzustand.',

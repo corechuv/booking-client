@@ -31,6 +31,7 @@ function SiteFooter() {
     [languages],
   )
   const footerLinks = [
+    { to: '/inspiration', label: t('nav.inspiration') },
     { to: '/catalog', label: t('nav.catalog') },
     { to: '/specialists', label: t('nav.specialists') },
     { to: '/pricing', label: t('nav.pricing') },
@@ -70,7 +71,7 @@ function SiteFooter() {
       <div className="site-footer__main">
         <nav className="site-footer__links" aria-label="Footer navigation">
           {footerLinks.map((item) => (
-            <Link key={item.to} to={item.to}>
+            <Link key={`${item.to}:${item.label}`} to={item.to}>
               {item.label}
             </Link>
           ))}

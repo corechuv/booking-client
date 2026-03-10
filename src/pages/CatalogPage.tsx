@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import {
   type ClientCategory,
@@ -32,8 +32,10 @@ function CatalogPage() {
     getIsMobileCatalog() ? 'categories' : 'services',
   )
   const [pendingFocusServiceId, setPendingFocusServiceId] = useState<string | null>(null)
+  const [pendingScrollToServicesTop, setPendingScrollToServicesTop] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const servicesSectionRef = useRef<HTMLElement | null>(null)
 
   const serviceIdFromQuery = useMemo(() => {
     const value = searchParams.get('service')?.trim()
@@ -129,6 +131,7 @@ function CatalogPage() {
     setActiveCategoryId(categoryIdFromQuery)
     if (isMobileCatalog) {
       setMobileView('services')
+      setPendingScrollToServicesTop(true)
     }
   }, [catalog, categoryIdFromQuery, isMobileCatalog])
 
@@ -172,6 +175,24 @@ function CatalogPage() {
     })
     setPendingFocusServiceId(null)
   }, [isMobileCatalog, mobileView, pendingFocusServiceId])
+
+  useEffect(() => {
+    if (!pendingScrollToServicesTop) {
+      return
+    }
+
+    if (isMobileCatalog && mobileView !== 'services') {
+      return
+    }
+
+    requestAnimationFrame(() => {
+      servicesSectionRef.current?.scrollIntoView({
+        behavior: 'auto',
+        block: 'start',
+      })
+    })
+    setPendingScrollToServicesTop(false)
+  }, [isMobileCatalog, mobileView, pendingScrollToServicesTop])
 
   const showCategories = !isMobileCatalog || mobileView === 'categories'
   const showServices = !isMobileCatalog || mobileView === 'services'
@@ -235,6 +256,7 @@ function CatalogPage() {
                 setActiveCategoryId(category.id)
                 if (isMobileCatalog) {
                   setMobileView('services')
+                  setPendingScrollToServicesTop(true)
                 }
               }}
             >
@@ -245,6 +267,7 @@ function CatalogPage() {
         </aside>
 
         <section
+          ref={servicesSectionRef}
           className={
             showServices ? 'catalog-page__services is-visible' : 'catalog-page__services'
           }

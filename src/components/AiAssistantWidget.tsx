@@ -141,9 +141,9 @@ function AiAssistantWidget() {
       },
       {
         root: null,
-        // Hide the floating trigger a bit before footer controls start.
-        rootMargin: '0px 0px 96px 0px',
-        threshold: 0,
+        // Hide the floating trigger before footer controls start.
+        rootMargin: '0px 0px 120px 0px',
+        threshold: 0.01,
       },
     )
 
@@ -381,11 +381,17 @@ function AiAssistantWidget() {
 
   return (
     <div className="ai-assistant">
-      {!isOpen && !isFooterVisible ? (
+      {!isOpen ? (
         <button
           type="button"
-          className="ai-assistant__toggle"
+          className={
+            isFooterVisible
+              ? 'ai-assistant__toggle is-hidden'
+              : 'ai-assistant__toggle'
+          }
           aria-label={t('assistant.open')}
+          aria-hidden={isFooterVisible}
+          tabIndex={isFooterVisible ? -1 : 0}
           onClick={openAssistant}
         >
           <span className="ai-assistant__toggle-text">{t('assistant.always')}</span>

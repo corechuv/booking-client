@@ -2,7 +2,7 @@
   position: fixed;
   right: clamp(0.8rem, 2vw, 1.25rem);
   bottom: clamp(0.8rem, 2vw, 1.25rem);
-  z-index: 96;
+  z-index: 90;
 }
 
 .ai-assistant__toggle {
@@ -24,6 +24,17 @@
   gap: 0.62rem;
   cursor: pointer;
   box-shadow: var(--accent-shadow);
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ai-assistant__toggle.is-hidden {
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+  pointer-events: none;
+  visibility: hidden;
+  box-shadow: none;
 }
 
 .ai-assistant__toggle-text {

@@ -81,6 +81,7 @@ export const getLegalContent = (
   language: AppLanguageCode,
   contact?: PublicContactSettings,
 ): LegalPageContent => {
+  const legalOwnerName = 'Iryna Marinina (Mira)'
   const salonName = getFallback(contact?.salon_name, 'Mira beauty salon')
   const salonEmail = getFallback(contact?.email, '—')
   const salonPhone = getFallback(contact?.phone, '—')
@@ -99,7 +100,7 @@ export const getLegalContent = (
           {
             title: '1. Відповідальний за обробку',
             paragraphs: [
-              `Відповідальний: ${salonName}.`,
+              `Відповідальний: ${legalOwnerName}.`,
               `Контакти: ${salonAddress}, ${salonEmail}, ${salonPhone}.`,
               'Правова база: Загальний регламент захисту даних (GDPR / DSGVO), BDSG та норми Німеччини щодо цифрових сервісів.',
             ],
@@ -380,9 +381,8 @@ export const getLegalContent = (
           {
             title: '1. Постачальник послуги (Diensteanbieter)',
             paragraphs: [
-              `Назва проєкту/салону: ${salonName}`,
-              'Юридична особа або ФОП: [додайте точну правову форму]',
-              'Представник(и): [додайте ПІБ уповноваженої особи]',
+              `Назва: ${legalOwnerName}`,
+              'Юридична форма: Einzelunternehmen',
               `Адреса (ladungsfaehig): ${salonAddress}`,
             ],
           },
@@ -391,7 +391,7 @@ export const getLegalContent = (
             paragraphs: [`Email: ${salonEmail}`, `Телефон: ${salonPhone}`, `Маршрут: ${routeUrl}`],
           },
           {
-            title: '3. Реєстр і податкові реквізити (за наявності)',
+            title: '3. Реєстр і податкові реквізити',
             paragraphs: [
               'Handelsregister: [додайте суд/номер або вкажіть, що відсутній]',
               'USt-IdNr. за §27a UStG: [додайте, якщо є]',
@@ -435,7 +435,7 @@ export const getLegalContent = (
           {
             title: '1. Verantwortlicher',
             paragraphs: [
-              `Verantwortlich: ${salonName}.`,
+              `Verantwortlich: ${legalOwnerName}.`,
               `Kontakt: ${salonAddress}, ${salonEmail}, ${salonPhone}.`,
               'Rechtsrahmen: DSGVO, BDSG sowie einschlaegige deutsche Vorschriften fuer digitale Dienste.',
             ],
@@ -712,9 +712,8 @@ export const getLegalContent = (
           {
             title: '1. Diensteanbieter',
             paragraphs: [
-              `Name/Bezeichnung: ${salonName}`,
-              'Rechtsform: [bitte ergaenzen, z. B. Einzelunternehmen, GmbH, UG]',
-              'Vertretungsberechtigte Person(en): [bitte ergaenzen]',
+              `Name/Bezeichnung: ${legalOwnerName}`,
+              'Rechtsform: Einzelunternehmen',
               `Ladungsfaehige Anschrift: ${salonAddress}`,
             ],
           },
@@ -723,7 +722,7 @@ export const getLegalContent = (
             paragraphs: [`E-Mail: ${salonEmail}`, `Telefon: ${salonPhone}`, `Route: ${routeUrl}`],
           },
           {
-            title: '3. Register und Steuernummern (falls vorhanden)',
+            title: '3. Register und Steuernummern',
             paragraphs: [
               'Handelsregister: [Registergericht, Registernummer oder Hinweis: nicht eingetragen]',
               'USt-IdNr. gemaess § 27a UStG: [bitte ergaenzen]',
@@ -766,7 +765,7 @@ export const getLegalContent = (
         {
           title: '1. Кто отвечает за обработку',
           paragraphs: [
-            `Ответственный: ${salonName}.`,
+            `Ответственный: ${legalOwnerName}.`,
             `Контакты: ${salonAddress}, ${salonEmail}, ${salonPhone}.`,
             'Применяемое право: GDPR (DSGVO), BDSG и релевантные нормы Германии для цифровых сервисов.',
           ],
@@ -1046,9 +1045,8 @@ export const getLegalContent = (
         {
           title: '1. Diensteanbieter',
           paragraphs: [
-            `Название: ${salonName}`,
-            'Юридическая форма: [укажите точно, например Einzelunternehmen/GmbH/UG]',
-            'Представитель(и): [укажите уполномоченное лицо]',
+            `Название: ${legalOwnerName}`,
+            'Юридическая форма: Einzelunternehmen',
             `Почтовый адрес (ladungsfaehig): ${salonAddress}`,
           ],
         },
@@ -1057,7 +1055,7 @@ export const getLegalContent = (
           paragraphs: [`Email: ${salonEmail}`, `Телефон: ${salonPhone}`, `Маршрут: ${routeUrl}`],
         },
         {
-          title: '3. Реестры и налоговые идентификаторы (если применимо)',
+          title: '3. Реестры и налоговые идентификаторы',
           paragraphs: [
             'Handelsregister: [суд и номер или пометка, что не применяется]',
             'USt-IdNr. по §27a UStG: [добавьте при наличии]',

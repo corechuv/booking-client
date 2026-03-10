@@ -77,6 +77,7 @@ function AiAssistantWidget() {
   const [showConsentDetails, setShowConsentDetails] = useState(false)
   const [chatAddress, setChatAddress] = useState('')
   const [chatRouteUrl, setChatRouteUrl] = useState('')
+  const [isFooterVisible, setIsFooterVisible] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
   const isFeatureEnabled = isAssistantFeatureEnabled()
   const isHidden = pathname.startsWith('/admin')
@@ -121,6 +122,36 @@ function AiAssistantWidget() {
     }
     setIsOpen(false)
   }, [isHidden, isOpen])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+
+    const footer = document.querySelector('.site-footer')
+    if (!footer) {
+      setIsFooterVisible(false)
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries
+        setIsFooterVisible(Boolean(entry?.isIntersecting))
+      },
+      {
+        root: null,
+        // Hide the floating trigger a bit before footer controls start.
+        rootMargin: '0px 0px 96px 0px',
+        threshold: 0,
+      },
+    )
+
+    observer.observe(footer)
+    return () => {
+      observer.disconnect()
+    }
+  }, [pathname])
 
   useEffect(() => {
     if (!isOpen) {
@@ -350,7 +381,7 @@ function AiAssistantWidget() {
 
   return (
     <div className="ai-assistant">
-      {!isOpen ? (
+      {!isOpen && !isFooterVisible ? (
         <button
           type="button"
           className="ai-assistant__toggle"

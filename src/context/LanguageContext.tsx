@@ -4,6 +4,11 @@ import { LanguageContext, type AppLanguage } from './language-context'
 import type { AppLanguageCode } from '../i18n/types'
 
 const LANGUAGE_STORAGE_KEY = 'mira-language'
+const localeByLanguage: Record<AppLanguageCode, string> = {
+  ru: 'ru-RU',
+  uk: 'uk-UA',
+  de: 'de-DE',
+}
 
 const fallbackLanguages: AppLanguage[] = [
   {
@@ -33,11 +38,12 @@ const fallbackLanguages: AppLanguage[] = [
 ]
 
 const normalizeLanguageCode = (value: string | null | undefined): AppLanguageCode => {
-  const normalized = value?.trim().toLowerCase()
-  if (normalized === 'uk') {
+  const normalized = value?.trim().toLowerCase().replace('_', '-')
+  const baseCode = normalized?.split('-')[0]
+  if (baseCode === 'uk' || baseCode === 'ua') {
     return 'uk'
   }
-  if (normalized === 'de') {
+  if (baseCode === 'de') {
     return 'de'
   }
   return 'ru'
@@ -46,9 +52,13 @@ const normalizeLanguageCode = (value: string | null | undefined): AppLanguageCod
 const parseLanguageCode = (
   value: string | null | undefined,
 ): AppLanguageCode | null => {
-  const normalized = value?.trim().toLowerCase()
-  if (normalized === 'ru' || normalized === 'uk' || normalized === 'de') {
-    return normalized
+  const normalized = value?.trim().toLowerCase().replace('_', '-')
+  const baseCode = normalized?.split('-')[0]
+  if (baseCode === 'ua') {
+    return 'uk'
+  }
+  if (baseCode === 'ru' || baseCode === 'uk' || baseCode === 'de') {
+    return baseCode
   }
   return null
 }
@@ -101,8 +111,9 @@ const applyDocumentLanguage = (code: AppLanguageCode) => {
     return
   }
 
-  document.documentElement.setAttribute('lang', code)
-  document.documentElement.setAttribute('xml:lang', code)
+  const locale = localeByLanguage[code] ?? localeByLanguage.ru
+  document.documentElement.setAttribute('lang', locale)
+  document.documentElement.setAttribute('xml:lang', locale)
   document.documentElement.setAttribute('translate', 'yes')
 
   const contentLanguageMeta = document.querySelector(

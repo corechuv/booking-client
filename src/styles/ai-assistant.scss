@@ -24,17 +24,20 @@
   gap: 0.62rem;
   cursor: pointer;
   box-shadow: var(--accent-shadow);
-  transform: translateZ(0);
-  will-change: transform, opacity;
-  transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  transition: opacity 0.2s ease, box-shadow 0.2s ease;
 }
 
 .ai-assistant__toggle.is-hidden {
   opacity: 0;
-  transform: translate3d(0, 10px, 0);
   pointer-events: none;
   visibility: hidden;
   box-shadow: none;
+}
+
+body.site-nav-mobile-open .ai-assistant {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .ai-assistant__toggle-text {

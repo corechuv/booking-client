@@ -53,6 +53,17 @@ function SiteNav() {
     }
   }, [isLanguageModalOpen, isMobileMenuOpen, isThemeModalOpen])
 
+  useEffect(() => {
+    if (typeof document === 'undefined') {
+      return
+    }
+
+    document.body.classList.toggle('site-nav-mobile-open', isMobileMenuOpen)
+    return () => {
+      document.body.classList.remove('site-nav-mobile-open')
+    }
+  }, [isMobileMenuOpen])
+
   const closeMobileMenu = () => setIsMobileMenuOpen(false)
 
   return (

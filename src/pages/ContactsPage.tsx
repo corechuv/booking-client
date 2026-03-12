@@ -9,6 +9,7 @@ import {
 import CertificatesGrid from '../components/CertificatesGrid'
 import FaqAccordion from '../components/FaqAccordion'
 import LinkButton from '../components/LinkButton'
+import SalonMap from '../components/SalonMap'
 import SectionPageHero from '../components/SectionPageHero'
 import SiteFooter from '../components/SiteFooter'
 import SiteNav from '../components/SiteNav'
@@ -40,6 +41,11 @@ function ContactsPage() {
     [t],
   )
   const [contacts, setContacts] = useState<Array<{ label: string; value: string }>>([])
+  const [mapData, setMapData] = useState<{ salonName: string; address: string; routeUrl: string }>({
+    salonName: '',
+    address: '',
+    routeUrl: '',
+  })
   const [hours, setHours] = useState<Array<{ day: string; time: string }>>([])
   const [faq, setFaq] = useState<Array<{ id: string; question: string; answer: string }>>([])
   const [loadingError, setLoadingError] = useState<string | null>(null)
@@ -69,8 +75,18 @@ function ContactsPage() {
         { label: t('contacts.field.phone'), value: contact.phone },
         { label: t('contacts.field.email'), value: contact.email },
       ])
+      setMapData({
+        salonName: contact.salon_name,
+        address: contact.address,
+        routeUrl: contact.route_url,
+      })
     } else {
       setContacts([])
+      setMapData({
+        salonName: '',
+        address: '',
+        routeUrl: '',
+      })
       firstError ??= getErrorText(contactResult.reason, t('contacts.errorFallback'))
     }
 
@@ -169,6 +185,17 @@ function ContactsPage() {
               </li>
             ))}
           </ul>
+
+          {mapData.address ? (
+            <div className="contacts-page__map-inline">
+              <p className="contacts-page__map-label">{t('contacts.map.title')}</p>
+              <SalonMap
+                salonName={mapData.salonName}
+                address={mapData.address}
+                routeUrl={mapData.routeUrl}
+              />
+            </div>
+          ) : null}
         </article>
 
         <article className="section-card">

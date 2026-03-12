@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom'
 import LinkButton from '../components/LinkButton'
 import { PRIMARY_SPECIALIST_NAME, SALON_PHONE } from '../config/salon'
+import { SALON_NAME } from '../config/salon'
 import { useTheme } from '../context/theme-context'
+import { useSeo } from '../hooks/useSeo'
 import '../styles/admin-page.scss'
 
 const sectionLinks = [
@@ -126,6 +128,14 @@ const integrations = [
 
 function AdminPage() {
   const { theme, toggleTheme } = useTheme()
+
+  useSeo({
+    path: '/admin',
+    title: `Admin | ${SALON_NAME}`,
+    description: 'Administrative dashboard.',
+    keywords: ['admin', SALON_NAME],
+    noindex: true,
+  })
 
   return (
     <main className="admin-page">

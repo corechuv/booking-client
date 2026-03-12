@@ -4,8 +4,10 @@ import LinkButton from '../components/LinkButton'
 import SectionPageHero from '../components/SectionPageHero'
 import SiteFooter from '../components/SiteFooter'
 import SiteNav from '../components/SiteNav'
+import { SALON_NAME } from '../config/salon'
 import { useLanguage } from '../context/language-context'
 import { useI18n } from '../hooks/useI18n'
+import { useSeo } from '../hooks/useSeo'
 import { mapApiServicesToCatalog } from '../lib/service-catalog-api'
 import '../styles/section-page.scss'
 
@@ -56,6 +58,34 @@ function PricingPage() {
   useEffect(() => {
     void loadPriceList()
   }, [loadPriceList])
+
+  useSeo({
+    path: '/pricing',
+    title: `${t('pricing.hero.title')} | ${SALON_NAME}`,
+    description: t('pricing.hero.description'),
+    keywords: [
+      SALON_NAME,
+      t('nav.pricing'),
+      t('pricing.baseTitle'),
+      ...priceList.slice(0, 20).map((item) => item.service),
+    ],
+    jsonLd: priceList.length
+      ? {
+          '@type': 'OfferCatalog',
+          name: t('pricing.hero.title'),
+          itemListElement: priceList.slice(0, 40).map((item, index) => ({
+            '@type': 'Offer',
+            position: index + 1,
+            itemOffered: {
+              '@type': 'Service',
+              name: item.service,
+            },
+            priceCurrency: 'EUR',
+            price: item.price.replace(/[^\d,.]/g, '').replace(',', '.'),
+          })),
+        }
+      : undefined,
+  })
 
   return (
     <main className="section-page">

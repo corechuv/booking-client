@@ -16,8 +16,9 @@ import SectionPageHero from '../components/SectionPageHero'
 import SiteNav from '../components/SiteNav'
 import SiteFooter from '../components/SiteFooter'
 import { useLanguage } from '../context/language-context'
-import { PRIMARY_SPECIALIST_NAME } from '../config/salon'
+import { PRIMARY_SPECIALIST_NAME, SALON_NAME } from '../config/salon'
 import { useI18n } from '../hooks/useI18n'
+import { useSeo } from '../hooks/useSeo'
 import { usePublicContact } from '../hooks/usePublicContact'
 import { formatEuroPrice, resolveServiceDiscount } from '../lib/service-catalog-api'
 import '../styles/booking-page.scss'
@@ -244,6 +245,41 @@ function BookingPage() {
     consentProcedureChecked &&
     consentDataChecked &&
     Boolean(schedulerSelection.slot)
+
+  useSeo({
+    path: '/booking',
+    title: selectedService
+      ? `${selectedService.title} | ${SALON_NAME}`
+      : `${t('nav.bookNow')} | ${SALON_NAME}`,
+    description: selectedService
+      ? `${selectedService.category} · ${selectedService.duration_minutes} min · ${formatEuroPrice(selectedService.price)}`
+      : t('booking.hero.onlyCatalog'),
+    keywords: [
+      SALON_NAME,
+      t('nav.bookNow'),
+      t('nav.catalog'),
+      selectedService?.title ?? '',
+      selectedService?.category ?? '',
+      PRIMARY_SPECIALIST_NAME,
+    ],
+    jsonLd: selectedService
+      ? {
+          '@type': 'Service',
+          name: selectedService.title,
+          category: selectedService.category,
+          provider: {
+            '@type': 'BeautySalon',
+            name: SALON_NAME,
+          },
+          offers: {
+            '@type': 'Offer',
+            priceCurrency: 'EUR',
+            price: Number(selectedService.price).toFixed(2),
+            availability: 'https://schema.org/InStock',
+          },
+        }
+      : undefined,
+  })
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()

@@ -6,8 +6,9 @@ import {
   type BookingConfirmedResult,
 } from '../api/client-api'
 import LinkButton from '../components/LinkButton'
-import { PRIMARY_SPECIALIST_NAME } from '../config/salon'
+import { PRIMARY_SPECIALIST_NAME, SALON_NAME } from '../config/salon'
 import { useI18n } from '../hooks/useI18n'
+import { useSeo } from '../hooks/useSeo'
 import '../styles/booking-confirmed-page.scss'
 
 type ConfirmState =
@@ -87,6 +88,26 @@ function BookingConfirmedPage() {
       isMounted = false
     }
   }, [t, token])
+
+  const seoTitle = state.phase === 'success'
+    ? `${t('confirmed.successEyebrow')} | ${SALON_NAME}`
+    : state.phase === 'error'
+      ? `${t('confirmed.errorTitle')} | ${SALON_NAME}`
+      : `${t('confirmed.loading')} | ${SALON_NAME}`
+
+  const seoDescription = state.phase === 'success'
+    ? `${t('confirmed.procedure')}: ${state.booking.service_title}.`
+    : state.phase === 'error'
+      ? state.message
+      : t('confirmed.loading')
+
+  useSeo({
+    path: '/booking/confirmed',
+    title: seoTitle,
+    description: seoDescription,
+    keywords: [SALON_NAME, t('confirmed.successEyebrow'), t('confirmed.procedure')],
+    noindex: true,
+  })
 
   if (state.phase === 'loading') {
     return (

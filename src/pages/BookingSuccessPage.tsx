@@ -1,7 +1,9 @@
 import { useLocation, useSearchParams } from 'react-router-dom'
 import LinkButton from '../components/LinkButton'
 import { PRIMARY_SPECIALIST_NAME } from '../config/salon'
+import { SALON_NAME } from '../config/salon'
 import { useI18n } from '../hooks/useI18n'
+import { useSeo } from '../hooks/useSeo'
 import '../styles/booking-success-page.scss'
 
 type BookingSuccessState = {
@@ -37,6 +39,14 @@ function BookingSuccessPage() {
   const bookingDateText = locationState.startsAt
     ? dateTimeFormatter.format(new Date(locationState.startsAt))
     : t('success.defaultDate')
+
+  useSeo({
+    path: '/booking/success',
+    title: `${t('success.eyebrow')} | ${SALON_NAME}`,
+    description: `${t('success.procedure')}: ${locationState.serviceTitle}. ${t('success.datetime')}: ${bookingDateText}.`,
+    keywords: [SALON_NAME, t('success.eyebrow'), t('success.nextStep'), locationState.serviceTitle],
+    noindex: true,
+  })
 
   return (
     <main className="booking-success-page">

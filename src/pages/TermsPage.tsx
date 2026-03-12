@@ -3,9 +3,11 @@ import SectionPageHero from '../components/SectionPageHero'
 import SiteFooter from '../components/SiteFooter'
 import SiteNav from '../components/SiteNav'
 import { getLegalContent } from '../content/legal-content'
+import { SALON_NAME } from '../config/salon'
 import { useLanguage } from '../context/language-context'
 import { useI18n } from '../hooks/useI18n'
 import { usePublicContact } from '../hooks/usePublicContact'
+import { useSeo } from '../hooks/useSeo'
 import '../styles/section-page.scss'
 import '../styles/legal-page.scss'
 
@@ -18,6 +20,13 @@ function TermsPage() {
     [contact, language],
   )
   const content = legalContent.terms
+
+  useSeo({
+    path: '/terms',
+    title: `${content.title} | ${SALON_NAME}`,
+    description: content.description,
+    keywords: [SALON_NAME, content.title, t('footer.terms')],
+  })
 
   return (
     <main className="section-page legal-page">

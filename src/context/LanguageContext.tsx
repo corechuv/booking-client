@@ -77,6 +77,13 @@ const getInitialLanguage = (): AppLanguageCode => {
     return 'ru'
   }
 
+  const queryLanguage = parseLanguageCode(
+    new URLSearchParams(window.location.search).get('lang'),
+  )
+  if (queryLanguage) {
+    return queryLanguage
+  }
+
   const storedCode = parseLanguageCode(window.localStorage.getItem(LANGUAGE_STORAGE_KEY))
   if (storedCode) {
     return storedCode

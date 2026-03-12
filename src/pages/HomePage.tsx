@@ -3,8 +3,10 @@ import { fetchClientServices } from '../api/client-api'
 import LinkButton from '../components/LinkButton'
 import SiteFooter from '../components/SiteFooter'
 import SiteNav from '../components/SiteNav'
+import { SALON_NAME } from '../config/salon'
 import { useLanguage } from '../context/language-context'
 import { useI18n } from '../hooks/useI18n'
+import { useSeo } from '../hooks/useSeo'
 import { mapApiServicesToCatalog } from '../lib/service-catalog-api'
 import '../styles/landing-page.scss'
 
@@ -93,6 +95,31 @@ function HomePage() {
   useEffect(() => {
     void loadDeals()
   }, [loadDeals])
+
+  useSeo({
+    path: '/',
+    title: `${t('home.title').replace('\n', ' ')} | ${SALON_NAME}`,
+    description: t('home.description'),
+    keywords: [
+      SALON_NAME,
+      t('nav.home'),
+      t('nav.catalog'),
+      t('nav.bookNow'),
+      t('nav.specialists'),
+      ...deals.map((item) => item.title),
+    ],
+    jsonLd: deals.length
+      ? {
+          '@type': 'ItemList',
+          name: t('home.offers.title'),
+          itemListElement: deals.map((item, index) => ({
+            '@type': 'ListItem',
+            position: index + 1,
+            name: item.title,
+          })),
+        }
+      : undefined,
+  })
 
   return (
     <main className="landing-page">

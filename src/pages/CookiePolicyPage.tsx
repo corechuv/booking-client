@@ -2,11 +2,13 @@ import { useMemo, useState } from 'react'
 import SectionPageHero from '../components/SectionPageHero'
 import SiteFooter from '../components/SiteFooter'
 import SiteNav from '../components/SiteNav'
+import { SALON_NAME } from '../config/salon'
 import type { CookieCategoryKey } from '../content/legal-content'
 import { getLegalContent } from '../content/legal-content'
 import { useLanguage } from '../context/language-context'
 import { useI18n } from '../hooks/useI18n'
 import { usePublicContact } from '../hooks/usePublicContact'
+import { useSeo } from '../hooks/useSeo'
 import {
   applyCookiePreferences,
   getCookiePreferences,
@@ -120,6 +122,13 @@ function CookiePolicyPage() {
     setPreferences(saved)
     window.location.reload()
   }
+
+  useSeo({
+    path: '/cookies',
+    title: `${cookieContent.title} | ${SALON_NAME}`,
+    description: cookieContent.description,
+    keywords: [SALON_NAME, cookieContent.title, t('footer.cookies')],
+  })
 
   return (
     <main className="section-page legal-page">

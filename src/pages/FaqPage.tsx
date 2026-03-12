@@ -5,8 +5,10 @@ import LinkButton from '../components/LinkButton'
 import SectionPageHero from '../components/SectionPageHero'
 import SiteFooter from '../components/SiteFooter'
 import SiteNav from '../components/SiteNav'
+import { SALON_NAME } from '../config/salon'
 import { useLanguage } from '../context/language-context'
 import { useI18n } from '../hooks/useI18n'
+import { useSeo } from '../hooks/useSeo'
 import '../styles/section-page.scss'
 
 const getErrorText = (error: unknown): string => {
@@ -52,6 +54,31 @@ function FaqPage() {
   useEffect(() => {
     void loadFaq()
   }, [loadFaq])
+
+  useSeo({
+    path: '/faq',
+    title: `${t('faq.hero.title')} | ${SALON_NAME}`,
+    description: t('faq.hero.description'),
+    keywords: [
+      SALON_NAME,
+      t('nav.faq'),
+      t('nav.catalog'),
+      ...items.slice(0, 12).map((item) => item.question),
+    ],
+    jsonLd: items.length
+      ? {
+          '@type': 'FAQPage',
+          mainEntity: items.slice(0, 20).map((item) => ({
+            '@type': 'Question',
+            name: item.question,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: item.answer,
+            },
+          })),
+        }
+      : undefined,
+  })
 
   return (
     <main className="section-page faq-page">

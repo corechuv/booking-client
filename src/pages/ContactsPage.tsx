@@ -13,8 +13,10 @@ import SalonMap from '../components/SalonMap'
 import SectionPageHero from '../components/SectionPageHero'
 import SiteFooter from '../components/SiteFooter'
 import SiteNav from '../components/SiteNav'
+import { SALON_NAME } from '../config/salon'
 import { useLanguage } from '../context/language-context'
 import { useI18n } from '../hooks/useI18n'
+import { useSeo } from '../hooks/useSeo'
 import { buildHoursByDay, formatDayHours } from '../lib/business-hours'
 import '../styles/section-page.scss'
 
@@ -151,6 +153,23 @@ function ContactsPage() {
   useEffect(() => {
     void loadContent()
   }, [loadContent])
+
+  useSeo({
+    path: '/contacts',
+    title: `${t('contacts.hero.title')} | ${SALON_NAME}`,
+    description: t('contacts.hero.description'),
+    keywords: [
+      SALON_NAME,
+      t('nav.contacts'),
+      ...contacts.map((item) => item.value),
+      ...hours.map((item) => `${item.day} ${item.time}`),
+    ],
+    jsonLd: {
+      '@type': 'ContactPage',
+      name: t('contacts.hero.title'),
+      description: t('contacts.hero.description'),
+    },
+  })
 
   return (
     <main className="section-page contacts-page">

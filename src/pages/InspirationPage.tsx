@@ -9,8 +9,10 @@ import SectionPageHero from '../components/SectionPageHero'
 import SiteFooter from '../components/SiteFooter'
 import SiteNav from '../components/SiteNav'
 import { AI_ASSISTANT_OPEN_EVENT } from '../constants/assistant'
+import { SALON_NAME } from '../config/salon'
 import { useLanguage } from '../context/language-context'
 import { useI18n } from '../hooks/useI18n'
+import { useSeo } from '../hooks/useSeo'
 import { mapApiServicesToCatalog } from '../lib/service-catalog-api'
 import '../styles/section-page.scss'
 import '../styles/inspiration-page.scss'
@@ -139,6 +141,18 @@ function InspirationPage() {
     t('inspiration.ai.item.2'),
     t('inspiration.ai.item.3'),
   ]
+
+  useSeo({
+    path: '/inspiration',
+    title: `${t('inspiration.hero.title')} | ${SALON_NAME}`,
+    description: t('inspiration.hero.description'),
+    keywords: [
+      SALON_NAME,
+      t('nav.inspiration'),
+      t('inspiration.hero.title'),
+      ...cards.map((item) => item.title),
+    ],
+  })
 
   return (
     <main className="section-page inspiration-page">

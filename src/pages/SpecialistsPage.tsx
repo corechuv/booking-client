@@ -10,9 +10,11 @@ import LinkButton from '../components/LinkButton'
 import SectionPageHero from '../components/SectionPageHero'
 import SiteFooter from '../components/SiteFooter'
 import SiteNav from '../components/SiteNav'
+import { SALON_NAME } from '../config/salon'
 import { useLanguage } from '../context/language-context'
 import { PRIMARY_SPECIALIST_NAME } from '../config/salon'
 import { useI18n } from '../hooks/useI18n'
+import { useSeo } from '../hooks/useSeo'
 import { buildHoursByDay, formatDayHours } from '../lib/business-hours'
 import '../styles/section-page.scss'
 
@@ -147,6 +149,35 @@ function SpecialistsPage() {
   useEffect(() => {
     void loadContent()
   }, [loadContent])
+
+  useSeo({
+    path: '/specialists',
+    title: `${t('specialists.hero.title')} | ${SALON_NAME}`,
+    description: t('specialists.hero.description'),
+    keywords: [
+      SALON_NAME,
+      t('nav.specialists'),
+      PRIMARY_SPECIALIST_NAME,
+      ...specialists.map((item) => item.name),
+      ...specialists.map((item) => item.role),
+    ],
+    jsonLd: specialists.length
+      ? {
+          '@type': 'ItemList',
+          name: t('specialists.hero.title'),
+          itemListElement: specialists.map((item, index) => ({
+            '@type': 'ListItem',
+            position: index + 1,
+            item: {
+              '@type': 'Person',
+              name: item.name,
+              jobTitle: item.role,
+              description: item.text,
+            },
+          })),
+        }
+      : undefined,
+  })
 
   return (
     <main className="section-page">

@@ -10,11 +10,19 @@ import LinkButton from '../components/LinkButton'
 import SectionPageHero from '../components/SectionPageHero'
 import SiteFooter from '../components/SiteFooter'
 import SiteNav from '../components/SiteNav'
+import { SALON_NAME } from '../config/salon'
 import { useLanguage } from '../context/language-context'
 import { useI18n } from '../hooks/useI18n'
+import { useSeo } from '../hooks/useSeo'
 import { mapApiServicesToCatalog } from '../lib/service-catalog-api'
 import '../styles/section-page.scss'
 import '../styles/catalog-page.scss'
+
+const parseEuroAmount = (value: string): number | null => {
+  const normalized = value.replace(/[^\d,.]/g, '').replace(',', '.')
+  const parsed = Number.parseFloat(normalized)
+  return Number.isFinite(parsed) ? parsed : null
+}
 
 function CatalogPage() {
   const { language } = useLanguage()
@@ -216,6 +224,75 @@ function CatalogPage() {
 
   const showCategories = !isMobileCatalog || mobileView === 'categories'
   const showServices = !isMobileCatalog || mobileView === 'services'
+  const flatServices = useMemo(
+    () =>
+      catalog.flatMap((category) =>
+        category.services.map((service) => ({
+          categoryId: category.id,
+          categoryName: category.name,
+          ...service,
+        })),
+      ),
+    [catalog],
+  )
+
+  const seoDescription = useMemo(() => {
+    if (!flatServices.length) {
+      return t('catalog.hero.description')
+    }
+    const featured = flatServices.slice(0, 3).map((item) => item.title).join(', ')
+    return `${t('catalog.hero.description')} ${featured}.`
+  }, [flatServices, t])
+
+  const catalogJsonLd = useMemo(() => {
+    if (!flatServices.length) {
+      return undefined
+    }
+
+    return {
+      '@type': 'ItemList',
+      name: t('catalog.hero.title'),
+      numberOfItems: flatServices.length,
+      itemListElement: flatServices.slice(0, 40).map((item, index) => {
+        const priceValue = parseEuroAmount(item.price)
+        const serviceObject: Record<string, unknown> = {
+          '@type': 'Service',
+          name: item.title,
+          category: item.categoryName,
+          description: item.description,
+        }
+
+        if (priceValue !== null) {
+          serviceObject.offers = {
+            '@type': 'Offer',
+            priceCurrency: 'EUR',
+            price: priceValue.toFixed(2),
+            availability: 'https://schema.org/InStock',
+          }
+        }
+
+        return {
+          '@type': 'ListItem',
+          position: index + 1,
+          item: serviceObject,
+        }
+      }),
+    }
+  }, [flatServices, t])
+
+  useSeo({
+    path: '/catalog',
+    title: `${t('catalog.hero.title')} | ${SALON_NAME}`,
+    description: seoDescription,
+    keywords: [
+      SALON_NAME,
+      t('nav.catalog'),
+      t('catalog.hero.title'),
+      ...catalog.map((item) => item.name),
+      ...flatServices.slice(0, 20).map((item) => item.title),
+    ],
+    jsonLd: catalogJsonLd,
+  })
 
   return (
     <main className="section-page catalog-page">

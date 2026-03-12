@@ -5,6 +5,7 @@ import BookingSuccessPage from './pages/BookingSuccessPage'
 import AdminPage from './pages/AdminPage'
 import AiAssistantWidget from './components/AiAssistantWidget'
 import ScrollToTop from './components/ScrollToTop'
+import VisitTracker from './components/VisitTracker'
 import { LanguageProvider } from './context/LanguageContext'
 import { ThemeProvider } from './context/ThemeContext'
 import CatalogPage from './pages/CatalogPage'
@@ -25,6 +26,7 @@ function App() {
       <LanguageProvider>
         <BrowserRouter basename={import.meta.env.BASE_URL}>
           <ScrollToTop />
+          <VisitTracker />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/services" element={<Navigate to="/catalog" replace />} />

@@ -248,6 +248,13 @@ export type PublicLanguage = {
   updated_at: string
 }
 
+export type PublicVisitTrackPayload = {
+  path: string
+  referrer?: string | null
+  language?: string | null
+  session_id?: string | null
+}
+
 export type AssistantHistoryItem = {
   role: 'user' | 'assistant'
   content: string
@@ -352,6 +359,13 @@ export const fetchPublicSpecialists = (lang?: ClientLanguageCode) =>
 
 export const fetchPublicLanguages = () =>
   request<PublicLanguage[]>('/client/content/languages')
+
+export const trackPublicVisit = (payload: PublicVisitTrackPayload) =>
+  request<void>('/client/visits', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+    keepalive: true,
+  })
 
 export const chatWithAssistant = (payload: AssistantChatPayload) =>
   request<AssistantChatResponse>('/client/assistant/chat', {

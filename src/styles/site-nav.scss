@@ -78,15 +78,20 @@
 .site-nav__mobile-overlay {
   position: fixed;
   inset: 0;
+  width: 100vw;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: flex-end;
+  align-items: stretch;
   z-index: 420;
   background: var(--overlay-backdrop);
   backdrop-filter: blur(3px);
 }
 
 .site-nav__mobile-drawer {
-  margin-left: auto;
   width: min(320px, 88vw);
-  height: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
   border: 0;
   background: var(--surface-2);
   box-shadow: var(--shadow-soft);

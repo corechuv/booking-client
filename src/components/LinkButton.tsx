@@ -1,5 +1,7 @@
 import type { AnchorHTMLAttributes, ReactNode } from 'react'
 import { Link, type LinkProps } from 'react-router-dom'
+import { useLanguage } from '../context/language-context'
+import { localizePath } from '../lib/i18n-routing'
 
 type LinkButtonTone = 'primary' | 'secondary'
 type LinkButtonSize = 'sm' | 'md' | 'lg'
@@ -35,6 +37,7 @@ const getClassName = (
     .join(' ')
 
 function LinkButton(props: LinkButtonProps) {
+  const { language } = useLanguage()
   const {
     children,
     className,
@@ -50,8 +53,11 @@ function LinkButton(props: LinkButtonProps) {
       RouterLinkButtonProps,
       keyof LinkButtonBaseProps
     >
+    const localizedTo =
+      typeof to === 'string' ? localizePath(to, language) : to
+
     return (
-      <Link className={fullClassName} to={to} {...linkProps}>
+      <Link className={fullClassName} to={localizedTo} {...linkProps}>
         {children}
       </Link>
     )

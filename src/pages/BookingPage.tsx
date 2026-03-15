@@ -20,6 +20,7 @@ import { PRIMARY_SPECIALIST_NAME, SALON_NAME } from '../config/salon'
 import { useI18n } from '../hooks/useI18n'
 import { useSeo } from '../hooks/useSeo'
 import { usePublicContact } from '../hooks/usePublicContact'
+import { localizePath } from '../lib/i18n-routing'
 import { formatEuroPrice, resolveServiceDiscount } from '../lib/service-catalog-api'
 import '../styles/booking-page.scss'
 
@@ -159,7 +160,7 @@ function BookingPage() {
 
   useEffect(() => {
     if (serviceIdFromQuery === null) {
-      navigate('/catalog', { replace: true })
+      navigate(localizePath('/catalog', language), { replace: true })
       return
     }
 
@@ -168,7 +169,7 @@ function BookingPage() {
     }
 
     if (!selectedService) {
-      navigate('/catalog', { replace: true })
+      navigate(localizePath('/catalog', language), { replace: true })
     }
   }, [
     serviceIdFromQuery,
@@ -176,6 +177,7 @@ function BookingPage() {
     servicesError,
     selectedService,
     navigate,
+    language,
   ])
 
   useEffect(() => {
@@ -344,7 +346,9 @@ function BookingPage() {
         specialist: PRIMARY_SPECIALIST_NAME,
       })
 
-      navigate(`/booking/success?${successParams.toString()}`, { state: successState })
+      navigate(localizePath(`/booking/success?${successParams.toString()}`, language), {
+        state: successState,
+      })
     } catch (error) {
       setSubmitError(getErrorText(error))
     } finally {

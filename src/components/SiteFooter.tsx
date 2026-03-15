@@ -5,6 +5,7 @@ import { useI18n } from '../hooks/useI18n'
 import { useTheme } from '../context/theme-context'
 import { usePublicContact } from '../hooks/usePublicContact'
 import { lockBodyScroll, unlockBodyScroll } from '../lib/body-scroll-lock'
+import { localizePath } from '../lib/i18n-routing'
 import { CloseIcon } from './icons'
 
 function SiteFooter() {
@@ -71,7 +72,10 @@ function SiteFooter() {
       <div className="site-footer__main">
         <nav className="site-footer__links" aria-label="Footer navigation">
           {footerLinks.map((item) => (
-            <Link key={`${item.to}:${item.label}`} to={item.to}>
+            <Link
+              key={`${item.to}:${item.label}`}
+              to={localizePath(item.to, language)}
+            >
               {item.label}
             </Link>
           ))}
@@ -220,7 +224,7 @@ function SiteFooter() {
         </span>
         <nav className="site-footer__legal" aria-label="Legal navigation">
           {legalLinks.map((item) => (
-            <Link key={item.to} to={item.to}>
+            <Link key={item.to} to={localizePath(item.to, language)}>
               {item.label}
             </Link>
           ))}

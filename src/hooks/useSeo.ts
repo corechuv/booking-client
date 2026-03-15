@@ -6,6 +6,11 @@ import {
   SALON_ROUTE_URL,
 } from '../config/salon'
 import { useLanguage } from '../context/language-context'
+import {
+  DEFAULT_LANGUAGE,
+  SUPPORTED_LANGUAGES,
+  localizePath,
+} from '../lib/i18n-routing'
 
 type SeoJsonLd = Record<string, unknown>
 
@@ -91,6 +96,27 @@ const ensureCanonical = (href: string): void => {
   element.setAttribute('href', href)
 }
 
+const ensureAlternates = (
+  alternates: Array<{ hrefLang: string; href: string }>,
+): void => {
+  if (typeof document === 'undefined') {
+    return
+  }
+
+  document.head
+    .querySelectorAll('link[rel="alternate"][data-seo-managed="true"]')
+    .forEach((node) => node.parentNode?.removeChild(node))
+
+  alternates.forEach((item) => {
+    const element = document.createElement('link')
+    element.setAttribute('rel', 'alternate')
+    element.setAttribute('hreflang', item.hrefLang)
+    element.setAttribute('href', item.href)
+    element.setAttribute('data-seo-managed', 'true')
+    document.head.appendChild(element)
+  })
+}
+
 const ensureStructuredData = (payload: SeoJsonLd): void => {
   if (typeof document === 'undefined') {
     return
@@ -129,7 +155,8 @@ export const useSeo = ({
   const seoData = useMemo(() => {
     const siteUrl = resolveSiteUrl()
     const normalizedPath = normalizePath(path)
-    const pageUrl = `${siteUrl}${normalizedPath}`
+    const localizedPath = localizePath(normalizedPath, language)
+    const pageUrl = `${siteUrl}${localizedPath}`
     const imageUrl = toAbsoluteUrl(image, siteUrl)
     const localeTag = LOCALE_BY_LANGUAGE[language]
     const ogpLocale = OGP_LOCALE_BY_LANGUAGE[language]
@@ -137,6 +164,16 @@ export const useSeo = ({
       .map((item) => item.trim())
       .filter(Boolean)
       .join(', ')
+
+    const alternates: Array<{ hrefLang: string; href: string }> =
+      SUPPORTED_LANGUAGES.map((code) => ({
+      hrefLang: LOCALE_BY_LANGUAGE[code],
+      href: `${siteUrl}${localizePath(normalizedPath, code)}`,
+      }))
+    alternates.push({
+      hrefLang: 'x-default',
+      href: `${siteUrl}${localizePath(normalizedPath, DEFAULT_LANGUAGE)}`,
+    })
 
     const additionalGraph = Array.isArray(jsonLd)
       ? jsonLd
@@ -191,6 +228,7 @@ export const useSeo = ({
       ogpLocale,
       keywordsValue,
       structuredData,
+      alternates,
     }
   }, [description, image, jsonLd, keywords, language, path, title])
 
@@ -226,6 +264,11 @@ export const useSeo = ({
     ensureMeta('name', 'keywords', seoData.keywordsValue || SALON_NAME)
 
     ensureCanonical(seoData.pageUrl)
+    if (!noindex) {
+      ensureAlternates(seoData.alternates)
+    } else {
+      ensureAlternates([])
+    }
     ensureStructuredData(seoData.structuredData)
   }, [description, language, noindex, seoData, title, type])
 }

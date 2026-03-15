@@ -9,6 +9,7 @@ import {
 import { useLanguage } from '../context/language-context'
 import { useI18n } from '../hooks/useI18n'
 import { lockBodyScroll, unlockBodyScroll } from '../lib/body-scroll-lock'
+import { localizePath, splitLocalizedPathname } from '../lib/i18n-routing'
 import { AI_ASSISTANT_OPEN_EVENT } from '../constants/assistant'
 import { CloseIcon } from './icons'
 
@@ -37,7 +38,7 @@ const ASSISTANT_ROUTE_LABELS: Record<string, string> = {
 }
 
 const createAssistantRouteRegex = () =>
-  /\/(?:inspiration|catalog|booking|contacts|faq|pricing|specialists|privacy|terms|cookies|impressum)\b/gi
+  /(?:\/(?:ru|uk|de))?\/(?:inspiration|catalog|booking|contacts|faq|pricing|specialists|privacy|terms|cookies|impressum)\b/gi
 
 type AssistantActionLink = {
   path: string
@@ -228,9 +229,9 @@ function AiAssistantWidget() {
     const uniquePaths = new Set<string>()
 
     for (const match of text.matchAll(createAssistantRouteRegex())) {
-      const path = match[0].toLowerCase()
-      if (ASSISTANT_ROUTE_LABELS[path]) {
-        uniquePaths.add(path)
+      const normalizedPath = splitLocalizedPathname(match[0].toLowerCase()).pathname
+      if (ASSISTANT_ROUTE_LABELS[normalizedPath]) {
+        uniquePaths.add(normalizedPath)
       }
     }
 
@@ -281,7 +282,7 @@ function AiAssistantWidget() {
     while (match) {
       const rawPath = match[0]
       const matchIndex = match.index
-      const path = rawPath.toLowerCase()
+      const path = splitLocalizedPathname(rawPath.toLowerCase()).pathname
       const labelKey = ASSISTANT_ROUTE_LABELS[path]
 
       if (matchIndex > currentIndex) {
@@ -292,7 +293,7 @@ function AiAssistantWidget() {
         chunks.push(
           <Link
             key={`inline-link-${path}-${matchIndex}`}
-            to={path}
+            to={localizePath(path, language)}
             className="ai-assistant__inline-link"
             onClick={closeAssistant}
           >
@@ -514,9 +515,9 @@ function AiAssistantWidget() {
                 />
                 <span>
                   {t('assistant.legal.consentPrefix')}{' '}
-                  <Link to="/privacy">{t('footer.privacy')}</Link>,{' '}
-                  <Link to="/terms">{t('footer.terms')}</Link>,{' '}
-                  <Link to="/cookies">{t('footer.cookies')}</Link>.
+                  <Link to={localizePath('/privacy', language)}>{t('footer.privacy')}</Link>,{' '}
+                  <Link to={localizePath('/terms', language)}>{t('footer.terms')}</Link>,{' '}
+                  <Link to={localizePath('/cookies', language)}>{t('footer.cookies')}</Link>.
                 </span>
               </label>
               )}

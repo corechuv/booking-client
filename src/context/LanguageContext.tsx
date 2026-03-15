@@ -2,6 +2,11 @@ import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { fetchPublicLanguages, type PublicLanguage } from '../api/client-api'
 import { LanguageContext, type AppLanguage } from './language-context'
 import type { AppLanguageCode } from '../i18n/types'
+import {
+  localizePath,
+  normalizeLanguageCode,
+  splitLocalizedPathname,
+} from '../lib/i18n-routing'
 
 const LANGUAGE_STORAGE_KEY = 'mira-language'
 const localeByLanguage: Record<AppLanguageCode, string> = {
@@ -37,17 +42,8 @@ const fallbackLanguages: AppLanguage[] = [
   },
 ]
 
-const normalizeLanguageCode = (value: string | null | undefined): AppLanguageCode => {
-  const normalized = value?.trim().toLowerCase().replace('_', '-')
-  const baseCode = normalized?.split('-')[0]
-  if (baseCode === 'uk' || baseCode === 'ua') {
-    return 'uk'
-  }
-  if (baseCode === 'de') {
-    return 'de'
-  }
-  return 'ru'
-}
+const toAppLanguageCode = (value: string | null | undefined): AppLanguageCode =>
+  normalizeLanguageCode(value) ?? 'ru'
 
 const parseLanguageCode = (
   value: string | null | undefined,
@@ -65,7 +61,7 @@ const parseLanguageCode = (
 
 const toLanguage = (payload: PublicLanguage): AppLanguage => ({
   id: payload.id,
-  code: normalizeLanguageCode(payload.code),
+  code: toAppLanguageCode(payload.code),
   name: payload.name,
   sort_order: payload.sort_order,
   is_active: payload.is_active,
@@ -75,6 +71,11 @@ const toLanguage = (payload: PublicLanguage): AppLanguage => ({
 const getInitialLanguage = (): AppLanguageCode => {
   if (typeof window === 'undefined') {
     return 'ru'
+  }
+
+  const pathLanguage = splitLocalizedPathname(window.location.pathname).language
+  if (pathLanguage) {
+    return pathLanguage
   }
 
   const queryLanguage = parseLanguageCode(
@@ -184,6 +185,23 @@ function LanguageProvider({ children }: { children: ReactNode }) {
       language,
       setLanguage: (code: AppLanguageCode) => {
         if (code === language) {
+          return
+        }
+
+        if (typeof window !== 'undefined') {
+          const nextHref = localizePath(
+            `${window.location.pathname}${window.location.search}${window.location.hash}`,
+            code,
+          )
+
+          applyDocumentLanguage(code)
+          window.localStorage.setItem(LANGUAGE_STORAGE_KEY, code)
+          setLanguageState(code)
+
+          const currentHref = `${window.location.pathname}${window.location.search}${window.location.hash}`
+          if (nextHref !== currentHref) {
+            window.location.assign(nextHref)
+          }
           return
         }
 

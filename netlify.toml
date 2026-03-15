@@ -6,6 +6,66 @@
   NODE_VERSION = "20"
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+  from = "/"
+  to = "/ru"
+  status = 301
+
+[[redirects]]
+  from = "/services"
+  to = "/ru/catalog"
+  status = 301
+
+[[redirects]]
+  from = "/catalog"
+  to = "/ru/catalog"
+  status = 301
+
+[[redirects]]
+  from = "/specialists"
+  to = "/ru/specialists"
+  status = 301
+
+[[redirects]]
+  from = "/pricing"
+  to = "/ru/pricing"
+  status = 301
+
+[[redirects]]
+  from = "/inspiration"
+  to = "/ru/inspiration"
+  status = 301
+
+[[redirects]]
+  from = "/contacts"
+  to = "/ru/contacts"
+  status = 301
+
+[[redirects]]
+  from = "/faq"
+  to = "/ru/faq"
+  status = 301
+
+[[redirects]]
+  from = "/booking"
+  to = "/ru/booking"
+  status = 301
+
+[[redirects]]
+  from = "/privacy"
+  to = "/ru/privacy"
+  status = 301
+
+[[redirects]]
+  from = "/terms"
+  to = "/ru/terms"
+  status = 301
+
+[[redirects]]
+  from = "/cookies"
+  to = "/ru/cookies"
+  status = 301
+
+[[redirects]]
+  from = "/impressum"
+  to = "/ru/impressum"
+  status = 301

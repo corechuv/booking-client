@@ -5,6 +5,7 @@ import { useLanguage } from '../context/language-context'
 import { useTheme } from '../context/theme-context'
 import { useI18n } from '../hooks/useI18n'
 import { lockBodyScroll, unlockBodyScroll } from '../lib/body-scroll-lock'
+import { localizePath } from '../lib/i18n-routing'
 import LinkButton from './LinkButton'
 import { CloseIcon, MenuIcon } from './icons'
 
@@ -73,7 +74,11 @@ function SiteNav() {
   return (
     <>
       <header className="site-nav">
-        <Link className="site-brand" to="/" aria-label={t('nav.homeAria')}>
+        <Link
+          className="site-brand"
+          to={localizePath('/', language)}
+          aria-label={t('nav.homeAria')}
+        >
           <img className="site-brand__logo" src="/logo_full.png" alt="Mira logo" />
         </Link>
 
@@ -81,7 +86,7 @@ function SiteNav() {
           {links.map((link) => (
             <NavLink
               key={link.to}
-              to={link.to}
+              to={localizePath(link.to, language)}
               end={link.end}
               className={({ isActive }) =>
                 isActive ? 'site-nav__link is-active' : 'site-nav__link'
@@ -93,7 +98,12 @@ function SiteNav() {
         </nav>
 
         <div className="site-nav__actions">
-          <LinkButton className="site-nav__cta" to="/catalog" tone="primary" size="md">
+          <LinkButton
+            className="site-nav__cta"
+            to={localizePath('/catalog', language)}
+            tone="primary"
+            size="md"
+          >
             {t('nav.bookNow')}
           </LinkButton>
           <button
@@ -136,7 +146,7 @@ function SiteNav() {
                   {links.map((link) => (
                     <NavLink
                       key={link.to}
-                      to={link.to}
+                      to={localizePath(link.to, language)}
                       end={link.end}
                       className={({ isActive }) =>
                         isActive

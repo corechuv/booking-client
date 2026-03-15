@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /ru/admin
+Disallow: /uk/admin
+Disallow: /de/admin
+Disallow: /ru/booking/success
+Disallow: /uk/booking/success
+Disallow: /de/booking/success
+Disallow: /ru/booking/confirmed
+Disallow: /uk/booking/confirmed
+Disallow: /de/booking/confirmed
+Sitemap: https://center-mira.com/sitemap.xml
+

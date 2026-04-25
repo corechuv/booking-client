@@ -24,8 +24,8 @@
 
 .link-button--primary {
   color: var(--on-accent);
-  background: linear-gradient(130deg, var(--accent-1), var(--accent-2));
-  box-shadow: var(--accent-shadow);
+  background: #000000;
+  box-shadow: none;
 }
 
 .link-button--primary:hover {
@@ -43,15 +43,15 @@
 
 .link-button--sm {
   padding: 0.52rem 0.78rem;
-  font-size: 0.8rem;
+  font-size: 1rem;
 }
 
 .link-button--md {
   padding: 0.64rem 0.96rem;
-  font-size: 0.88rem;
+  font-size: 1rem;
 }
 
 .link-button--lg {
   padding: 0.74rem 1.1rem;
-  font-size: 0.92rem;
+  font-size: 1.08rem;
 }

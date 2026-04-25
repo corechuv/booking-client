@@ -34,7 +34,7 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
     'footer.privacy': 'Политика конфиденциальности',
     'footer.terms': 'Условия записи',
     'footer.cookies': 'Cookie policy',
-    'footer.copyright': '© {year} Mira beauty salon',
+    'footer.copyright': '© {year} Mira Beauty Salon',
 
     'common.loading': 'Загружаем данные...',
     'common.retry': 'Повторить загрузку',
@@ -87,7 +87,7 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
     'catalog.summaryFallback': 'Актуальные процедуры категории {category}.',
 
     'home.kicker': 'New generation salon experience',
-    'home.title': 'Ваша красота — это\nваша уверенность в себе',
+    'home.title': 'Ваш визит\nначинается здесь',
     'home.description': 'Mira это место, где уход, сервис и атмосфера работают вместе.',
     'home.cta.booking': 'Перейти к брони',
     'home.cta.catalog': 'Смотреть каталог',
@@ -438,7 +438,7 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
     'footer.privacy': 'Політика конфіденційності',
     'footer.terms': 'Умови запису',
     'footer.cookies': 'Cookie policy',
-    'footer.copyright': '© {year} Mira beauty salon',
+    'footer.copyright': '© {year} Mira Beauty Salon',
 
     'common.loading': 'Завантажуємо дані...',
     'common.retry': 'Спробувати знову',
@@ -842,7 +842,7 @@ const messages: Record<AppLanguageCode, MessageDictionary> = {
     'footer.privacy': 'Datenschutz',
     'footer.terms': 'Buchungsbedingungen',
     'footer.cookies': 'Cookie policy',
-    'footer.copyright': '© {year} Mira beauty salon',
+    'footer.copyright': '© {year} Mira Beauty Salon',
 
     'common.loading': 'Daten werden geladen...',
     'common.retry': 'Erneut laden',

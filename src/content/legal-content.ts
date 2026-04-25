@@ -82,7 +82,7 @@ export const getLegalContent = (
   contact?: PublicContactSettings,
 ): LegalPageContent => {
   const legalOwnerName = 'Iryna Marinina (Mira)'
-  const salonName = getFallback(contact?.salon_name, 'Mira beauty salon')
+  const salonName = getFallback(contact?.salon_name, 'Mira Beauty Salon')
   const salonEmail = getFallback(contact?.email, '—')
   const salonPhone = getFallback(contact?.phone, '—')
   const salonAddress = getFallback(contact?.address, '—')

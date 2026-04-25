@@ -16,31 +16,251 @@ const LANGUAGES = [
   { code: 'de', locale: 'de-DE', ogLocale: 'de_DE' },
 ]
 
+const SALON_BRAND = 'Mira Beauty Salon'
+const SALON_CITY = 'Hamburg'
+const SALON_STREET = 'Neue Große Bergstraße 7'
+const SALON_POSTAL_CODE = '22767'
+const SALON_COUNTRY_CODE = 'DE'
+
+const GEO_KEYWORDS = {
+  ru: ['Гамбург', 'Hamburg', SALON_POSTAL_CODE, SALON_STREET, 'онлайн-запись'],
+  uk: ['Гамбург', 'Hamburg', SALON_POSTAL_CODE, SALON_STREET, 'онлайн-запис'],
+  de: ['Hamburg', SALON_POSTAL_CODE, SALON_STREET, 'Online-Terminbuchung'],
+}
+
+const DEFAULT_API_BASE_URL = 'https://mira-booking-api-prod.onrender.com/api/v1'
+const API_BASE_URL = (
+  process.env.VITE_API_URL
+  || process.env.API_BASE_URL
+  || DEFAULT_API_BASE_URL
+).trim().replace(/\/+$/, '')
+
+const SLUG_CHAR_MAP = {
+  а: 'a',
+  б: 'b',
+  в: 'v',
+  г: 'g',
+  ґ: 'g',
+  д: 'd',
+  е: 'e',
+  ё: 'e',
+  є: 'ye',
+  ж: 'zh',
+  з: 'z',
+  и: 'i',
+  і: 'i',
+  ї: 'yi',
+  й: 'y',
+  к: 'k',
+  л: 'l',
+  м: 'm',
+  н: 'n',
+  о: 'o',
+  п: 'p',
+  р: 'r',
+  с: 's',
+  т: 't',
+  у: 'u',
+  ф: 'f',
+  х: 'h',
+  ц: 'ts',
+  ч: 'ch',
+  ш: 'sh',
+  щ: 'sch',
+  ъ: '',
+  ы: 'y',
+  ь: '',
+  э: 'e',
+  ю: 'yu',
+  я: 'ya',
+  ä: 'ae',
+  ö: 'oe',
+  ü: 'ue',
+  ß: 'ss',
+}
+
+const toLocalizedField = (languageCode, value) => ({
+  ru: value,
+  uk: value,
+  de: value,
+  [languageCode]: value,
+})
+
+const slugifyLabel = (value) => {
+  const transliterated = value
+    .split('')
+    .map((char) => {
+      const lower = char.toLowerCase()
+      return SLUG_CHAR_MAP[lower] ?? char
+    })
+    .join('')
+
+  const normalized = transliterated
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/['’`"]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
+
+  return normalized || 'category'
+}
+
+const buildCategorySlug = (name, id) => `${slugifyLabel(name)}-${id}`
+
+const categoryFallbackSummary = (languageCode, categoryName) => {
+  if (languageCode === 'uk') {
+    return `Актуальні процедури категорії ${categoryName}.`
+  }
+  if (languageCode === 'de') {
+    return `Aktuelle Behandlungen der Kategorie ${categoryName}.`
+  }
+  return `Актуальные процедуры категории ${categoryName}.`
+}
+
+const fetchJsonSafe = async (url) => {
+  try {
+    const response = await fetch(url, {
+      headers: { Accept: 'application/json' },
+    })
+    if (!response.ok) {
+      return null
+    }
+    return await response.json()
+  } catch {
+    return null
+  }
+}
+
+const loadCatalogSeoData = async () => {
+  const result = {}
+
+  await Promise.all(
+    LANGUAGES.map(async (language) => {
+      const [categoriesRaw, servicesRaw] = await Promise.all([
+        fetchJsonSafe(`${API_BASE_URL}/client/categories?lang=${language.code}`),
+        fetchJsonSafe(`${API_BASE_URL}/client/services?lang=${language.code}`),
+      ])
+
+      const categories = Array.isArray(categoriesRaw)
+        ? categoriesRaw.filter(
+            (item) =>
+              item
+              && typeof item === 'object'
+              && typeof item.id === 'number'
+              && typeof item.name === 'string'
+              && item.name.trim().length > 0,
+          )
+        : []
+
+      const services = Array.isArray(servicesRaw)
+        ? servicesRaw.filter(
+            (item) =>
+              item
+              && typeof item === 'object'
+              && typeof item.title === 'string'
+              && item.title.trim().length > 0
+              && typeof item.category_id === 'number',
+          )
+        : []
+
+      const servicesByCategory = new Map()
+      services.forEach((service) => {
+        const list = servicesByCategory.get(service.category_id) ?? []
+        list.push(service)
+        servicesByCategory.set(service.category_id, list)
+      })
+
+      const categoryRoutes = categories.map((category) => {
+        const slug = buildCategorySlug(category.name, category.id)
+        const categoryServices = servicesByCategory.get(category.id) ?? []
+        const categorySummary =
+          typeof category.description === 'string' && category.description.trim()
+            ? category.description.trim()
+            : categoryFallbackSummary(language.code, category.name)
+        const serviceTitles = categoryServices
+          .map((service) => service.title.trim())
+          .filter(Boolean)
+        const description = serviceTitles.length
+          ? `${categorySummary} ${serviceTitles.slice(0, 8).join(', ')}.`
+          : categorySummary
+        const keywordParts = Array.from(
+          new Set(
+            [
+              category.name,
+              `${category.name} ${SALON_CITY}`,
+              `${category.name} ${SALON_BRAND}`,
+              ...serviceTitles.slice(0, 20),
+            ]
+              .map((item) => item.trim())
+              .filter(Boolean),
+          ),
+        )
+
+        return {
+          path: `/catalog/${slug}`,
+          title: toLocalizedField(
+            language.code,
+            `${category.name} | ${SALON_BRAND}`,
+          ),
+          description: toLocalizedField(language.code, description),
+          keywords: toLocalizedField(language.code, keywordParts.join(', ')),
+          extraGraph: {
+            '@type': 'ItemList',
+            name: category.name,
+            numberOfItems: serviceTitles.length || 1,
+            itemListElement: (serviceTitles.length
+              ? serviceTitles
+              : [category.name]
+            ).slice(0, 40).map((name, index) => ({
+              '@type': 'ListItem',
+              position: index + 1,
+              item: {
+                '@type': serviceTitles.length ? 'Service' : 'Thing',
+                name,
+                category: category.name,
+              },
+            })),
+          },
+        }
+      })
+
+      result[language.code] = {
+        categories,
+        services,
+        categoryRoutes,
+      }
+    }),
+  )
+
+  return result
+}
+
 const INDEXABLE_ROUTES = [
   {
     path: '/',
     title: {
-      ru: 'Mira beauty salon | Каталог процедур и онлайн-запись',
-      uk: 'Mira beauty salon | Каталог процедур і онлайн-запис',
-      de: 'Mira beauty salon | Leistungen und Online-Terminbuchung',
+      ru: 'Mira Beauty Salon — онлайн-запись в Hamburg',
+      uk: 'Mira Beauty Salon — онлайн-запис у Hamburg',
+      de: 'Mira Beauty Salon — Online-Terminbuchung in Hamburg',
     },
     description: {
-      ru: 'Mira beauty salon в Hamburg: каталог процедур, онлайн-запись, специалисты, цены и контакты.',
-      uk: 'Mira beauty salon у Hamburg: каталог процедур, онлайн-запис, спеціалісти, ціни та контакти.',
-      de: 'Mira beauty salon in Hamburg: Leistungskatalog, Online-Termine, Spezialisten, Preise und Kontakte.',
+      ru: 'Mira Beauty Salon в Hamburg: каталог процедур, онлайн-запись, специалисты, цены и контакты.',
+      uk: 'Mira Beauty Salon у Hamburg: каталог процедур, онлайн-запис, спеціалісти, ціни та контакти.',
+      de: 'Mira Beauty Salon in Hamburg: Leistungskatalog, Online-Termine, Spezialisten, Preise und Kontakte.',
     },
     keywords: {
-      ru: 'Mira beauty salon, Hamburg, beauty salon, каталог процедур, онлайн запись',
-      uk: 'Mira beauty salon, Hamburg, beauty salon, каталог процедур, онлайн запис',
-      de: 'Mira beauty salon, Hamburg, Beauty Salon, Leistungen, Online Termin',
+      ru: 'Mira Beauty Salon, Hamburg, beauty salon, каталог процедур, онлайн запись',
+      uk: 'Mira Beauty Salon, Hamburg, beauty salon, каталог процедур, онлайн запис',
+      de: 'Mira Beauty Salon, Hamburg, Beauty Salon, Leistungen, Online Termin',
     },
   },
   {
     path: '/catalog',
     title: {
-      ru: 'Каталог процедур | Mira beauty salon',
-      uk: 'Каталог процедур | Mira beauty salon',
-      de: 'Leistungskatalog | Mira beauty salon',
+      ru: 'Каталог процедур | Mira Beauty Salon',
+      uk: 'Каталог процедур | Mira Beauty Salon',
+      de: 'Leistungskatalog | Mira Beauty Salon',
     },
     description: {
       ru: 'Выберите категорию и услугу в каталоге Mira и перейдите к онлайн-записи.',
@@ -56,9 +276,9 @@ const INDEXABLE_ROUTES = [
   {
     path: '/specialists',
     title: {
-      ru: 'Специалисты | Mira beauty salon',
-      uk: 'Спеціалісти | Mira beauty salon',
-      de: 'Spezialisten | Mira beauty salon',
+      ru: 'Специалисты | Mira Beauty Salon',
+      uk: 'Спеціалісти | Mira Beauty Salon',
+      de: 'Spezialisten | Mira Beauty Salon',
     },
     description: {
       ru: 'Команда специалистов Mira и направления работы в Hamburg.',
@@ -74,14 +294,14 @@ const INDEXABLE_ROUTES = [
   {
     path: '/pricing',
     title: {
-      ru: 'Цены | Mira beauty salon',
-      uk: 'Ціни | Mira beauty salon',
-      de: 'Preise | Mira beauty salon',
+      ru: 'Цены | Mira Beauty Salon',
+      uk: 'Ціни | Mira Beauty Salon',
+      de: 'Preise | Mira Beauty Salon',
     },
     description: {
-      ru: 'Актуальные цены на процедуры Mira beauty salon в Hamburg.',
-      uk: 'Актуальні ціни на процедури Mira beauty salon у Hamburg.',
-      de: 'Aktuelle Preise fur Behandlungen im Mira beauty salon in Hamburg.',
+      ru: 'Актуальные цены на процедуры Mira Beauty Salon в Hamburg.',
+      uk: 'Актуальні ціни на процедури Mira Beauty Salon у Hamburg.',
+      de: 'Aktuelle Preise fur Behandlungen im Mira Beauty Salon in Hamburg.',
     },
     keywords: {
       ru: 'цены, прайс, процедуры, Mira Hamburg',
@@ -92,9 +312,9 @@ const INDEXABLE_ROUTES = [
   {
     path: '/inspiration',
     title: {
-      ru: 'Вдохновение | Mira beauty salon',
-      uk: 'Натхнення | Mira beauty salon',
-      de: 'Inspiration | Mira beauty salon',
+      ru: 'Вдохновение | Mira Beauty Salon',
+      uk: 'Натхнення | Mira Beauty Salon',
+      de: 'Inspiration | Mira Beauty Salon',
     },
     description: {
       ru: 'Идеи образов и подбор направлений процедур Mira.',
@@ -110,14 +330,14 @@ const INDEXABLE_ROUTES = [
   {
     path: '/contacts',
     title: {
-      ru: 'Контакты | Mira beauty salon',
-      uk: 'Контакти | Mira beauty salon',
-      de: 'Kontakte | Mira beauty salon',
+      ru: 'Контакты | Mira Beauty Salon',
+      uk: 'Контакти | Mira Beauty Salon',
+      de: 'Kontakte | Mira Beauty Salon',
     },
     description: {
-      ru: 'Адрес, телефон, карта и график работы Mira beauty salon.',
-      uk: 'Адреса, телефон, мапа та графік роботи Mira beauty salon.',
-      de: 'Adresse, Telefon, Karte und Offnungszeiten des Mira beauty salon.',
+      ru: 'Адрес, телефон, карта и график работы Mira Beauty Salon.',
+      uk: 'Адреса, телефон, мапа та графік роботи Mira Beauty Salon.',
+      de: 'Adresse, Telefon, Karte und Offnungszeiten des Mira Beauty Salon.',
     },
     keywords: {
       ru: 'контакты, адрес, телефон, Hamburg salon',
@@ -128,14 +348,14 @@ const INDEXABLE_ROUTES = [
   {
     path: '/faq',
     title: {
-      ru: 'FAQ | Mira beauty salon',
-      uk: 'FAQ | Mira beauty salon',
-      de: 'FAQ | Mira beauty salon',
+      ru: 'FAQ | Mira Beauty Salon',
+      uk: 'FAQ | Mira Beauty Salon',
+      de: 'FAQ | Mira Beauty Salon',
     },
     description: {
-      ru: 'Частые вопросы по услугам и записи в Mira beauty salon.',
-      uk: 'Часті питання щодо послуг і запису в Mira beauty salon.',
-      de: 'Haufige Fragen zu Leistungen und Buchung im Mira beauty salon.',
+      ru: 'Частые вопросы по услугам и записи в Mira Beauty Salon.',
+      uk: 'Часті питання щодо послуг і запису в Mira Beauty Salon.',
+      de: 'Haufige Fragen zu Leistungen und Buchung im Mira Beauty Salon.',
     },
     keywords: {
       ru: 'faq, вопросы, запись, Mira salon',
@@ -146,14 +366,14 @@ const INDEXABLE_ROUTES = [
   {
     path: '/booking',
     title: {
-      ru: 'Онлайн-запись | Mira beauty salon',
-      uk: 'Онлайн-запис | Mira beauty salon',
-      de: 'Online-Termin | Mira beauty salon',
+      ru: 'Онлайн-запись | Mira Beauty Salon',
+      uk: 'Онлайн-запис | Mira Beauty Salon',
+      de: 'Online-Termin | Mira Beauty Salon',
     },
     description: {
-      ru: 'Подтвердите дату и слот онлайн-записи в Mira beauty salon.',
-      uk: 'Підтвердьте дату та слот онлайн-запису в Mira beauty salon.',
-      de: 'Bestatigen Sie Datum und Zeitslot Ihrer Online-Buchung im Mira beauty salon.',
+      ru: 'Подтвердите дату и слот онлайн-записи в Mira Beauty Salon.',
+      uk: 'Підтвердьте дату та слот онлайн-запису в Mira Beauty Salon.',
+      de: 'Bestatigen Sie Datum und Zeitslot Ihrer Online-Buchung im Mira Beauty Salon.',
     },
     keywords: {
       ru: 'запись онлайн, booking, Mira Hamburg',
@@ -164,14 +384,14 @@ const INDEXABLE_ROUTES = [
   {
     path: '/privacy',
     title: {
-      ru: 'Политика конфиденциальности | Mira beauty salon',
-      uk: 'Політика конфіденційності | Mira beauty salon',
-      de: 'Datenschutz | Mira beauty salon',
+      ru: 'Политика конфиденциальности | Mira Beauty Salon',
+      uk: 'Політика конфіденційності | Mira Beauty Salon',
+      de: 'Datenschutz | Mira Beauty Salon',
     },
     description: {
-      ru: 'Политика обработки персональных данных Mira beauty salon.',
-      uk: 'Політика обробки персональних даних Mira beauty salon.',
-      de: 'Datenschutzerklarung des Mira beauty salon.',
+      ru: 'Политика обработки персональных данных Mira Beauty Salon.',
+      uk: 'Політика обробки персональних даних Mira Beauty Salon.',
+      de: 'Datenschutzerklarung des Mira Beauty Salon.',
     },
     keywords: {
       ru: 'privacy policy, персональные данные, Mira',
@@ -182,14 +402,14 @@ const INDEXABLE_ROUTES = [
   {
     path: '/terms',
     title: {
-      ru: 'Условия записи | Mira beauty salon',
-      uk: 'Умови запису | Mira beauty salon',
-      de: 'Buchungsbedingungen | Mira beauty salon',
+      ru: 'Условия записи | Mira Beauty Salon',
+      uk: 'Умови запису | Mira Beauty Salon',
+      de: 'Buchungsbedingungen | Mira Beauty Salon',
     },
     description: {
-      ru: 'Условия бронирования и обслуживания Mira beauty salon.',
-      uk: 'Умови бронювання та обслуговування Mira beauty salon.',
-      de: 'Buchungs- und Servicebedingungen des Mira beauty salon.',
+      ru: 'Условия бронирования и обслуживания Mira Beauty Salon.',
+      uk: 'Умови бронювання та обслуговування Mira Beauty Salon.',
+      de: 'Buchungs- und Servicebedingungen des Mira Beauty Salon.',
     },
     keywords: {
       ru: 'условия записи, booking terms, Mira',
@@ -200,9 +420,9 @@ const INDEXABLE_ROUTES = [
   {
     path: '/cookies',
     title: {
-      ru: 'Cookie policy | Mira beauty salon',
-      uk: 'Cookie policy | Mira beauty salon',
-      de: 'Cookie-Richtlinie | Mira beauty salon',
+      ru: 'Cookie policy | Mira Beauty Salon',
+      uk: 'Cookie policy | Mira Beauty Salon',
+      de: 'Cookie-Richtlinie | Mira Beauty Salon',
     },
     description: {
       ru: 'Информация об использовании cookies и локального хранения.',
@@ -218,14 +438,14 @@ const INDEXABLE_ROUTES = [
   {
     path: '/impressum',
     title: {
-      ru: 'Impressum | Mira beauty salon',
-      uk: 'Impressum | Mira beauty salon',
-      de: 'Impressum | Mira beauty salon',
+      ru: 'Impressum | Mira Beauty Salon',
+      uk: 'Impressum | Mira Beauty Salon',
+      de: 'Impressum | Mira Beauty Salon',
     },
     description: {
-      ru: 'Юридическая информация компании Mira beauty salon.',
-      uk: 'Юридична інформація компанії Mira beauty salon.',
-      de: 'Rechtliche Anbieterkennzeichnung des Mira beauty salon.',
+      ru: 'Юридическая информация компании Mira Beauty Salon.',
+      uk: 'Юридична інформація компанії Mira Beauty Salon.',
+      de: 'Rechtliche Anbieterkennzeichnung des Mira Beauty Salon.',
     },
     keywords: {
       ru: 'impressum, legal, Mira',
@@ -287,7 +507,14 @@ const removeInlineLanguageScript = ($) => {
   })
 }
 
-const setStructuredData = ($, title, description, pageUrl, locale) => {
+const setStructuredData = (
+  $,
+  title,
+  description,
+  pageUrl,
+  locale,
+  extraGraph = [],
+) => {
   const payload = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -295,8 +522,24 @@ const setStructuredData = ($, title, description, pageUrl, locale) => {
         '@type': 'WebSite',
         '@id': `${SITE_URL}#website`,
         url: SITE_URL,
-        name: 'Mira beauty salon',
+        name: SALON_BRAND,
         inLanguage: locale,
+      },
+      {
+        '@type': 'BeautySalon',
+        '@id': `${SITE_URL}#salon`,
+        name: SALON_BRAND,
+        url: SITE_URL,
+        telephone: '+49 176 717 668 51',
+        image: `${SITE_URL}/logo_full.png`,
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: SALON_STREET,
+          postalCode: SALON_POSTAL_CODE,
+          addressLocality: SALON_CITY,
+          addressCountry: SALON_COUNTRY_CODE,
+        },
+        hasMap: 'https://maps.google.com/?q=Hamburg+Neue+Große+Bergstraße+7',
       },
       {
         '@type': 'WebPage',
@@ -306,6 +549,7 @@ const setStructuredData = ($, title, description, pageUrl, locale) => {
         description,
         inLanguage: locale,
       },
+      ...extraGraph,
     ],
   }
 
@@ -319,11 +563,29 @@ const setStructuredData = ($, title, description, pageUrl, locale) => {
   }
 }
 
-const createPageHtml = ({ template, language, route, noindex }) => {
+const createPageHtml = ({
+  template,
+  language,
+  route,
+  noindex,
+  titleOverride,
+  descriptionOverride,
+  extraKeywords = [],
+  extraGraph = [],
+}) => {
   const $ = load(template, { decodeEntities: false })
-  const title = route.title[language.code] ?? route.title.ru
-  const description = route.description[language.code] ?? route.description.ru
-  const keywords = route.keywords[language.code] ?? route.keywords.ru
+  const title = titleOverride ?? route.title[language.code] ?? route.title.ru
+  const description =
+    descriptionOverride ?? route.description[language.code] ?? route.description.ru
+  const routeKeywords = route.keywords[language.code] ?? route.keywords.ru
+  const keywords = Array.from(
+    new Set(
+      `${routeKeywords}, ${extraKeywords.join(', ')}, ${SALON_BRAND}, ${GEO_KEYWORDS[language.code].join(', ')}`
+        .split(',')
+        .map((item) => item.trim())
+        .filter(Boolean),
+    ),
+  ).join(', ')
   const localizedPath = toLocalizedPath(language.code, route.path)
   const pageUrl = toAbsoluteUrl(localizedPath)
 
@@ -349,7 +611,7 @@ const createPageHtml = ({ template, language, route, noindex }) => {
   upsertMeta($, 'property', 'og:title', title)
   upsertMeta($, 'property', 'og:description', description)
   upsertMeta($, 'property', 'og:type', 'website')
-  upsertMeta($, 'property', 'og:site_name', 'Mira beauty salon')
+  upsertMeta($, 'property', 'og:site_name', SALON_BRAND)
   upsertMeta($, 'property', 'og:locale', language.ogLocale)
   upsertMeta($, 'property', 'og:url', pageUrl)
   upsertMeta($, 'property', 'og:image', `${SITE_URL}/logo_full.png`)
@@ -359,7 +621,7 @@ const createPageHtml = ({ template, language, route, noindex }) => {
   upsertMeta($, 'name', 'twitter:image', `${SITE_URL}/logo_full.png`)
   upsertCanonical($, pageUrl)
   setAlternates($, route.path)
-  setStructuredData($, title, description, pageUrl, language.locale)
+  setStructuredData($, title, description, pageUrl, language.locale, extraGraph)
 
   return $.html()
 }
@@ -371,14 +633,9 @@ const writeRoutePage = async (pathName, html) => {
   await fs.writeFile(path.join(targetDir, 'index.html'), html, 'utf8')
 }
 
-const generateSitemapXml = () => {
+const generateSitemapXml = (localizedPaths) => {
   const date = new Date().toISOString().slice(0, 10)
-  const urls = []
-  for (const language of LANGUAGES) {
-    for (const route of INDEXABLE_ROUTES) {
-      urls.push(toAbsoluteUrl(toLocalizedPath(language.code, route.path)))
-    }
-  }
+  const urls = Array.from(new Set(localizedPaths)).map((item) => toAbsoluteUrl(item))
 
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
@@ -427,9 +684,9 @@ const main = async () => {
       const base = {
         path: routePath,
         title: {
-          ru: 'Служебная страница | Mira beauty salon',
-          uk: 'Службова сторінка | Mira beauty salon',
-          de: 'Service-Seite | Mira beauty salon',
+          ru: 'Служебная страница | Mira Beauty Salon',
+          uk: 'Службова сторінка | Mira Beauty Salon',
+          de: 'Service-Seite | Mira Beauty Salon',
         },
         description: {
           ru: 'Служебная страница подтверждения записи.',
@@ -459,9 +716,9 @@ const main = async () => {
     route: {
       path: '/404',
       title: {
-        ru: '404 | Mira beauty salon',
-        uk: '404 | Mira beauty salon',
-        de: '404 | Mira beauty salon',
+        ru: '404 | Mira Beauty Salon',
+        uk: '404 | Mira Beauty Salon',
+        de: '404 | Mira Beauty Salon',
       },
       description: {
         ru: 'Страница не найдена.',
@@ -483,4 +740,3 @@ const main = async () => {
 }
 
 void main()
-

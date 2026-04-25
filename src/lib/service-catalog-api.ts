@@ -1,6 +1,7 @@
 import type { ClientCategory, ClientService } from '../api/client-api'
 import type { ServiceCategory, ServiceItem } from '../data/service-catalog'
 import type { AppLanguageCode } from '../i18n/types'
+import { buildCategorySlug } from './category-slug'
 
 const categorySummaries: Record<AppLanguageCode, Record<string, string>> = {
   ru: {
@@ -22,12 +23,6 @@ const categorySummaries: Record<AppLanguageCode, Record<string, string>> = {
     'Makeup & Brows': 'Make-up, Brows und Lashes für Tages- und Event-Looks.',
   },
 }
-
-const toSlug = (value: string): string =>
-  value
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '') || 'category'
 
 const toPriceNumber = (value: number | string): number => {
   if (typeof value === 'number') {
@@ -176,7 +171,7 @@ export const mapApiServicesToCatalog = (
   return Array.from(grouped.entries())
     .filter(([, data]) => data.items.length > 0 || data.showEmpty)
     .map(([categoryId, data]) => ({
-      id: `${toSlug(data.name)}-${categoryId}`,
+      id: buildCategorySlug(data.name, categoryId),
       name: data.name,
       summary:
         data.summary ||

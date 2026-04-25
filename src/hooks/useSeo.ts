@@ -1,9 +1,12 @@
 import { useEffect, useMemo } from 'react'
 import {
-  SALON_ADDRESS,
+  SALON_CITY,
+  SALON_COUNTRY_CODE,
   SALON_NAME,
   SALON_PHONE,
+  SALON_POSTAL_CODE,
   SALON_ROUTE_URL,
+  SALON_STREET,
 } from '../config/salon'
 import { useLanguage } from '../context/language-context'
 import {
@@ -37,6 +40,32 @@ const OGP_LOCALE_BY_LANGUAGE = {
   ru: 'ru_RU',
   uk: 'uk_UA',
   de: 'de_DE',
+} as const
+
+const GEO_KEYWORDS_BY_LANGUAGE = {
+  ru: [
+    'Гамбург',
+    'Hamburg',
+    SALON_POSTAL_CODE,
+    SALON_STREET,
+    'салон красоты Гамбург',
+    'онлайн-запись',
+  ],
+  uk: [
+    'Гамбург',
+    'Hamburg',
+    SALON_POSTAL_CODE,
+    SALON_STREET,
+    'салон краси Гамбург',
+    'онлайн-запис',
+  ],
+  de: [
+    'Hamburg',
+    SALON_POSTAL_CODE,
+    SALON_STREET,
+    'Beauty Salon Hamburg',
+    'Online-Terminbuchung',
+  ],
 } as const
 
 const resolveSiteUrl = (): string => {
@@ -160,10 +189,13 @@ export const useSeo = ({
     const imageUrl = toAbsoluteUrl(image, siteUrl)
     const localeTag = LOCALE_BY_LANGUAGE[language]
     const ogpLocale = OGP_LOCALE_BY_LANGUAGE[language]
-    const keywordsValue = keywords
-      .map((item) => item.trim())
-      .filter(Boolean)
-      .join(', ')
+    const keywordsValue = Array.from(
+      new Set(
+        [...keywords, SALON_NAME, ...GEO_KEYWORDS_BY_LANGUAGE[language]]
+          .map((item) => item.trim())
+          .filter(Boolean),
+      ),
+    ).join(', ')
 
     const alternates: Array<{ hrefLang: string; href: string }> =
       SUPPORTED_LANGUAGES.map((code) => ({
@@ -200,9 +232,10 @@ export const useSeo = ({
           image: imageUrl,
           address: {
             '@type': 'PostalAddress',
-            streetAddress: SALON_ADDRESS,
-            addressLocality: 'Hamburg',
-            addressCountry: 'DE',
+            streetAddress: SALON_STREET,
+            postalCode: SALON_POSTAL_CODE,
+            addressLocality: SALON_CITY,
+            addressCountry: SALON_COUNTRY_CODE,
           },
           hasMap: SALON_ROUTE_URL,
         },

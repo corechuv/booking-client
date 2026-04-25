@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom'
 import {
   type ClientCategory,
   ApiError,
@@ -10,10 +15,12 @@ import LinkButton from '../components/LinkButton'
 import SectionPageHero from '../components/SectionPageHero'
 import SiteFooter from '../components/SiteFooter'
 import SiteNav from '../components/SiteNav'
-import { SALON_NAME } from '../config/salon'
+import { SALON_CITY, SALON_NAME } from '../config/salon'
 import { useLanguage } from '../context/language-context'
 import { useI18n } from '../hooks/useI18n'
 import { useSeo } from '../hooks/useSeo'
+import { extractCategoryNumericId } from '../lib/category-slug'
+import { localizePath } from '../lib/i18n-routing'
 import { mapApiServicesToCatalog } from '../lib/service-catalog-api'
 import '../styles/section-page.scss'
 import '../styles/catalog-page.scss'
@@ -27,6 +34,9 @@ const parseEuroAmount = (value: string): number | null => {
 function CatalogPage() {
   const { language } = useLanguage()
   const { t } = useI18n()
+  const { categorySlug } = useParams()
+  const navigate = useNavigate()
+  const location = useLocation()
   const [searchParams] = useSearchParams()
   const getIsMobileCatalog = () =>
     typeof window !== 'undefined'
@@ -74,6 +84,34 @@ function CatalogPage() {
     const value = searchParams.get('category')?.trim()
     return value ? value : null
   }, [searchParams])
+  const categoryIdFromPath = useMemo(() => {
+    const value = categorySlug?.trim()
+    return value ? value : null
+  }, [categorySlug])
+
+  const resolveCategoryId = useCallback(
+    (value: string | null): string | null => {
+      if (!value || !catalog.length) {
+        return null
+      }
+
+      const exact = catalog.find((category) => category.id === value)
+      if (exact) {
+        return exact.id
+      }
+
+      const numericId = extractCategoryNumericId(value)
+      if (numericId === null) {
+        return null
+      }
+
+      const byNumericId = catalog.find(
+        (category) => extractCategoryNumericId(category.id) === numericId,
+      )
+      return byNumericId?.id ?? null
+    },
+    [catalog],
+  )
 
   const loadCatalog = useCallback(async () => {
     setIsLoading(true)
@@ -144,25 +182,43 @@ function CatalogPage() {
       catalog.find((category) => category.id === activeCategoryId) ?? catalog[0],
     [activeCategoryId, catalog],
   )
+  const resolvedCategoryIdFromPath = useMemo(
+    () => resolveCategoryId(categoryIdFromPath),
+    [categoryIdFromPath, resolveCategoryId],
+  )
+
+  useEffect(() => {
+    if (!catalog.length || categoryIdFromPath === null) {
+      return
+    }
+
+    if (!resolvedCategoryIdFromPath) {
+      return
+    }
+
+    setActiveCategoryId(resolvedCategoryIdFromPath)
+    if (isMobileCatalog) {
+      setMobileView('services')
+      setPendingScrollToServicesTop(true)
+    }
+  }, [catalog, categoryIdFromPath, isMobileCatalog, resolvedCategoryIdFromPath])
 
   useEffect(() => {
     if (!catalog.length || categoryIdFromQuery === null) {
       return
     }
 
-    const hasCategoryFromQuery = catalog.some(
-      (category) => category.id === categoryIdFromQuery,
-    )
-    if (!hasCategoryFromQuery) {
+    const resolvedCategoryId = resolveCategoryId(categoryIdFromQuery)
+    if (!resolvedCategoryId) {
       return
     }
 
-    setActiveCategoryId(categoryIdFromQuery)
+    setActiveCategoryId(resolvedCategoryId)
     if (isMobileCatalog) {
       setMobileView('services')
       setPendingScrollToServicesTop(true)
     }
-  }, [catalog, categoryIdFromQuery, isMobileCatalog])
+  }, [catalog, categoryIdFromQuery, isMobileCatalog, resolveCategoryId])
 
   useEffect(() => {
     if (!catalog.length || serviceIdFromQuery === null) {
@@ -235,25 +291,83 @@ function CatalogPage() {
       ),
     [catalog],
   )
+  const activeCategoryServices = activeCategory?.services ?? []
+  const isCategorySeoPage = Boolean(
+    resolvedCategoryIdFromPath &&
+      activeCategory &&
+      activeCategory.id === resolvedCategoryIdFromPath,
+  )
+  const seoPath =
+    isCategorySeoPage && activeCategory ? `/catalog/${activeCategory.id}` : '/catalog'
 
   const seoDescription = useMemo(() => {
+    if (isCategorySeoPage && activeCategory) {
+      if (!activeCategoryServices.length) {
+        return `${activeCategory.summary} ${SALON_NAME} ${SALON_CITY}.`
+      }
+      const featured = activeCategoryServices
+        .slice(0, 5)
+        .map((item) => item.title)
+        .join(', ')
+      return `${activeCategory.summary} ${t('catalog.servicesCount', {
+        count: activeCategoryServices.length,
+      })}. ${featured}. ${SALON_NAME} ${SALON_CITY}.`
+    }
     if (!flatServices.length) {
       return t('catalog.hero.description')
     }
-    const featured = flatServices.slice(0, 3).map((item) => item.title).join(', ')
+    const featured = flatServices.slice(0, 6).map((item) => item.title).join(', ')
     return `${t('catalog.hero.description')} ${featured}.`
-  }, [flatServices, t])
+  }, [activeCategory, activeCategoryServices, flatServices, isCategorySeoPage, t])
+
+  const seoTitle = isCategorySeoPage && activeCategory
+    ? `${activeCategory.name} | ${t('catalog.hero.title')} | ${SALON_NAME}`
+    : `${t('catalog.hero.title')} | ${SALON_NAME}`
+
+  const categorySeoKeywords = useMemo(
+    () =>
+      catalog.flatMap((item) => [
+        item.name,
+        `${item.name} ${SALON_CITY}`,
+        `${item.name} ${SALON_NAME}`,
+      ]),
+    [catalog],
+  )
 
   const catalogJsonLd = useMemo(() => {
-    if (!flatServices.length) {
-      return undefined
+    const sourceServices = isCategorySeoPage
+      ? activeCategoryServices.map((service) => ({
+          ...service,
+          categoryName: activeCategory?.name ?? '',
+        }))
+      : flatServices
+
+    if (!sourceServices.length) {
+      if (!catalog.length) {
+        return undefined
+      }
+
+      return {
+        '@type': 'ItemList',
+        name: t('catalog.hero.title'),
+        numberOfItems: catalog.length,
+        itemListElement: catalog.map((item, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          item: {
+            '@type': 'Thing',
+            name: item.name,
+            description: item.summary,
+          },
+        })),
+      }
     }
 
     return {
       '@type': 'ItemList',
-      name: t('catalog.hero.title'),
-      numberOfItems: flatServices.length,
-      itemListElement: flatServices.slice(0, 40).map((item, index) => {
+      name: isCategorySeoPage && activeCategory ? activeCategory.name : t('catalog.hero.title'),
+      numberOfItems: sourceServices.length,
+      itemListElement: sourceServices.slice(0, 40).map((item, index) => {
         const priceValue = parseEuroAmount(item.price)
         const serviceObject: Record<string, unknown> = {
           '@type': 'Service',
@@ -278,21 +392,41 @@ function CatalogPage() {
         }
       }),
     }
-  }, [flatServices, t])
+  }, [activeCategory, activeCategoryServices, catalog, flatServices, isCategorySeoPage, t])
 
   useSeo({
-    path: '/catalog',
-    title: `${t('catalog.hero.title')} | ${SALON_NAME}`,
+    path: seoPath,
+    title: seoTitle,
     description: seoDescription,
     keywords: [
       SALON_NAME,
+      SALON_CITY,
       t('nav.catalog'),
       t('catalog.hero.title'),
-      ...catalog.map((item) => item.name),
-      ...flatServices.slice(0, 20).map((item) => item.title),
+      ...categorySeoKeywords,
+      ...(isCategorySeoPage ? activeCategoryServices : flatServices)
+        .slice(0, 20)
+        .map((item) => item.title),
     ],
     jsonLd: catalogJsonLd,
   })
+
+  const openCategory = useCallback(
+    (nextCategoryId: string) => {
+      setActiveCategoryId(nextCategoryId)
+
+      const nextPath = localizePath(`/catalog/${nextCategoryId}`, language)
+      if (`${location.pathname}${location.search}` !== nextPath) {
+        navigate(nextPath, { replace: true })
+      }
+
+      if (isMobileCatalog) {
+        setMobileView('services')
+        setPendingScrollToServicesTop(true)
+      }
+    },
+    [isMobileCatalog, language, location.pathname, location.search, navigate],
+  )
 
   return (
     <main className="section-page catalog-page">
@@ -349,13 +483,7 @@ function CatalogPage() {
                   : 'catalog-page__category'
               }
               type="button"
-              onClick={() => {
-                setActiveCategoryId(category.id)
-                if (isMobileCatalog) {
-                  setMobileView('services')
-                  setPendingScrollToServicesTop(true)
-                }
-              }}
+              onClick={() => openCategory(category.id)}
             >
               <strong>{category.name}</strong>
               <span>{t('catalog.servicesCount', { count: category.services.length })}</span>

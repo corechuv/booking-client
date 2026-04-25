@@ -68,7 +68,6 @@ function HomePage() {
   const metrics = [
     { value: '4.9/5', label: t('home.metric.rating') },
     { value: '2 500+', label: t('home.metric.bookings') },
-    { value: '24/7', label: t('home.metric.availability') },
   ]
 
   const loadDeals = useCallback(async () => {
@@ -131,15 +130,11 @@ function HomePage() {
 
         <section className="landing-hero">
           <div className="landing-hero__copy">
-            <p className="landing-kicker">{t('home.kicker')}</p>
             <h1 className="landing-hero__title">
               {t('home.title').split('\n')[0]}
               <br />
               {t('home.title').split('\n')[1]}
             </h1>
-            <p className="landing-hero__description">
-              {t('home.description')}
-            </p>
             <div className="landing-hero__cta">
               <LinkButton to="/catalog" tone="primary" size="lg">
                 {t('home.cta.booking')}

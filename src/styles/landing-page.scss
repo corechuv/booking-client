@@ -4,9 +4,7 @@
   overflow: hidden;
   padding: 0;
   color: var(--text-1);
-  background:
-    radial-gradient(1200px 380px at 50% -60px, var(--blob-1), transparent 70%),
-    linear-gradient(160deg, var(--bg-base), var(--bg-soft));
+  background: var(--bg-base);
 }
 
 .landing-page__content {
